@@ -1,0 +1,240 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:\Users\david\coding\01_PRISON_PHONE_paper\3000_code\SMCL_logs\1_conversions_and_merging.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 4 Nov 2025, 12:02:01
+{txt}
+{com}. 
+. * outcomes: inmate_noncon_, inmate_contact_, staff_miscond_, staff_harassment_
+.         * both all(egations) and subs(tantiations), for 2004-2018
+. import delimited "2000_data\200_raw\prea_data.csv", encoding(UTF-8)
+{res}{text}(12 vars, 750 obs)
+
+{com}. save "2000_data\400_base\prea_dta", replace
+{txt}{p 0 4 2}
+file {bf}
+2000_data\400_base\prea_dta.dta{rm}
+saved
+{p_end}
+
+{com}. 
+. * my phone rates: is_coll_, is_pre, is_debit, oos_coll, oos_pre, oos_debit
+.         * _fee, _rate, and _flat, for 2005-2018
+. import delimited "2000_data\200_raw\phone_rate_new_data.csv", encoding(UTF-8) clear
+{res}{text}(27 vars, 739 obs)
+
+{com}. destring oos_coll_rate, replace
+{txt}oos_coll_rate already numeric; no {res}replace
+{txt}
+{com}. save "2000_data\400_base\phone_rate_new_dta", replace
+{txt}{p 0 4 2}
+file {bf}
+2000_data\400_base\phone_rate_new_dta.dta{rm}
+saved
+{p_end}
+
+{com}. 
+. * website phone rates: oos_avg_rate and is_avg_rate, for 2008 + 2013-2019
+. import delimited "2000_data\200_raw\phone_rate_old_data.csv", encoding(UTF-8) clear
+{res}{text}(4 vars, 400 obs)
+
+{com}. save "2000_data\400_base\phone_rate_old_dta", replace
+{txt}{p 0 4 2}
+file {bf}
+2000_data\400_base\phone_rate_old_dta.dta{rm}
+saved
+{p_end}
+
+{com}. 
+. * population data by sentence length (+ gender); 1+, 1-, unsen, for 2000-2019
+. import delimited "2000_data\200_raw\population_data.csv", encoding(UTF-8) clear
+{res}{text}(11 vars, 1,000 obs)
+
+{com}. save "2000_data\400_base\population_dta", replace
+{txt}{p 0 4 2}
+file {bf}
+2000_data\400_base\population_dta.dta{rm}
+saved
+{p_end}
+
+{com}. 
+. * capacity data, rated_, operational_, design_, custody_pop, 
+.         * plus lowest_cap_pct, highest_cap_pct, for 2011-2019
+. import delimited "2000_data\200_raw\capacity_data.csv", encoding(UTF-8) clear
+{res}{text}(8 vars, 450 obs)
+
+{com}. order state year
+{txt}
+{com}. save "2000_data\400_base\capacity_dta", replace
+{txt}{p 0 4 2}
+file {bf}
+2000_data\400_base\capacity_dta.dta{rm}
+saved
+{p_end}
+
+{com}. 
+. * blocked suicide data: in blocked-years, for 2001-2019
+. import delimited "2000_data\200_raw\suicide_blocked_data.csv", encoding(ISO-8859-2) clear
+{res}{text}(5 vars, 950 obs)
+
+{com}. sort state year
+{txt}
+{com}. save "2000_data\400_base\suicide_blocked_dta.dta", replace
+{txt}{p 0 4 2}
+file {bf}
+2000_data\400_base\suicide_blocked_dta.dta{rm}
+saved
+{p_end}
+
+{com}. 
+. * supplemental: counts for age bins, education levels, sentence lengths, offense types, for 2004-2019 
+. import delimited "2000_data\200_raw\states_2004_2019_ages_plus.csv", encoding(UTF-8) clear
+{res}{text}(39 vars, 800 obs)
+
+{com}. save "2000_data\400_base\states_2004_2019_ages_plus_dta", replace
+{txt}{p 0 4 2}
+file {bf}
+2000_data\400_base\states_2004_2019_ages_plus_dta.dta{rm}
+saved
+{p_end}
+
+{com}. 
+. * unconditional deaths: raw_death_count, deaths_fed_total, deaths_state_total, for 2001-2019
+. import delimited "2000_data\200_raw\raw_death_counts_2001_2019.csv", encoding(UTF-8) clear
+{res}{text}(5 vars, 950 obs)
+
+{com}. save "2000_data\400_base\raw_death_counts_2001_2019_dta", replace
+{txt}{p 0 4 2}
+file {bf}
+2000_data\400_base\raw_death_counts_2001_2019_dta.dta{rm}
+saved
+{p_end}
+
+{com}. 
+. * merging above into single DTA file
+. use "2000_data\400_base\prea_dta", replace
+{txt}
+{com}. merge 1:m state year using "2000_data\400_base\phone_rate_new_dta.dta", nogen
+{res}
+{txt}{col 5}Result{col 33}Number of obs
+{col 5}{hline 41}
+{col 5}Not matched{col 30}{res}              89
+{txt}{col 9}from master{col 30}{res}              50{txt}  
+{col 9}from using{col 30}{res}              39{txt}  
+
+{col 5}Matched{col 30}{res}             700{txt}  
+{col 5}{hline 41}
+
+{com}. merge m:m state year using "2000_data\400_base\phone_rate_old_dta.dta", nogen
+{res}
+{txt}{col 5}Result{col 33}Number of obs
+{col 5}{hline 41}
+{col 5}Not matched{col 30}{res}             417
+{txt}{col 9}from master{col 30}{res}             403{txt}  
+{col 9}from using{col 30}{res}              14{txt}  
+
+{col 5}Matched{col 30}{res}             386{txt}  
+{col 5}{hline 41}
+
+{com}. merge m:1 state year using "2000_data\400_base\capacity_dta.dta", nogen
+{res}
+{txt}{col 5}Result{col 33}Number of obs
+{col 5}{hline 41}
+{col 5}Not matched{col 30}{res}             353
+{txt}{col 9}from master{col 30}{res}             353{txt}  
+{col 9}from using{col 30}{res}               0{txt}  
+
+{col 5}Matched{col 30}{res}             450{txt}  
+{col 5}{hline 41}
+
+{com}. merge m:1 state year using "2000_data\400_base\population_dta.dta", nogen
+{res}
+{txt}{col 5}Result{col 33}Number of obs
+{col 5}{hline 41}
+{col 5}Not matched{col 30}{res}             203
+{txt}{col 9}from master{col 30}{res}               3{txt}  
+{col 9}from using{col 30}{res}             200{txt}  
+
+{col 5}Matched{col 30}{res}             800{txt}  
+{col 5}{hline 41}
+
+{com}. merge m:1 state year using "2000_data\400_base\suicide_blocked_dta.dta", nogen
+{res}
+{txt}{col 5}Result{col 33}Number of obs
+{col 5}{hline 41}
+{col 5}Not matched{col 30}{res}              53
+{txt}{col 9}from master{col 30}{res}              53{txt}  
+{col 9}from using{col 30}{res}               0{txt}  
+
+{col 5}Matched{col 30}{res}             950{txt}  
+{col 5}{hline 41}
+
+{com}. merge m:1 state year using "2000_data\400_base\states_2004_2019_ages_plus_dta.dta", nogen
+{res}
+{txt}{col 5}Result{col 33}Number of obs
+{col 5}{hline 41}
+{col 5}Not matched{col 30}{res}             203
+{txt}{col 9}from master{col 30}{res}             203{txt}  
+{col 9}from using{col 30}{res}               0{txt}  
+
+{col 5}Matched{col 30}{res}             800{txt}  
+{col 5}{hline 41}
+
+{com}. merge m:1 state year using "2000_data\400_base\raw_death_counts_2001_2019_dta.dta", nogen
+{res}
+{txt}{col 5}Result{col 33}Number of obs
+{col 5}{hline 41}
+{col 5}Not matched{col 30}{res}              53
+{txt}{col 9}from master{col 30}{res}              53{txt}  
+{col 9}from using{col 30}{res}               0{txt}  
+
+{col 5}Matched{col 30}{res}             950{txt}  
+{col 5}{hline 41}
+
+{com}. 
+. statastates, name(state)
+{res}{txt}(0 real changes made)
+{res}{txt}{p 0 7 2}
+(variable
+{bf:state_name} was {bf:str14}, now {bf:str20} to accommodate using data's values)
+{p_end}
+
+{col 5}Result{col 33}Number of obs
+{col 5}{hline 41}
+{col 5}Not matched{col 30}{res}               1
+{txt}{col 9}from master{col 30}{res}               0{txt}  (_merge==1)
+{col 9}from using{col 30}{res}               1{txt}  (_merge==2)
+
+{col 5}Matched{col 30}{res}           1,003{txt}  (_merge==3)
+{col 5}{hline 41}
+{res}{txt}
+{com}. drop _merge
+{txt}
+{com}. 
+. * dropping DC and Hawaii
+. drop if (state_fips==11) 
+{txt}(1 observation deleted)
+
+{com}. drop if (state_fips==15) 
+{txt}(20 observations deleted)
+
+{com}. sort state year
+{txt}
+{com}. 
+. save "2000_data\500_working\merged_prison_dta", replace
+{txt}{p 0 4 2}
+file {bf}
+2000_data\500_working\merged_prison_dta.dta{rm}
+saved
+{p_end}
+
+{com}. 
+. log close
+      {txt}name:  {res}<unnamed>
+       {txt}log:  {res}C:\Users\david\coding\01_PRISON_PHONE_paper\3000_code\SMCL_logs\1_conversions_and_merging.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res} 4 Nov 2025, 12:02:02
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}

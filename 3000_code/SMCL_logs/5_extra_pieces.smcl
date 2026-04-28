@@ -1,0 +1,78 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:\Users\david\coding\01_PRISON_PHONE_paper\3000_code\SMCL_logs\5_extra_pieces.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 4 Nov 2025, 16:07:11
+{txt}
+{com}. 
+. 
+. 
+. use "2000_data\500_working\labeled_prison_dta", replace
+{txt}
+{com}. sort state year
+{txt}
+{com}. save "2000_data\500_working\extra_pieces_dta", replace
+{txt}{p 0 4 2}
+file {bf}
+2000_data\500_working\extra_pieces_dta.dta{rm}
+saved
+{p_end}
+
+{com}. 
+. **********
+. 
+. * scatterplot of all phone rates across time 
+. use "2000_data\500_working\extra_pieces_dta", replace
+{txt}
+{com}. keep if year>=2008 & year<=2018
+{txt}(444 observations deleted)
+
+{com}. twoway scatter oos_coll_15m year, ms(X) xline(2013.5, lstyle(dot)) yline(3.75, lstyle(dot)) subtitle() ytitle("15-Minute Interstate Collect Call Cost") xtitle("Year") saving("5000_figures\Scatterplot All Rates.gph", replace)
+{res}{txt}file {bf:5000_figures\Scatterplot All Rates.gph} saved
+
+{com}. *graph export "~\coding\03_figures\pdfs\Scatterplot All Rates.pdf", as(pdf) name("Graph") replace
+. graph export "6000_LaTeX\rates_scatterplot.eps", replace
+{txt}{p 0 4 2}
+file {bf}
+6000_LaTeX\rates_scatterplot.eps{rm}
+saved as
+EPS
+format
+{p_end}
+
+{com}. graph export "6000_LaTeX\rates_scatterplot.pdf", replace
+{txt}{p 0 4 2}
+file {bf}
+6000_LaTeX\rates_scatterplot.pdf{rm}
+saved as
+PDF
+format
+{p_end}
+
+{com}. 
+. STOP
+{err}command {bf}STOP{sf} is unrecognized
+{txt}{search r(199), local:r(199);}
+
+end of do-file
+
+{search r(199), local:r(199);}
+
+{com}. do "C:\Users\david\coding\01_PRISON_PHONE_paper\3000_code\4_final_output.do"
+{txt}
+{com}. * 4_final_output.do
+. 
+. clear all
+{res}{txt}
+{com}. 
+. *cd "\bigdata\mbateslab\dford013\coding\01_PRISON_PHONE_paper"
+. cd "~\coding\01_PRISON_PHONE_paper"
+{res}C:\Users\david\coding\01_PRISON_PHONE_paper
+{txt}
+{com}. 
+. ********************************************************************************
+. 
+. capture log close 
+{smcl}
+{com}{sf}{ul off}

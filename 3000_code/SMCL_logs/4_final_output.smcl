@@ -1,0 +1,1885 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:\Users\david\coding\01_PRISON_PHONE_paper\3000_code\SMCL_logs\4_final_output.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 9 Dec 2025, 12:17:28
+{txt}
+{com}. 
+. *ssc install outreg2
+. 
+. use "2000_data/500_working/labeled_prison_dta", replace
+{txt}
+{com}. sort state year
+{txt}
+{com}. 
+. * no PREA data before 2004 or after 2018
+. drop if (year < 2004) | (year > 2018)
+{txt}(248 observations deleted)
+
+{com}. * year_1 = 2004
+. 
+. * no rate data before 2008 or after 2018
+. drop if (year<2008) | (year>2018)
+{txt}(196 observations deleted)
+
+{com}. *drop year_1 
+. 
+. * playing around trying to balance full set -- imputing IL & NV missing values with surrounding year means
+. *egen IL_inmate_noncon_all_mean1 = mean(inmate_noncon_all) if state=="ILLINOIS" & year<2007
+. *egen IL_inmate_noncon_all_mean2 = mean(inmate_noncon_all) if state=="ILLINOIS" & year>2011 & year<2015
+. *replace inmate_noncon_all = IL_inmate_noncon_all_mean1 if state=="ILLINOIS" & year==2005
+. *replace inmate_noncon_all = IL_inmate_noncon_all_mean2 if state=="ILLINOIS" & year==2013
+. *egen NV_inmate_noncon_all_mean1 = mean(inmate_noncon_all) if state=="NEVADA" & year==2016
+. *replace inmate_noncon_all = NV_inmate_noncon_all_mean1 if state=="NEVADA" & year==2016
+. 
+. * playing around imputing basic early phone rate years
+. *bysort state: gen early_rate_imputes = oos_coll_15m if year==2008
+. *bysort state: egen early_imputes = max(early_rate_imputes)
+. *replace oos_coll_15m = early_imputes if year<2008
+. 
+. * identifying balanced panel
+. * missing inmate_noncon_all: IL*1, NV*1
+. * missing staff_miscond_all: NONE
+. gen balanced = (state!="ILLINOIS" & state!="NEVADA")
+{txt}
+{com}. 
+. bysort state: egen pre_rate = mean(oos_coll_15m) if year==2013
+{txt}(490 missing values generated)
+
+{com}. 
+. la var oos_coll_15m "Treatment"
+{txt}
+{com}. la var total_pop "Prison Pop."
+{txt}
+{com}. la var total_pop2 "Pop. Squared"
+{txt}
+{com}. la var total_pop3 "Pop. Cubed"
+{txt}
+{com}. la var treat_base "Treatment Status"
+{txt}
+{com}. la var inmate_noncon_all "Inmate Sexual Acts"
+{txt}
+{com}. la var staff_miscond_all "Staff Misconduct"
+{txt}
+{com}. la var pre_rate "Pre-Period Cost ($)"
+{txt}
+{com}. 
+. * Labeling Values for Table: 
+. label define treatment_status 0 "Control" 1 "Treated" 
+{txt}
+{com}. label values treat_base treatment_status
+{txt}
+{com}. 
+. collect clear
+{res}{txt}
+{com}. 
+. dtable inmate_noncon_all staff_miscond_all pre_rate total_pop, by(treat_base) ///
+>         name(dstats) nosample title("Raw Differences") 
+{res}
+{smcl}
+{reset}{...}
+{p}Raw Differences{p_end}
+{hline 19}{c -}{hline 23}{c -}{hline 23}{c -}{hline 23}
+{space 19} {space 28}Treatment Status{space 27}
+{space 19} {space 8}Control{space 8} {space 8}Treated{space 8} {space 9}Total{space 9}
+{hline 19}{c -}{hline 23}{c -}{hline 23}{c -}{hline 23}
+Inmate Sexual Acts{space 1} {space 8}{result:50.721 (77.670)} {space 8}{result:49.591 (73.454)} {space 8}{result:50.052 (75.133)}
+Staff Misconduct{space 3} {space 7}{result:79.559 (118.280)} {space 7}{result:67.793 (132.304)} {space 7}{result:72.596 (126.787)}
+Pre-Period Cost ($) {space 10}{result:2.264 (1.010)} {space 10}{result:9.699 (4.105)} {space 10}{result:6.664 (4.885)}
+Prison Pop.{space 8} {result:22,593.982 (21,869.939)} {result:24,996.257 (34,295.910)} {result:24,015.737 (29,855.054)}
+{hline 19}{c -}{hline 23}{c -}{hline 23}{c -}{hline 23}
+
+{com}. collect style cell result[mean sd]#var[inmate_noncon_all], nformat(%3.2fc)
+{res}{txt}
+{com}. collect style cell result[mean sd]#var[staff_miscond_all], nformat(%3.2fc)
+{res}{txt}
+{com}. collect style cell result[mean sd]#var[pre_rate], nformat(%3.2fc)
+{res}{txt}
+{com}. collect style cell result[mean sd]#var[total_pop], nformat(%5.0fc)
+{res}{txt}
+{com}. collect export "6000_LaTeX\prison_phone_dstats.tex", replace tableonly
+{res}{txt}{p 0 1 2}
+(collection {res:dstats} exported to file {browse "C:/Users/david/coding/01_PRISON_PHONE_paper/6000_LaTeX/prison_phone_dstats.tex":6000_LaTeX\prison_phone_dstats.tex})
+{p_end}
+
+{com}. 
+. save "2000_data/500_working/final_output_dta", replace
+{txt}{p 0 4 2}
+file {bf}
+2000_data/500_working/final_output_dta.dta{rm}
+saved
+{p_end}
+
+{com}. 
+. **********
+. 
+. /*
+> * Preliminary Unbalanced TWFE, Adding Controls 
+> 
+> use "2000_data/500_working/final_output_dta", replace
+> 
+> drop if balanced==0
+> 
+> local yit "inmate_noncon_all staff_miscond_all"
+> 
+> local xit0 "c.oos_coll_15m c.total_pop i.state_fips i.year"
+> local xit1 "c.oos_coll_15m c.total_pop i.state_fips i.year c.age_* i.nined_age_*"
+> local xit2 "c.oos_coll_15m c.total_pop i.state_fips i.year c.educ_* i.nined_educ_*"
+> local xit3 "c.oos_coll_15m c.total_pop i.state_fips i.year"
+> local xit4 "c.oos_coll_15m c.total_pop i.state_fips i.year"
+> local xit5 "c.oos_coll_15m c.total_pop i.state_fips i.year"
+> 
+> * xit0
+> foreach y in `yit' {c -(}
+>         reg `y' `xit0', vce(cl state_fips)
+>         outreg2 using "4000_outputs/unb_TWFE_`y'1.0.tex", dec(3) replace ctitle(Xit0) nocons keep(oos_coll_15m total_pop) title(TWFE: "`: var label `y''")
+> {c )-}
+> 
+> * xit1
+> foreach y in `yit' {c -(}
+>         reg `y' `xit1', vce(cl state_fips)
+>         outreg2 using "4000_outputs/unb_TWFE_`y'1.0.tex", dec(3) append ctitle(Xit1) nocons keep(oos_coll_15m total_pop age_*) title(TWFE: "`: var label `y''")
+> {c )-}
+> 
+> * xit2
+> foreach y in `yit' {c -(}
+>         reg `y' `xit2', vce(cl state_fips)
+>         outreg2 using "4000_outputs/unb_TWFE_`y'1.0.tex", dec(3) append ctitle(Xit2) nocons keep(oos_coll_15m total_pop educ_*) title("`: var label `y''")
+> {c )-}
+> 
+> * xit3
+> foreach y in `yit' {c -(}
+>         reg `y' `xit3', vce(cl state_fips)
+>         outreg2 using "4000_outputs/unb_TWFE_`y'1.0.tex", dec(3) append ctitle(Xit3) nocons keep(oos_coll_15m total_pop) title("`: var label `y''")
+> {c )-}
+> 
+> * xit4
+> foreach y in `yit' {c -(}
+>         reg `y' `xit4', vce(cl state_fips)
+>         outreg2 using "4000_outputs/unb_TWFE_`y'1.0.tex", dec(3) append ctitle(Xit4) nocons keep(oos_coll_15m total_pop) title("`: var label `y''")
+> {c )-}
+> 
+> * xit5
+> foreach y in `yit' {c -(}
+>         reg `y' `xit5', vce(cl state_fips)
+>         outreg2 using "4000_outputs/unb_TWFE_`y'1.0.tex", dec(3) append ctitle(Xit5) nocons keep(oos_coll_15m total_pop) title("`: var label `y''")
+> {c )-}
+> 
+> * total_pop strict improvement, seems mandatory
+> * design_cap makes intuitive sense, but doesn't seem very useful (0.95 corr with total_pop)
+> * total_pop2 seems pretty negligible
+> * rated_cap and operational_cap even more correlated with total_pop, thinking design_cap if any
+> * age_* seem to drive estimates negative, which seems odd. Why could this be? 
+> * educ_* seem to strengthen the estimates somewhat?
+> */
+. 
+. **********
+. 
+. * MAKING 1ST SET OF TABLES: 
+. 
+. * Specification #1, unbalanced TWFE, Baseline: 
+. * yit = alpha + xit*beta + si*gamma + ft*delta + eit
+. use "2000_data/500_working/final_output_dta", replace
+{txt}
+{com}. 
+. local yit "inmate_noncon_all staff_miscond_all"
+{txt}
+{com}. local xit "c.oos_coll_15m c.total_pop i.state_fips i.year"
+{txt}
+{com}. 
+. * SPECIFICATION #1 REGRESSION LOOP:
+. foreach y in `yit' {c -(}
+{txt}  2{com}.         reg `y' `xit', vce(cluster state_fips)
+{txt}  3{com}.         outreg2 using "6000_LaTeX/table_`y'_1.1.tex", dec(3) replace ctitle(TWFE) nocons keep(oos_coll_15m total_pop) label tex(frag) nonotes 
+{txt}  4{com}. {c )-}
+
+{txt}Linear regression                               Number of obs     = {res}       537
+                                                {txt}{help j_robustsingular:F(11, 48) }        =  {res}        .
+                                                {txt}Prob > F          = {res}         .
+                                                {txt}R-squared         = {res}    0.8051
+                                                {txt}Root MSE          =    {res} 35.197
+
+{txt}{ralign 78:(Std. err. adjusted for {res:49} clusters in {res:state_fips})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}inmate_non~l{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+oos_coll_15m {c |}{col 14}{res}{space 2} .7792185{col 26}{space 2} 1.271446{col 37}{space 1}    0.61{col 46}{space 3}0.543{col 54}{space 4}-1.777196{col 67}{space 3} 3.335633
+{txt}{space 3}total_pop {c |}{col 14}{res}{space 2}-.0031172{col 26}{space 2} .0007902{col 37}{space 1}   -3.94{col 46}{space 3}0.000{col 54}{space 4}-.0047059{col 67}{space 3}-.0015284
+{txt}{space 12} {c |}
+{space 2}state_fips {c |}
+{space 10}2  {c |}{col 14}{res}{space 2}-141.6762{col 26}{space 2}   16.072{col 37}{space 1}   -8.82{col 46}{space 3}0.000{col 54}{space 4}-173.9911{col 67}{space 3}-109.3613
+{txt}{space 10}4  {c |}{col 14}{res}{space 2} 13.64507{col 26}{space 2} 10.77207{col 37}{space 1}    1.27{col 46}{space 3}0.211{col 54}{space 4}-8.013637{col 67}{space 3} 35.30377
+{txt}{space 10}5  {c |}{col 14}{res}{space 2}-105.7328{col 26}{space 2} 8.092662{col 37}{space 1}  -13.07{col 46}{space 3}0.000{col 54}{space 4}-122.0042{col 67}{space 3}-89.46143
+{txt}{space 10}6  {c |}{col 14}{res}{space 2} 450.1915{col 26}{space 2} 94.63219{col 37}{space 1}    4.76{col 46}{space 3}0.000{col 54}{space 4} 259.9207{col 67}{space 3} 640.4623
+{txt}{space 10}8  {c |}{col 14}{res}{space 2}-82.71055{col 26}{space 2} 6.354637{col 37}{space 1}  -13.02{col 46}{space 3}0.000{col 54}{space 4} -95.4874{col 67}{space 3} -69.9337
+{txt}{space 10}9  {c |}{col 14}{res}{space 2} -88.4931{col 26}{space 2} 6.668246{col 37}{space 1}  -13.27{col 46}{space 3}0.000{col 54}{space 4}-101.9005{col 67}{space 3}-75.08569
+{txt}{space 9}10  {c |}{col 14}{res}{space 2}-117.3118{col 26}{space 2} 14.92209{col 37}{space 1}   -7.86{col 46}{space 3}0.000{col 54}{space 4}-147.3147{col 67}{space 3}-87.30897
+{txt}{space 9}12  {c |}{col 14}{res}{space 2} 433.6229{col 26}{space 2} 54.38104{col 37}{space 1}    7.97{col 46}{space 3}0.000{col 54}{space 4} 324.2825{col 67}{space 3} 542.9633
+{txt}{space 9}13  {c |}{col 14}{res}{space 2} 44.02167{col 26}{space 2} 17.45506{col 37}{space 1}    2.52{col 46}{space 3}0.015{col 54}{space 4} 8.925917{col 67}{space 3} 79.11742
+{txt}{space 9}16  {c |}{col 14}{res}{space 2}-140.0152{col 26}{space 2} 14.65141{col 37}{space 1}   -9.56{col 46}{space 3}0.000{col 54}{space 4}-169.4739{col 67}{space 3}-110.5566
+{txt}{space 9}17  {c |}{col 14}{res}{space 2} 36.34136{col 26}{space 2} 20.33127{col 37}{space 1}    1.79{col 46}{space 3}0.080{col 54}{space 4}  -4.5374{col 67}{space 3} 77.22011
+{txt}{space 9}18  {c |}{col 14}{res}{space 2}-51.39247{col 26}{space 2} 9.194256{col 37}{space 1}   -5.59{col 46}{space 3}0.000{col 54}{space 4}-69.87876{col 67}{space 3}-32.90618
+{txt}{space 9}19  {c |}{col 14}{res}{space 2}-100.7748{col 26}{space 2} 12.79885{col 37}{space 1}   -7.87{col 46}{space 3}0.000{col 54}{space 4}-126.5086{col 67}{space 3}-75.04095
+{txt}{space 9}20  {c |}{col 14}{res}{space 2}-86.79368{col 26}{space 2} 12.62655{col 37}{space 1}   -6.87{col 46}{space 3}0.000{col 54}{space 4}-112.1811{col 67}{space 3}-61.40629
+{txt}{space 9}21  {c |}{col 14}{res}{space 2} -80.6638{col 26}{space 2} 10.74434{col 37}{space 1}   -7.51{col 46}{space 3}0.000{col 54}{space 4}-102.2667{col 67}{space 3}-59.06086
+{txt}{space 9}22  {c |}{col 14}{res}{space 2} -81.5156{col 26}{space 2} 8.788189{col 37}{space 1}   -9.28{col 46}{space 3}0.000{col 54}{space 4}-99.18544{col 67}{space 3}-63.84576
+{txt}{space 9}23  {c |}{col 14}{res}{space 2}-142.6962{col 26}{space 2} 17.31544{col 37}{space 1}   -8.24{col 46}{space 3}0.000{col 54}{space 4}-177.5112{col 67}{space 3}-107.8812
+{txt}{space 9}24  {c |}{col 14}{res}{space 2}-58.75058{col 26}{space 2}  8.09376{col 37}{space 1}   -7.26{col 46}{space 3}0.000{col 54}{space 4}-75.02418{col 67}{space 3}-42.47699
+{txt}{space 9}25  {c |}{col 14}{res}{space 2}-103.9064{col 26}{space 2} 13.66842{col 37}{space 1}   -7.60{col 46}{space 3}0.000{col 54}{space 4}-131.3886{col 67}{space 3}-76.42422
+{txt}{space 9}26  {c |}{col 14}{res}{space 2} 36.38788{col 26}{space 2}  20.0884{col 37}{space 1}    1.81{col 46}{space 3}0.076{col 54}{space 4}-4.002559{col 67}{space 3} 76.77832
+{txt}{space 9}27  {c |}{col 14}{res}{space 2}-113.8835{col 26}{space 2} 11.99249{col 37}{space 1}   -9.50{col 46}{space 3}0.000{col 54}{space 4} -137.996{col 67}{space 3}-89.77098
+{txt}{space 9}28  {c |}{col 14}{res}{space 2}-84.26037{col 26}{space 2} 11.06721{col 37}{space 1}   -7.61{col 46}{space 3}0.000{col 54}{space 4}-106.5125{col 67}{space 3}-62.00826
+{txt}{space 9}29  {c |}{col 14}{res}{space 2} 55.56744{col 26}{space 2} 14.09233{col 37}{space 1}    3.94{col 46}{space 3}0.000{col 54}{space 4} 27.23292{col 67}{space 3} 83.90197
+{txt}{space 9}30  {c |}{col 14}{res}{space 2}-136.6215{col 26}{space 2} 18.39478{col 37}{space 1}   -7.43{col 46}{space 3}0.000{col 54}{space 4}-173.6067{col 67}{space 3}-99.63634
+{txt}{space 9}31  {c |}{col 14}{res}{space 2}-126.6127{col 26}{space 2}  17.2384{col 37}{space 1}   -7.34{col 46}{space 3}0.000{col 54}{space 4}-161.2729{col 67}{space 3}-91.95261
+{txt}{space 9}32  {c |}{col 14}{res}{space 2}-89.97929{col 26}{space 2} 9.856493{col 37}{space 1}   -9.13{col 46}{space 3}0.000{col 54}{space 4}-109.7971{col 67}{space 3}-70.16148
+{txt}{space 9}33  {c |}{col 14}{res}{space 2}-136.3587{col 26}{space 2} 18.49075{col 37}{space 1}   -7.37{col 46}{space 3}0.000{col 54}{space 4}-173.5368{col 67}{space 3}-99.18052
+{txt}{space 9}34  {c |}{col 14}{res}{space 2}-83.38983{col 26}{space 2} 8.651901{col 37}{space 1}   -9.64{col 46}{space 3}0.000{col 54}{space 4}-100.7856{col 67}{space 3}-65.99401
+{txt}{space 9}35  {c |}{col 14}{res}{space 2} -139.383{col 26}{space 2} 16.84525{col 37}{space 1}   -8.27{col 46}{space 3}0.000{col 54}{space 4}-173.2527{col 67}{space 3}-105.5134
+{txt}{space 9}36  {c |}{col 14}{res}{space 2} 62.45461{col 26}{space 2} 28.92183{col 37}{space 1}    2.16{col 46}{space 3}0.036{col 54}{space 4}  4.30338{col 67}{space 3} 120.6058
+{txt}{space 9}37  {c |}{col 14}{res}{space 2} .3787212{col 26}{space 2} 13.05118{col 37}{space 1}    0.03{col 46}{space 3}0.977{col 54}{space 4}-25.86244{col 67}{space 3} 26.61989
+{txt}{space 9}38  {c |}{col 14}{res}{space 2}-152.7727{col 26}{space 2} 18.68517{col 37}{space 1}   -8.18{col 46}{space 3}0.000{col 54}{space 4}-190.3418{col 67}{space 3}-115.2037
+{txt}{space 9}39  {c |}{col 14}{res}{space 2} 67.88906{col 26}{space 2} 18.42281{col 37}{space 1}    3.69{col 46}{space 3}0.001{col 54}{space 4} 30.84751{col 67}{space 3} 104.9306
+{txt}{space 9}40  {c |}{col 14}{res}{space 2}-66.83895{col 26}{space 2} 9.924071{col 37}{space 1}   -6.74{col 46}{space 3}0.000{col 54}{space 4}-86.79263{col 67}{space 3}-46.88527
+{txt}{space 9}41  {c |}{col 14}{res}{space 2}-99.10829{col 26}{space 2} 8.288745{col 37}{space 1}  -11.96{col 46}{space 3}0.000{col 54}{space 4}-115.7739{col 67}{space 3}-82.44265
+{txt}{space 9}42  {c |}{col 14}{res}{space 2} 75.22353{col 26}{space 2} 20.80867{col 37}{space 1}    3.62{col 46}{space 3}0.001{col 54}{space 4}  33.3849{col 67}{space 3} 117.0622
+{txt}{space 9}44  {c |}{col 14}{res}{space 2}-140.8702{col 26}{space 2} 17.13567{col 37}{space 1}   -8.22{col 46}{space 3}0.000{col 54}{space 4}-175.3238{col 67}{space 3}-106.4167
+{txt}{space 9}45  {c |}{col 14}{res}{space 2}  -55.462{col 26}{space 2} 10.84682{col 37}{space 1}   -5.11{col 46}{space 3}0.000{col 54}{space 4}-77.27099{col 67}{space 3}-33.65301
+{txt}{space 9}46  {c |}{col 14}{res}{space 2}-138.4693{col 26}{space 2} 16.20966{col 37}{space 1}   -8.54{col 46}{space 3}0.000{col 54}{space 4} -171.061{col 67}{space 3}-105.8776
+{txt}{space 9}47  {c |}{col 14}{res}{space 2}-93.16079{col 26}{space 2} 7.922269{col 37}{space 1}  -11.76{col 46}{space 3}0.000{col 54}{space 4}-109.0896{col 67}{space 3}  -77.232
+{txt}{space 9}48  {c |}{col 14}{res}{space 2} 579.4411{col 26}{space 2} 92.66115{col 37}{space 1}    6.25{col 46}{space 3}0.000{col 54}{space 4} 393.1333{col 67}{space 3} 765.7488
+{txt}{space 9}49  {c |}{col 14}{res}{space 2}-135.6115{col 26}{space 2} 15.03031{col 37}{space 1}   -9.02{col 46}{space 3}0.000{col 54}{space 4}-165.8319{col 67}{space 3} -105.391
+{txt}{space 9}50  {c |}{col 14}{res}{space 2}-141.6761{col 26}{space 2} 17.99657{col 37}{space 1}   -7.87{col 46}{space 3}0.000{col 54}{space 4}-177.8606{col 67}{space 3}-105.4915
+{txt}{space 9}51  {c |}{col 14}{res}{space 2}-45.34912{col 26}{space 2} 7.727768{col 37}{space 1}   -5.87{col 46}{space 3}0.000{col 54}{space 4}-60.88684{col 67}{space 3} -29.8114
+{txt}{space 9}53  {c |}{col 14}{res}{space 2} 61.68133{col 26}{space 2} 5.752296{col 37}{space 1}   10.72{col 46}{space 3}0.000{col 54}{space 4} 50.11556{col 67}{space 3} 73.24709
+{txt}{space 9}54  {c |}{col 14}{res}{space 2}-122.3588{col 26}{space 2} 15.13123{col 37}{space 1}   -8.09{col 46}{space 3}0.000{col 54}{space 4}-152.7822{col 67}{space 3}-91.93547
+{txt}{space 9}55  {c |}{col 14}{res}{space 2}-22.44156{col 26}{space 2}  9.88582{col 37}{space 1}   -2.27{col 46}{space 3}0.028{col 54}{space 4}-42.31833{col 67}{space 3}-2.564785
+{txt}{space 9}56  {c |}{col 14}{res}{space 2}-149.3343{col 26}{space 2} 17.43918{col 37}{space 1}   -8.56{col 46}{space 3}0.000{col 54}{space 4}-184.3981{col 67}{space 3}-114.2704
+{txt}{space 12} {c |}
+{space 8}year {c |}
+{space 7}2009  {c |}{col 14}{res}{space 2}-3.894276{col 26}{space 2} 2.506865{col 37}{space 1}   -1.55{col 46}{space 3}0.127{col 54}{space 4}-8.934667{col 67}{space 3} 1.146115
+{txt}{space 7}2010  {c |}{col 14}{res}{space 2} 5.458839{col 26}{space 2} 5.023309{col 37}{space 1}    1.09{col 46}{space 3}0.283{col 54}{space 4}-4.641202{col 67}{space 3} 15.55888
+{txt}{space 7}2011  {c |}{col 14}{res}{space 2} 7.310084{col 26}{space 2} 6.041272{col 37}{space 1}    1.21{col 46}{space 3}0.232{col 54}{space 4}-4.836708{col 67}{space 3} 19.45688
+{txt}{space 7}2012  {c |}{col 14}{res}{space 2} 9.552719{col 26}{space 2} 7.189066{col 37}{space 1}    1.33{col 46}{space 3}0.190{col 54}{space 4}-4.901866{col 67}{space 3} 24.00731
+{txt}{space 7}2013  {c |}{col 14}{res}{space 2} 15.80333{col 26}{space 2} 8.018041{col 37}{space 1}    1.97{col 46}{space 3}0.055{col 54}{space 4}-.3180182{col 67}{space 3} 31.92469
+{txt}{space 7}2014  {c |}{col 14}{res}{space 2} 31.48539{col 26}{space 2} 15.20217{col 37}{space 1}    2.07{col 46}{space 3}0.044{col 54}{space 4} .9193735{col 67}{space 3} 62.05141
+{txt}{space 7}2015  {c |}{col 14}{res}{space 2} 39.78635{col 26}{space 2} 16.65191{col 37}{space 1}    2.39{col 46}{space 3}0.021{col 54}{space 4} 6.305437{col 67}{space 3} 73.26727
+{txt}{space 7}2016  {c |}{col 14}{res}{space 2} 35.22298{col 26}{space 2} 13.63154{col 37}{space 1}    2.58{col 46}{space 3}0.013{col 54}{space 4} 7.814934{col 67}{space 3} 62.63103
+{txt}{space 7}2017  {c |}{col 14}{res}{space 2} 33.22196{col 26}{space 2} 13.93941{col 37}{space 1}    2.38{col 46}{space 3}0.021{col 54}{space 4} 5.194908{col 67}{space 3} 61.24902
+{txt}{space 7}2018  {c |}{col 14}{res}{space 2}  35.8815{col 26}{space 2}   15.394{col 37}{space 1}    2.33{col 46}{space 3}0.024{col 54}{space 4} 4.929797{col 67}{space 3} 66.83321
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 136.7966{col 26}{space 2} 24.55856{col 37}{space 1}    5.57{col 46}{space 3}0.000{col 54}{space 4} 87.41825{col 67}{space 3} 186.1749
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}{stata `"shellout using `"6000_LaTeX/table_inmate_noncon_all_1.1.tex"'"':6000_LaTeX/table_inmate_noncon_all_1.1.tex}
+{browse `"C:\Users\david\coding\01_PRISON_PHONE_paper"' :dir}{com} : {txt}{stata `"seeout using "6000_LaTeX/table_inmate_noncon_all_1.1.txt", label"':seeout}
+
+Linear regression                               Number of obs     = {res}       539
+                                                {txt}{help j_robustsingular:F(11, 48) }        =  {res}        .
+                                                {txt}Prob > F          = {res}         .
+                                                {txt}R-squared         = {res}    0.6160
+                                                {txt}Root MSE          =    {res} 83.349
+
+{txt}{ralign 78:(Std. err. adjusted for {res:49} clusters in {res:state_fips})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}staff_misc~l{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+oos_coll_15m {c |}{col 14}{res}{space 2} 1.892693{col 26}{space 2}  2.25596{col 37}{space 1}    0.84{col 46}{space 3}0.406{col 54}{space 4} -2.64322{col 67}{space 3} 6.428605
+{txt}{space 3}total_pop {c |}{col 14}{res}{space 2}-.0056339{col 26}{space 2} .0020282{col 37}{space 1}   -2.78{col 46}{space 3}0.008{col 54}{space 4}-.0097118{col 67}{space 3} -.001556
+{txt}{space 12} {c |}
+{space 2}state_fips {c |}
+{space 10}2  {c |}{col 14}{res}{space 2}-156.0486{col 26}{space 2} 41.25313{col 37}{space 1}   -3.78{col 46}{space 3}0.000{col 54}{space 4}-238.9936{col 67}{space 3}-73.10361
+{txt}{space 10}4  {c |}{col 14}{res}{space 2} 83.25291{col 26}{space 2} 21.70596{col 37}{space 1}    3.84{col 46}{space 3}0.000{col 54}{space 4} 39.61015{col 67}{space 3} 126.8957
+{txt}{space 10}5  {c |}{col 14}{res}{space 2}-67.16988{col 26}{space 2} 21.91775{col 37}{space 1}   -3.06{col 46}{space 3}0.004{col 54}{space 4}-111.2385{col 67}{space 3}-23.10128
+{txt}{space 10}6  {c |}{col 14}{res}{space 2} 761.9435{col 26}{space 2}  239.101{col 37}{space 1}    3.19{col 46}{space 3}0.003{col 54}{space 4} 281.1988{col 67}{space 3} 1242.688
+{txt}{space 10}8  {c |}{col 14}{res}{space 2}-43.51095{col 26}{space 2} 17.23903{col 37}{space 1}   -2.52{col 46}{space 3}0.015{col 54}{space 4}-78.17234{col 67}{space 3}-8.849559
+{txt}{space 10}9  {c |}{col 14}{res}{space 2}-75.21516{col 26}{space 2} 18.14778{col 37}{space 1}   -4.14{col 46}{space 3}0.000{col 54}{space 4}-111.7037{col 67}{space 3} -38.7266
+{txt}{space 9}10  {c |}{col 14}{res}{space 2}-128.2688{col 26}{space 2} 40.08567{col 37}{space 1}   -3.20{col 46}{space 3}0.002{col 54}{space 4}-208.8664{col 67}{space 3}-47.67116
+{txt}{space 9}12  {c |}{col 14}{res}{space 2} 696.0634{col 26}{space 2} 130.7556{col 37}{space 1}    5.32{col 46}{space 3}0.000{col 54}{space 4} 433.1616{col 67}{space 3} 958.9652
+{txt}{space 9}13  {c |}{col 14}{res}{space 2} 235.3382{col 26}{space 2} 44.53406{col 37}{space 1}    5.28{col 46}{space 3}0.000{col 54}{space 4} 145.7965{col 67}{space 3}   324.88
+{txt}{space 9}16  {c |}{col 14}{res}{space 2} -141.745{col 26}{space 2} 38.54551{col 37}{space 1}   -3.68{col 46}{space 3}0.001{col 54}{space 4}-219.2459{col 67}{space 3}-64.24405
+{txt}{space 9}17  {c |}{col 14}{res}{space 2} 151.5471{col 26}{space 2} 45.59723{col 37}{space 1}    3.32{col 46}{space 3}0.002{col 54}{space 4} 59.86771{col 67}{space 3} 243.2265
+{txt}{space 9}18  {c |}{col 14}{res}{space 2} 7.040723{col 26}{space 2} 16.11136{col 37}{space 1}    0.44{col 46}{space 3}0.664{col 54}{space 4}-25.35335{col 67}{space 3} 39.43479
+{txt}{space 9}19  {c |}{col 14}{res}{space 2}-84.29583{col 26}{space 2} 34.54634{col 37}{space 1}   -2.44{col 46}{space 3}0.018{col 54}{space 4}-153.7559{col 67}{space 3}-14.83575
+{txt}{space 9}20  {c |}{col 14}{res}{space 2}-70.96148{col 26}{space 2} 33.98422{col 37}{space 1}   -2.09{col 46}{space 3}0.042{col 54}{space 4}-139.2913{col 67}{space 3} -2.63162
+{txt}{space 9}21  {c |}{col 14}{res}{space 2}-25.23865{col 26}{space 2} 28.50886{col 37}{space 1}   -0.89{col 46}{space 3}0.380{col 54}{space 4}-82.55957{col 67}{space 3} 32.08226
+{txt}{space 9}22  {c |}{col 14}{res}{space 2} 43.82131{col 26}{space 2} 21.72821{col 37}{space 1}    2.02{col 46}{space 3}0.049{col 54}{space 4} .1338131{col 67}{space 3} 87.50881
+{txt}{space 9}23  {c |}{col 14}{res}{space 2} -160.435{col 26}{space 2} 46.21367{col 37}{space 1}   -3.47{col 46}{space 3}0.001{col 54}{space 4}-253.3538{col 67}{space 3}-67.51616
+{txt}{space 9}24  {c |}{col 14}{res}{space 2}-15.52214{col 26}{space 2} 16.24324{col 37}{space 1}   -0.96{col 46}{space 3}0.344{col 54}{space 4}-48.18135{col 67}{space 3} 17.13708
+{txt}{space 9}25  {c |}{col 14}{res}{space 2}-79.33944{col 26}{space 2} 35.03464{col 37}{space 1}   -2.26{col 46}{space 3}0.028{col 54}{space 4}-149.7813{col 67}{space 3}-8.897566
+{txt}{space 9}26  {c |}{col 14}{res}{space 2} 196.6187{col 26}{space 2} 42.21434{col 37}{space 1}    4.66{col 46}{space 3}0.000{col 54}{space 4} 111.7411{col 67}{space 3} 281.4963
+{txt}{space 9}27  {c |}{col 14}{res}{space 2}-119.1998{col 26}{space 2} 31.39666{col 37}{space 1}   -3.80{col 46}{space 3}0.000{col 54}{space 4} -182.327{col 67}{space 3}-56.07258
+{txt}{space 9}28  {c |}{col 14}{res}{space 2}-102.9092{col 26}{space 2} 30.03513{col 37}{space 1}   -3.43{col 46}{space 3}0.001{col 54}{space 4}-163.2988{col 67}{space 3}-42.51948
+{txt}{space 9}29  {c |}{col 14}{res}{space 2} 170.7991{col 26}{space 2} 25.06081{col 37}{space 1}    6.82{col 46}{space 3}0.000{col 54}{space 4}  120.411{col 67}{space 3} 221.1872
+{txt}{space 9}30  {c |}{col 14}{res}{space 2}-142.9319{col 26}{space 2} 49.85241{col 37}{space 1}   -2.87{col 46}{space 3}0.006{col 54}{space 4}-243.1669{col 67}{space 3}-42.69689
+{txt}{space 9}31  {c |}{col 14}{res}{space 2}-103.1794{col 26}{space 2} 45.49989{col 37}{space 1}   -2.27{col 46}{space 3}0.028{col 54}{space 4} -194.663{col 67}{space 3}-11.69571
+{txt}{space 9}32  {c |}{col 14}{res}{space 2}-44.91979{col 26}{space 2} 26.36011{col 37}{space 1}   -1.70{col 46}{space 3}0.095{col 54}{space 4}-97.92034{col 67}{space 3} 8.080763
+{txt}{space 9}33  {c |}{col 14}{res}{space 2}-146.6303{col 26}{space 2} 49.43655{col 37}{space 1}   -2.97{col 46}{space 3}0.005{col 54}{space 4}-246.0291{col 67}{space 3}-47.23144
+{txt}{space 9}34  {c |}{col 14}{res}{space 2}-43.30591{col 26}{space 2} 18.94383{col 37}{space 1}   -2.29{col 46}{space 3}0.027{col 54}{space 4}-81.39503{col 67}{space 3}-5.216793
+{txt}{space 9}35  {c |}{col 14}{res}{space 2}-128.3152{col 26}{space 2} 45.52215{col 37}{space 1}   -2.82{col 46}{space 3}0.007{col 54}{space 4}-219.8436{col 67}{space 3}-36.78678
+{txt}{space 9}36  {c |}{col 14}{res}{space 2} 355.4462{col 26}{space 2} 63.06105{col 37}{space 1}    5.64{col 46}{space 3}0.000{col 54}{space 4} 228.6534{col 67}{space 3} 482.2389
+{txt}{space 9}37  {c |}{col 14}{res}{space 2} 253.7719{col 26}{space 2} 28.59865{col 37}{space 1}    8.87{col 46}{space 3}0.000{col 54}{space 4} 196.2705{col 67}{space 3} 311.2734
+{txt}{space 9}38  {c |}{col 14}{res}{space 2}-158.1544{col 26}{space 2}  50.6212{col 37}{space 1}   -3.12{col 46}{space 3}0.003{col 54}{space 4}-259.9352{col 67}{space 3}-56.37371
+{txt}{space 9}39  {c |}{col 14}{res}{space 2} 146.5559{col 26}{space 2} 44.67987{col 37}{space 1}    3.28{col 46}{space 3}0.002{col 54}{space 4} 56.72098{col 67}{space 3} 236.3908
+{txt}{space 9}40  {c |}{col 14}{res}{space 2} -36.7486{col 26}{space 2} 21.42611{col 37}{space 1}   -1.72{col 46}{space 3}0.093{col 54}{space 4}-79.82868{col 67}{space 3} 6.331475
+{txt}{space 9}41  {c |}{col 14}{res}{space 2}-70.02788{col 26}{space 2} 22.53091{col 37}{space 1}   -3.11{col 46}{space 3}0.003{col 54}{space 4}-115.3293{col 67}{space 3}-24.72646
+{txt}{space 9}42  {c |}{col 14}{res}{space 2} 381.0774{col 26}{space 2} 48.61208{col 37}{space 1}    7.84{col 46}{space 3}0.000{col 54}{space 4} 283.3363{col 67}{space 3} 478.8185
+{txt}{space 9}44  {c |}{col 14}{res}{space 2}-150.3914{col 26}{space 2} 46.53374{col 37}{space 1}   -3.23{col 46}{space 3}0.002{col 54}{space 4}-243.9538{col 67}{space 3} -56.8291
+{txt}{space 9}45  {c |}{col 14}{res}{space 2}-22.20702{col 26}{space 2} 20.93963{col 37}{space 1}   -1.06{col 46}{space 3}0.294{col 54}{space 4}-64.30897{col 67}{space 3} 19.89492
+{txt}{space 9}46  {c |}{col 14}{res}{space 2}-151.2565{col 26}{space 2} 43.96445{col 37}{space 1}   -3.44{col 46}{space 3}0.001{col 54}{space 4} -239.653{col 67}{space 3}-62.86006
+{txt}{space 9}47  {c |}{col 14}{res}{space 2}-57.07913{col 26}{space 2} 21.55712{col 37}{space 1}   -2.65{col 46}{space 3}0.011{col 54}{space 4}-100.4226{col 67}{space 3}-13.73563
+{txt}{space 9}48  {c |}{col 14}{res}{space 2}  1011.83{col 26}{space 2} 232.4199{col 37}{space 1}    4.35{col 46}{space 3}0.000{col 54}{space 4} 544.5181{col 67}{space 3} 1479.141
+{txt}{space 9}49  {c |}{col 14}{res}{space 2}-144.7867{col 26}{space 2} 40.81568{col 37}{space 1}   -3.55{col 46}{space 3}0.001{col 54}{space 4}-226.8521{col 67}{space 3}-62.72127
+{txt}{space 9}50  {c |}{col 14}{res}{space 2}-143.5385{col 26}{space 2} 48.98186{col 37}{space 1}   -2.93{col 46}{space 3}0.005{col 54}{space 4}-242.0231{col 67}{space 3}-45.05382
+{txt}{space 9}51  {c |}{col 14}{res}{space 2} 53.75643{col 26}{space 2} 14.27513{col 37}{space 1}    3.77{col 46}{space 3}0.000{col 54}{space 4} 25.05436{col 67}{space 3}  82.4585
+{txt}{space 9}53  {c |}{col 14}{res}{space 2} 104.6256{col 26}{space 2} 15.54668{col 37}{space 1}    6.73{col 46}{space 3}0.000{col 54}{space 4} 73.36686{col 67}{space 3} 135.8842
+{txt}{space 9}54  {c |}{col 14}{res}{space 2}-95.55092{col 26}{space 2} 41.12972{col 37}{space 1}   -2.32{col 46}{space 3}0.024{col 54}{space 4}-178.2478{col 67}{space 3}-12.85409
+{txt}{space 9}55  {c |}{col 14}{res}{space 2} 40.72632{col 26}{space 2} 18.51065{col 37}{space 1}    2.20{col 46}{space 3}0.033{col 54}{space 4} 3.508151{col 67}{space 3} 77.94448
+{txt}{space 9}56  {c |}{col 14}{res}{space 2}-162.9885{col 26}{space 2} 46.84507{col 37}{space 1}   -3.48{col 46}{space 3}0.001{col 54}{space 4}-257.1769{col 67}{space 3}-68.80019
+{txt}{space 12} {c |}
+{space 8}year {c |}
+{space 7}2009  {c |}{col 14}{res}{space 2} 3.867635{col 26}{space 2} 5.220281{col 37}{space 1}    0.74{col 46}{space 3}0.462{col 54}{space 4}-6.628444{col 67}{space 3} 14.36371
+{txt}{space 7}2010  {c |}{col 14}{res}{space 2} 1.890921{col 26}{space 2} 5.919699{col 37}{space 1}    0.32{col 46}{space 3}0.751{col 54}{space 4}-10.01143{col 67}{space 3} 13.79327
+{txt}{space 7}2011  {c |}{col 14}{res}{space 2} .5060523{col 26}{space 2} 6.465887{col 37}{space 1}    0.08{col 46}{space 3}0.938{col 54}{space 4}-12.49449{col 67}{space 3} 13.50659
+{txt}{space 7}2012  {c |}{col 14}{res}{space 2} 5.841603{col 26}{space 2} 9.305457{col 37}{space 1}    0.63{col 46}{space 3}0.533{col 54}{space 4}-12.86827{col 67}{space 3} 24.55148
+{txt}{space 7}2013  {c |}{col 14}{res}{space 2} 21.84427{col 26}{space 2} 13.98285{col 37}{space 1}    1.56{col 46}{space 3}0.125{col 54}{space 4}-6.270129{col 67}{space 3} 49.95868
+{txt}{space 7}2014  {c |}{col 14}{res}{space 2}  60.0212{col 26}{space 2} 27.92117{col 37}{space 1}    2.15{col 46}{space 3}0.037{col 54}{space 4} 3.881934{col 67}{space 3} 116.1605
+{txt}{space 7}2015  {c |}{col 14}{res}{space 2} 93.07988{col 26}{space 2} 35.74811{col 37}{space 1}    2.60{col 46}{space 3}0.012{col 54}{space 4} 21.20349{col 67}{space 3} 164.9563
+{txt}{space 7}2016  {c |}{col 14}{res}{space 2}  90.7724{col 26}{space 2} 29.08235{col 37}{space 1}    3.12{col 46}{space 3}0.003{col 54}{space 4} 32.29842{col 67}{space 3} 149.2464
+{txt}{space 7}2017  {c |}{col 14}{res}{space 2} 80.57991{col 26}{space 2} 26.24973{col 37}{space 1}    3.07{col 46}{space 3}0.004{col 54}{space 4}  27.8013{col 67}{space 3} 133.3585
+{txt}{space 7}2018  {c |}{col 14}{res}{space 2} 83.31726{col 26}{space 2}  28.6312{col 37}{space 1}    2.91{col 46}{space 3}0.005{col 54}{space 4} 25.75037{col 67}{space 3} 140.8841
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 123.6873{col 26}{space 2} 62.35815{col 37}{space 1}    1.98{col 46}{space 3}0.053{col 54}{space 4}-1.692202{col 67}{space 3} 249.0667
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}{stata `"shellout using `"6000_LaTeX/table_staff_miscond_all_1.1.tex"'"':6000_LaTeX/table_staff_miscond_all_1.1.tex}
+{browse `"C:\Users\david\coding\01_PRISON_PHONE_paper"' :dir}{com} : {txt}{stata `"seeout using "6000_LaTeX/table_staff_miscond_all_1.1.txt", label"':seeout}
+
+{com}. 
+. **********
+. 
+. * testing equivalency in my setting: using i.state_fips and i.year vs xi_bar and xt_bar 
+. /* 
+> * evidently, 2K vs (N-1) + (T-1) controls, or 
+> * for Mundlak vs TWFE tables, coef same, F-Stat only appearing on Mundlak specification, TWFE likely too many DoF issue
+> use "2000_data/500_working/final_output_dta", replace
+> 
+> *drop if balanced==0
+> 
+> local yit "inmate_noncon_all staff_miscond_all"
+> local xit "oos_coll_15m total_pop design_cap crime_violent off_rapesa nined_design_cap nined_crime_violent nined_off_rapesa"
+> 
+> foreach x in `xit' {c -(}
+>         bysort state: egen `x'_i_bar = mean(`x')
+> {c )-}
+> local xi_bar "*_i_bar"
+> 
+> foreach x in `xit' {c -(}
+>         bysort year: egen `x'_t_bar = mean(`x')
+> {c )-}
+> local xt_bar "*_t_bar"
+> 
+> local xit "c.oos_coll_15m c.total_pop c.design_cap c.crime_violent c.off_rapesa i.nined_design_cap i.nined_crime_violent i.nined_off_rapesa"
+> 
+> * Bm Regressions: 
+> reg inmate_noncon_all `xit' `xi_bar' `xt_bar', vce(cluster state_fips)
+> outreg2 using "4000_outputs/mundlak_vs_twfe_test2.tex", dec(3) replace ctitle(Mundlak) nocons keep(oos_coll_15m total_pop design_cap crime_violent off_rapesa) addstat("F Test", e(F)) title(More Controls Odd: inmate_noncon_all, Even: staff_miscond_all) nonotes 
+> 
+> reg staff_miscond_all `xit' `xi_bar' `xt_bar', vce(cluster state_fips)
+> outreg2 using "4000_outputs/mundlak_vs_twfe_test2.tex", dec(3) append ctitle(Mundlak) nocons keep(oos_coll_15m total_pop design_cap crime_violent off_rapesa) addstat("F Test", e(F))
+> 
+> 
+> foreach y in `yit' {c -(}
+>         reg `y' `xit' i.state_fips i.year, vce(cluster state_fips)
+>         outreg2 using "4000_outputs/mundlak_vs_twfe_test2.tex", dec(3) append ctitle(TWFE) nocons keep(oos_coll_15m total_pop design_cap crime_violent off_rapesa)
+> {c )-}
+> 
+> */ 
+. 
+. * for balanced panel, TWFE vs Mundlak appear to give equivalent estimates
+. 
+. **********
+. 
+. * Specification #2, unbalanced TWFE, adding total_pop2 & total_pop3: 
+. * yit = alpha + xit*beta + si*gamma + ft*delta + eit
+. use "2000_data/500_working/final_output_dta", replace
+{txt}
+{com}. 
+. local yit "inmate_noncon_all staff_miscond_all"
+{txt}
+{com}. local xit "c.oos_coll_15m c.total_pop c.total_pop2 i.state_fips i.year"
+{txt}
+{com}. 
+. * SPECIFICATION #2 REGRESSION LOOP:
+. foreach y in `yit' {c -(}
+{txt}  2{com}.         reg `y' `xit', vce(cluster state_fips)
+{txt}  3{com}.         outreg2 using "6000_LaTeX/table_`y'_1.1.tex", dec(3) append ctitle(TWFE) nocons keep(oos_coll_15m total_pop total_pop2 total_pop3) label tex(frag) nonotes 
+{txt}  4{com}. {c )-}
+
+{txt}Linear regression                               Number of obs     = {res}       537
+                                                {txt}{help j_robustsingular:F(12, 48) }        =  {res}        .
+                                                {txt}Prob > F          = {res}         .
+                                                {txt}R-squared         = {res}    0.8057
+                                                {txt}Root MSE          =    {res} 35.182
+
+{txt}{ralign 78:(Std. err. adjusted for {res:49} clusters in {res:state_fips})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}inmate_non~l{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+oos_coll_15m {c |}{col 14}{res}{space 2} .7624273{col 26}{space 2} 1.262993{col 37}{space 1}    0.60{col 46}{space 3}0.549{col 54}{space 4} -1.77699{col 67}{space 3} 3.301844
+{txt}{space 3}total_pop {c |}{col 14}{res}{space 2}-.0049668{col 26}{space 2} .0030367{col 37}{space 1}   -1.64{col 46}{space 3}0.108{col 54}{space 4}-.0110725{col 67}{space 3} .0011389
+{txt}{space 2}total_pop2 {c |}{col 14}{res}{space 2} 7.31e-09{col 26}{space 2} 1.00e-08{col 37}{space 1}    0.73{col 46}{space 3}0.469{col 54}{space 4}-1.28e-08{col 67}{space 3} 2.75e-08
+{txt}{space 12} {c |}
+{space 2}state_fips {c |}
+{space 10}2  {c |}{col 14}{res}{space 2}-174.9143{col 26}{space 2}  55.8331{col 37}{space 1}   -3.13{col 46}{space 3}0.003{col 54}{space 4}-287.1742{col 67}{space 3}-62.65427
+{txt}{space 10}4  {c |}{col 14}{res}{space 2} 26.28077{col 26}{space 2} 23.92885{col 37}{space 1}    1.10{col 46}{space 3}0.278{col 54}{space 4}-21.83142{col 67}{space 3} 74.39296
+{txt}{space 10}5  {c |}{col 14}{res}{space 2}-121.6098{col 26}{space 2} 26.45615{col 37}{space 1}   -4.60{col 46}{space 3}0.000{col 54}{space 4}-174.8034{col 67}{space 3}-68.41612
+{txt}{space 10}6  {c |}{col 14}{res}{space 2} 521.8349{col 26}{space 2} 163.6183{col 37}{space 1}    3.19{col 46}{space 3}0.003{col 54}{space 4} 192.8581{col 67}{space 3} 850.8116
+{txt}{space 10}8  {c |}{col 14}{res}{space 2}-95.13469{col 26}{space 2} 20.74712{col 37}{space 1}   -4.59{col 46}{space 3}0.000{col 54}{space 4}-136.8496{col 67}{space 3} -53.4198
+{txt}{space 10}9  {c |}{col 14}{res}{space 2}-101.9414{col 26}{space 2} 22.47537{col 37}{space 1}   -4.54{col 46}{space 3}0.000{col 54}{space 4}-147.1312{col 67}{space 3}-56.75166
+{txt}{space 9}10  {c |}{col 14}{res}{space 2}-149.2692{col 26}{space 2} 53.17465{col 37}{space 1}   -2.81{col 46}{space 3}0.007{col 54}{space 4} -256.184{col 67}{space 3}-42.35444
+{txt}{space 9}12  {c |}{col 14}{res}{space 2} 498.2959{col 26}{space 2} 124.6484{col 37}{space 1}    4.00{col 46}{space 3}0.000{col 54}{space 4} 247.6735{col 67}{space 3} 748.9183
+{txt}{space 9}13  {c |}{col 14}{res}{space 2} 73.10407{col 26}{space 2} 51.17726{col 37}{space 1}    1.43{col 46}{space 3}0.160{col 54}{space 4}-29.79471{col 67}{space 3} 176.0029
+{txt}{space 9}16  {c |}{col 14}{res}{space 2}-170.8843{col 26}{space 2} 51.64113{col 37}{space 1}   -3.31{col 46}{space 3}0.002{col 54}{space 4}-274.7158{col 67}{space 3}-67.05288
+{txt}{space 9}17  {c |}{col 14}{res}{space 2} 63.82328{col 26}{space 2} 50.46152{col 37}{space 1}    1.26{col 46}{space 3}0.212{col 54}{space 4} -37.6364{col 67}{space 3}  165.283
+{txt}{space 9}18  {c |}{col 14}{res}{space 2}-50.38467{col 26}{space 2} 9.470364{col 37}{space 1}   -5.32{col 46}{space 3}0.000{col 54}{space 4}-69.42611{col 67}{space 3}-31.34323
+{txt}{space 9}19  {c |}{col 14}{res}{space 2}-126.2338{col 26}{space 2} 42.20566{col 37}{space 1}   -2.99{col 46}{space 3}0.004{col 54}{space 4}-211.0939{col 67}{space 3} -41.3736
+{txt}{space 9}20  {c |}{col 14}{res}{space 2}-111.6262{col 26}{space 2} 41.17922{col 37}{space 1}   -2.71{col 46}{space 3}0.009{col 54}{space 4}-194.4226{col 67}{space 3}-28.82985
+{txt}{space 9}21  {c |}{col 14}{res}{space 2} -100.628{col 26}{space 2} 33.21374{col 37}{space 1}   -3.03{col 46}{space 3}0.004{col 54}{space 4}-167.4087{col 67}{space 3} -33.8473
+{txt}{space 9}22  {c |}{col 14}{res}{space 2} -94.7198{col 26}{space 2} 22.31618{col 37}{space 1}   -4.24{col 46}{space 3}0.000{col 54}{space 4}-139.5895{col 67}{space 3}-49.85012
+{txt}{space 9}23  {c |}{col 14}{res}{space 2} -180.179{col 26}{space 2} 62.31007{col 37}{space 1}   -2.89{col 46}{space 3}0.006{col 54}{space 4}-305.4618{col 67}{space 3}-54.89623
+{txt}{space 9}24  {c |}{col 14}{res}{space 2}-63.99508{col 26}{space 2} 11.04686{col 37}{space 1}   -5.79{col 46}{space 3}0.000{col 54}{space 4}-86.20628{col 67}{space 3}-41.78387
+{txt}{space 9}25  {c |}{col 14}{res}{space 2}-127.2089{col 26}{space 2}  38.8582{col 37}{space 1}   -3.27{col 46}{space 3}0.002{col 54}{space 4}-205.3385{col 67}{space 3}-49.07923
+{txt}{space 9}26  {c |}{col 14}{res}{space 2} 61.16784{col 26}{space 2} 46.52244{col 37}{space 1}    1.31{col 46}{space 3}0.195{col 54}{space 4} -32.3718{col 67}{space 3} 154.7075
+{txt}{space 9}27  {c |}{col 14}{res}{space 2}-138.6322{col 26}{space 2} 41.57729{col 37}{space 1}   -3.33{col 46}{space 3}0.002{col 54}{space 4}-222.2289{col 67}{space 3}-55.03544
+{txt}{space 9}28  {c |}{col 14}{res}{space 2}-106.5654{col 26}{space 2} 37.04788{col 37}{space 1}   -2.88{col 46}{space 3}0.006{col 54}{space 4}-181.0551{col 67}{space 3}-32.07564
+{txt}{space 9}29  {c |}{col 14}{res}{space 2} 64.77324{col 26}{space 2} 21.49983{col 37}{space 1}    3.01{col 46}{space 3}0.004{col 54}{space 4} 21.54493{col 67}{space 3} 108.0016
+{txt}{space 9}30  {c |}{col 14}{res}{space 2}-175.0216{col 26}{space 2} 63.28947{col 37}{space 1}   -2.77{col 46}{space 3}0.008{col 54}{space 4}-302.2736{col 67}{space 3}-47.76955
+{txt}{space 9}31  {c |}{col 14}{res}{space 2}-159.2466{col 26}{space 2} 53.96486{col 37}{space 1}   -2.95{col 46}{space 3}0.005{col 54}{space 4}-267.7502{col 67}{space 3}-50.74298
+{txt}{space 9}32  {c |}{col 14}{res}{space 2}-109.0704{col 26}{space 2} 31.57096{col 37}{space 1}   -3.45{col 46}{space 3}0.001{col 54}{space 4}-172.5481{col 67}{space 3}-45.59273
+{txt}{space 9}33  {c |}{col 14}{res}{space 2}-173.0664{col 26}{space 2} 60.53794{col 37}{space 1}   -2.86{col 46}{space 3}0.006{col 54}{space 4}-294.7861{col 67}{space 3}-51.34675
+{txt}{space 9}34  {c |}{col 14}{res}{space 2}-92.06565{col 26}{space 2} 15.67479{col 37}{space 1}   -5.87{col 46}{space 3}0.000{col 54}{space 4}-123.5819{col 67}{space 3}-60.54938
+{txt}{space 9}35  {c |}{col 14}{res}{space 2}-173.8227{col 26}{space 2} 56.85164{col 37}{space 1}   -3.06{col 46}{space 3}0.004{col 54}{space 4}-288.1306{col 67}{space 3}-59.51482
+{txt}{space 9}36  {c |}{col 14}{res}{space 2} 98.81373{col 26}{space 2} 68.22789{col 37}{space 1}    1.45{col 46}{space 3}0.154{col 54}{space 4}-38.36763{col 67}{space 3} 235.9951
+{txt}{space 9}37  {c |}{col 14}{res}{space 2} 18.47609{col 26}{space 2} 33.01183{col 37}{space 1}    0.56{col 46}{space 3}0.578{col 54}{space 4}-47.89864{col 67}{space 3} 84.85081
+{txt}{space 9}38  {c |}{col 14}{res}{space 2}-191.7781{col 26}{space 2} 64.26808{col 37}{space 1}   -2.98{col 46}{space 3}0.004{col 54}{space 4}-320.9978{col 67}{space 3} -62.5585
+{txt}{space 9}39  {c |}{col 14}{res}{space 2} 96.70166{col 26}{space 2}  51.3997{col 37}{space 1}    1.88{col 46}{space 3}0.066{col 54}{space 4}-6.644366{col 67}{space 3} 200.0477
+{txt}{space 9}40  {c |}{col 14}{res}{space 2}-76.24342{col 26}{space 2} 17.23666{col 37}{space 1}   -4.42{col 46}{space 3}0.000{col 54}{space 4}   -110.9{col 67}{space 3} -41.5868
+{txt}{space 9}41  {c |}{col 14}{res}{space 2}-115.6798{col 26}{space 2} 27.61897{col 37}{space 1}   -4.19{col 46}{space 3}0.000{col 54}{space 4}-171.2115{col 67}{space 3}-60.14817
+{txt}{space 9}42  {c |}{col 14}{res}{space 2} 105.7564{col 26}{space 2} 55.22339{col 37}{space 1}    1.92{col 46}{space 3}0.061{col 54}{space 4}-5.277621{col 67}{space 3} 216.7905
+{txt}{space 9}44  {c |}{col 14}{res}{space 2}-176.7496{col 26}{space 2} 59.21691{col 37}{space 1}   -2.98{col 46}{space 3}0.004{col 54}{space 4}-295.8132{col 67}{space 3}-57.68603
+{txt}{space 9}45  {c |}{col 14}{res}{space 2}-60.71372{col 26}{space 2}  12.9821{col 37}{space 1}   -4.68{col 46}{space 3}0.000{col 54}{space 4}-86.81597{col 67}{space 3}-34.61147
+{txt}{space 9}46  {c |}{col 14}{res}{space 2}-173.4141{col 26}{space 2} 57.89651{col 37}{space 1}   -3.00{col 46}{space 3}0.004{col 54}{space 4}-289.8228{col 67}{space 3}-57.00534
+{txt}{space 9}47  {c |}{col 14}{res}{space 2}-109.2738{col 26}{space 2} 26.89954{col 37}{space 1}   -4.06{col 46}{space 3}0.000{col 54}{space 4}-163.3589{col 67}{space 3}-55.18862
+{txt}{space 9}48  {c |}{col 14}{res}{space 2} 653.7068{col 26}{space 2} 165.5986{col 37}{space 1}    3.95{col 46}{space 3}0.000{col 54}{space 4} 320.7486{col 67}{space 3} 986.6651
+{txt}{space 9}49  {c |}{col 14}{res}{space 2}-167.7376{col 26}{space 2} 53.26854{col 37}{space 1}   -3.15{col 46}{space 3}0.003{col 54}{space 4}-274.8412{col 67}{space 3}-60.63404
+{txt}{space 9}50  {c |}{col 14}{res}{space 2}-180.4069{col 26}{space 2} 63.92746{col 37}{space 1}   -2.82{col 46}{space 3}0.007{col 54}{space 4}-308.9417{col 67}{space 3}-51.87213
+{txt}{space 9}51  {c |}{col 14}{res}{space 2}-38.60161{col 26}{space 2} 13.95302{col 37}{space 1}   -2.77{col 46}{space 3}0.008{col 54}{space 4}-66.65603{col 67}{space 3}-10.54718
+{txt}{space 9}53  {c |}{col 14}{res}{space 2} 50.03372{col 26}{space 2}  19.5561{col 37}{space 1}    2.56{col 46}{space 3}0.014{col 54}{space 4} 10.71355{col 67}{space 3} 89.35389
+{txt}{space 9}54  {c |}{col 14}{res}{space 2}-153.8602{col 26}{space 2} 52.10641{col 37}{space 1}   -2.95{col 46}{space 3}0.005{col 54}{space 4}-258.6271{col 67}{space 3}-49.09319
+{txt}{space 9}55  {c |}{col 14}{res}{space 2}-25.77894{col 26}{space 2} 10.69017{col 37}{space 1}   -2.41{col 46}{space 3}0.020{col 54}{space 4}-47.27297{col 67}{space 3}-4.284901
+{txt}{space 9}56  {c |}{col 14}{res}{space 2}-187.2398{col 26}{space 2} 62.90067{col 37}{space 1}   -2.98{col 46}{space 3}0.005{col 54}{space 4}-313.7101{col 67}{space 3}-60.76953
+{txt}{space 12} {c |}
+{space 8}year {c |}
+{space 7}2009  {c |}{col 14}{res}{space 2}-4.069635{col 26}{space 2} 2.644988{col 37}{space 1}   -1.54{col 46}{space 3}0.130{col 54}{space 4} -9.38774{col 67}{space 3}  1.24847
+{txt}{space 7}2010  {c |}{col 14}{res}{space 2} 5.344947{col 26}{space 2} 5.048736{col 37}{space 1}    1.06{col 46}{space 3}0.295{col 54}{space 4}-4.806217{col 67}{space 3} 15.49611
+{txt}{space 7}2011  {c |}{col 14}{res}{space 2}  7.00903{col 26}{space 2} 6.107234{col 37}{space 1}    1.15{col 46}{space 3}0.257{col 54}{space 4}-5.270386{col 67}{space 3} 19.28845
+{txt}{space 7}2012  {c |}{col 14}{res}{space 2} 9.100409{col 26}{space 2} 7.382075{col 37}{space 1}    1.23{col 46}{space 3}0.224{col 54}{space 4}-5.742248{col 67}{space 3} 23.94306
+{txt}{space 7}2013  {c |}{col 14}{res}{space 2} 15.49915{col 26}{space 2} 8.096215{col 37}{space 1}    1.91{col 46}{space 3}0.062{col 54}{space 4}-.7793788{col 67}{space 3} 31.77768
+{txt}{space 7}2014  {c |}{col 14}{res}{space 2} 31.13444{col 26}{space 2} 15.19234{col 37}{space 1}    2.05{col 46}{space 3}0.046{col 54}{space 4}  .588186{col 67}{space 3}  61.6807
+{txt}{space 7}2015  {c |}{col 14}{res}{space 2} 39.20028{col 26}{space 2} 16.43292{col 37}{space 1}    2.39{col 46}{space 3}0.021{col 54}{space 4} 6.159682{col 67}{space 3} 72.24089
+{txt}{space 7}2016  {c |}{col 14}{res}{space 2} 34.16031{col 26}{space 2} 13.24471{col 37}{space 1}    2.58{col 46}{space 3}0.013{col 54}{space 4} 7.530038{col 67}{space 3} 60.79058
+{txt}{space 7}2017  {c |}{col 14}{res}{space 2} 31.95918{col 26}{space 2} 13.54516{col 37}{space 1}    2.36{col 46}{space 3}0.022{col 54}{space 4} 4.724815{col 67}{space 3} 59.19355
+{txt}{space 7}2018  {c |}{col 14}{res}{space 2} 34.17888{col 26}{space 2} 14.59468{col 37}{space 1}    2.34{col 46}{space 3}0.023{col 54}{space 4} 4.834308{col 67}{space 3} 63.52345
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2} 178.9337{col 26}{space 2} 68.91028{col 37}{space 1}    2.60{col 46}{space 3}0.012{col 54}{space 4} 40.38029{col 67}{space 3} 317.4871
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}{stata `"shellout using `"6000_LaTeX/table_inmate_noncon_all_1.1.tex"'"':6000_LaTeX/table_inmate_noncon_all_1.1.tex}
+{browse `"C:\Users\david\coding\01_PRISON_PHONE_paper"' :dir}{com} : {txt}{stata `"seeout using "6000_LaTeX/table_inmate_noncon_all_1.1.txt", label"':seeout}
+
+Linear regression                               Number of obs     = {res}       539
+                                                {txt}{help j_robustsingular:F(12, 48) }        =  {res}        .
+                                                {txt}Prob > F          = {res}         .
+                                                {txt}R-squared         = {res}    0.6177
+                                                {txt}Root MSE          =    {res} 83.252
+
+{txt}{ralign 78:(Std. err. adjusted for {res:49} clusters in {res:state_fips})}
+{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}staff_misc~l{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+oos_coll_15m {c |}{col 14}{res}{space 2} 1.840668{col 26}{space 2} 2.235332{col 37}{space 1}    0.82{col 46}{space 3}0.414{col 54}{space 4}-2.653769{col 67}{space 3} 6.335104
+{txt}{space 3}total_pop {c |}{col 14}{res}{space 2}-.0109555{col 26}{space 2} .0047996{col 37}{space 1}   -2.28{col 46}{space 3}0.027{col 54}{space 4}-.0206057{col 67}{space 3}-.0013053
+{txt}{space 2}total_pop2 {c |}{col 14}{res}{space 2} 2.11e-08{col 26}{space 2} 1.78e-08{col 37}{space 1}    1.18{col 46}{space 3}0.243{col 54}{space 4}-1.48e-08{col 67}{space 3} 5.70e-08
+{txt}{space 12} {c |}
+{space 2}state_fips {c |}
+{space 10}2  {c |}{col 14}{res}{space 2}-251.6518{col 26}{space 2} 87.35255{col 37}{space 1}   -2.88{col 46}{space 3}0.006{col 54}{space 4}-427.2858{col 67}{space 3}-76.01769
+{txt}{space 10}4  {c |}{col 14}{res}{space 2} 119.5653{col 26}{space 2} 33.75128{col 37}{space 1}    3.54{col 46}{space 3}0.001{col 54}{space 4} 51.70377{col 67}{space 3} 187.4267
+{txt}{space 10}5  {c |}{col 14}{res}{space 2}-112.8452{col 26}{space 2} 44.08662{col 37}{space 1}   -2.56{col 46}{space 3}0.014{col 54}{space 4}-201.4873{col 67}{space 3} -24.2031
+{txt}{space 10}6  {c |}{col 14}{res}{space 2} 967.1651{col 26}{space 2} 239.3406{col 37}{space 1}    4.04{col 46}{space 3}0.000{col 54}{space 4} 485.9386{col 67}{space 3} 1448.392
+{txt}{space 10}8  {c |}{col 14}{res}{space 2}-79.25179{col 26}{space 2} 34.46347{col 37}{space 1}   -2.30{col 46}{space 3}0.026{col 54}{space 4}-148.5452{col 67}{space 3}-9.958354
+{txt}{space 10}9  {c |}{col 14}{res}{space 2}-113.9001{col 26}{space 2} 36.78893{col 37}{space 1}   -3.10{col 46}{space 3}0.003{col 54}{space 4}-187.8692{col 67}{space 3}-39.93103
+{txt}{space 9}10  {c |}{col 14}{res}{space 2}-220.1983{col 26}{space 2} 85.38875{col 37}{space 1}   -2.58{col 46}{space 3}0.013{col 54}{space 4}-391.8839{col 67}{space 3}-48.51274
+{txt}{space 9}12  {c |}{col 14}{res}{space 2} 881.7821{col 26}{space 2} 181.7161{col 37}{space 1}    4.85{col 46}{space 3}0.000{col 54}{space 4} 516.4174{col 67}{space 3} 1247.147
+{txt}{space 9}13  {c |}{col 14}{res}{space 2} 318.9405{col 26}{space 2} 78.47185{col 37}{space 1}    4.06{col 46}{space 3}0.000{col 54}{space 4} 161.1623{col 67}{space 3} 476.7188
+{txt}{space 9}16  {c |}{col 14}{res}{space 2}-230.5378{col 26}{space 2} 81.74196{col 37}{space 1}   -2.82{col 46}{space 3}0.007{col 54}{space 4}-394.8911{col 67}{space 3}-66.18462
+{txt}{space 9}17  {c |}{col 14}{res}{space 2} 231.4212{col 26}{space 2}  74.0668{col 37}{space 1}    3.12{col 46}{space 3}0.003{col 54}{space 4}  82.4999{col 67}{space 3} 380.3425
+{txt}{space 9}18  {c |}{col 14}{res}{space 2} 9.912292{col 26}{space 2} 15.55182{col 37}{space 1}    0.64{col 46}{space 3}0.527{col 54}{space 4}-21.35673{col 67}{space 3} 41.18132
+{txt}{space 9}19  {c |}{col 14}{res}{space 2}-157.5429{col 26}{space 2} 70.70716{col 37}{space 1}   -2.23{col 46}{space 3}0.031{col 54}{space 4}-299.7091{col 67}{space 3}-15.37659
+{txt}{space 9}20  {c |}{col 14}{res}{space 2}-142.4069{col 26}{space 2} 69.21234{col 37}{space 1}   -2.06{col 46}{space 3}0.045{col 54}{space 4}-281.5676{col 67}{space 3}-3.246147
+{txt}{space 9}21  {c |}{col 14}{res}{space 2}-82.67912{col 26}{space 2} 56.53405{col 37}{space 1}   -1.46{col 46}{space 3}0.150{col 54}{space 4}-196.3484{col 67}{space 3} 30.99021
+{txt}{space 9}22  {c |}{col 14}{res}{space 2} 5.824023{col 26}{space 2} 39.66211{col 37}{space 1}    0.15{col 46}{space 3}0.884{col 54}{space 4}-73.92199{col 67}{space 3} 85.57004
+{txt}{space 9}23  {c |}{col 14}{res}{space 2}-268.2601{col 26}{space 2} 99.63229{col 37}{space 1}   -2.69{col 46}{space 3}0.010{col 54}{space 4}-468.5843{col 67}{space 3}-67.93599
+{txt}{space 9}24  {c |}{col 14}{res}{space 2}-30.62858{col 26}{space 2} 21.93631{col 37}{space 1}   -1.40{col 46}{space 3}0.169{col 54}{space 4}-74.73447{col 67}{space 3} 13.47732
+{txt}{space 9}25  {c |}{col 14}{res}{space 2} -146.393{col 26}{space 2} 67.65675{col 37}{space 1}   -2.16{col 46}{space 3}0.035{col 54}{space 4} -282.426{col 67}{space 3}-10.35996
+{txt}{space 9}26  {c |}{col 14}{res}{space 2} 267.8269{col 26}{space 2} 66.22226{col 37}{space 1}    4.04{col 46}{space 3}0.000{col 54}{space 4} 134.6782{col 67}{space 3} 400.9757
+{txt}{space 9}27  {c |}{col 14}{res}{space 2}-190.3841{col 26}{space 2} 65.55808{col 37}{space 1}   -2.90{col 46}{space 3}0.006{col 54}{space 4}-322.1974{col 67}{space 3}-58.57072
+{txt}{space 9}28  {c |}{col 14}{res}{space 2}-167.0785{col 26}{space 2} 61.54063{col 37}{space 1}   -2.71{col 46}{space 3}0.009{col 54}{space 4}-290.8142{col 67}{space 3}-43.34274
+{txt}{space 9}29  {c |}{col 14}{res}{space 2} 197.2347{col 26}{space 2}   29.287{col 37}{space 1}    6.73{col 46}{space 3}0.000{col 54}{space 4} 138.3492{col 67}{space 3} 256.1201
+{txt}{space 9}30  {c |}{col 14}{res}{space 2}-253.4159{col 26}{space 2} 105.5137{col 37}{space 1}   -2.40{col 46}{space 3}0.020{col 54}{space 4}-465.5654{col 67}{space 3}-41.26634
+{txt}{space 9}31  {c |}{col 14}{res}{space 2}-197.0808{col 26}{space 2} 92.23156{col 37}{space 1}   -2.14{col 46}{space 3}0.038{col 54}{space 4}-382.5248{col 67}{space 3}-11.63677
+{txt}{space 9}32  {c |}{col 14}{res}{space 2}-99.21718{col 26}{space 2} 52.85028{col 37}{space 1}   -1.88{col 46}{space 3}0.067{col 54}{space 4}-205.4798{col 67}{space 3} 7.045423
+{txt}{space 9}33  {c |}{col 14}{res}{space 2}-252.2515{col 26}{space 2} 102.4533{col 37}{space 1}   -2.46{col 46}{space 3}0.017{col 54}{space 4}-458.2477{col 67}{space 3}-46.25529
+{txt}{space 9}34  {c |}{col 14}{res}{space 2}-68.28182{col 26}{space 2} 29.74409{col 37}{space 1}   -2.30{col 46}{space 3}0.026{col 54}{space 4}-128.0863{col 67}{space 3}-8.477327
+{txt}{space 9}35  {c |}{col 14}{res}{space 2}-227.4043{col 26}{space 2}    95.15{col 37}{space 1}   -2.39{col 46}{space 3}0.021{col 54}{space 4}-418.7162{col 67}{space 3}-36.09244
+{txt}{space 9}36  {c |}{col 14}{res}{space 2} 459.9176{col 26}{space 2} 97.77485{col 37}{space 1}    4.70{col 46}{space 3}0.000{col 54}{space 4} 263.3281{col 67}{space 3} 656.5071
+{txt}{space 9}37  {c |}{col 14}{res}{space 2} 305.7872{col 26}{space 2} 47.88229{col 37}{space 1}    6.39{col 46}{space 3}0.000{col 54}{space 4} 209.5134{col 67}{space 3}  402.061
+{txt}{space 9}38  {c |}{col 14}{res}{space 2}-270.3808{col 26}{space 2}  107.211{col 37}{space 1}   -2.52{col 46}{space 3}0.015{col 54}{space 4}-485.9429{col 67}{space 3}-54.81871
+{txt}{space 9}39  {c |}{col 14}{res}{space 2} 229.3739{col 26}{space 2} 77.05964{col 37}{space 1}    2.98{col 46}{space 3}0.005{col 54}{space 4} 74.43513{col 67}{space 3} 384.3127
+{txt}{space 9}40  {c |}{col 14}{res}{space 2}-63.82391{col 26}{space 2} 32.96064{col 37}{space 1}   -1.94{col 46}{space 3}0.059{col 54}{space 4}-130.0957{col 67}{space 3} 2.447907
+{txt}{space 9}41  {c |}{col 14}{res}{space 2}   -117.7{col 26}{space 2} 45.67702{col 37}{space 1}   -2.58{col 46}{space 3}0.013{col 54}{space 4}-209.5398{col 67}{space 3}-25.86016
+{txt}{space 9}42  {c |}{col 14}{res}{space 2} 468.8313{col 26}{space 2} 81.51148{col 37}{space 1}    5.75{col 46}{space 3}0.000{col 54}{space 4} 304.9415{col 67}{space 3} 632.7211
+{txt}{space 9}44  {c |}{col 14}{res}{space 2}  -253.62{col 26}{space 2} 98.33447{col 37}{space 1}   -2.58{col 46}{space 3}0.013{col 54}{space 4}-451.3347{col 67}{space 3}-55.90529
+{txt}{space 9}45  {c |}{col 14}{res}{space 2}-37.34273{col 26}{space 2} 26.05567{col 37}{space 1}   -1.43{col 46}{space 3}0.158{col 54}{space 4}-89.73117{col 67}{space 3}  15.0457
+{txt}{space 9}46  {c |}{col 14}{res}{space 2}-251.7861{col 26}{space 2} 94.04664{col 37}{space 1}   -2.68{col 46}{space 3}0.010{col 54}{space 4}-440.8796{col 67}{space 3}-62.69265
+{txt}{space 9}47  {c |}{col 14}{res}{space 2}-103.4297{col 26}{space 2} 43.98488{col 37}{space 1}   -2.35{col 46}{space 3}0.023{col 54}{space 4}-191.8672{col 67}{space 3}-14.99215
+{txt}{space 9}48  {c |}{col 14}{res}{space 2} 1224.645{col 26}{space 2} 241.1788{col 37}{space 1}    5.08{col 46}{space 3}0.000{col 54}{space 4}  739.722{col 67}{space 3} 1709.567
+{txt}{space 9}49  {c |}{col 14}{res}{space 2}-237.2071{col 26}{space 2} 86.69831{col 37}{space 1}   -2.74{col 46}{space 3}0.009{col 54}{space 4}-411.5257{col 67}{space 3}-62.88846
+{txt}{space 9}50  {c |}{col 14}{res}{space 2}-254.9674{col 26}{space 2} 105.0293{col 37}{space 1}   -2.43{col 46}{space 3}0.019{col 54}{space 4} -466.143{col 67}{space 3}-43.79175
+{txt}{space 9}51  {c |}{col 14}{res}{space 2} 73.14151{col 26}{space 2} 19.11119{col 37}{space 1}    3.83{col 46}{space 3}0.000{col 54}{space 4} 34.71589{col 67}{space 3} 111.5671
+{txt}{space 9}53  {c |}{col 14}{res}{space 2} 71.12328{col 26}{space 2} 31.50143{col 37}{space 1}    2.26{col 46}{space 3}0.029{col 54}{space 4} 7.785412{col 67}{space 3} 134.4611
+{txt}{space 9}54  {c |}{col 14}{res}{space 2}-186.1803{col 26}{space 2} 86.29002{col 37}{space 1}   -2.16{col 46}{space 3}0.036{col 54}{space 4} -359.678{col 67}{space 3} -12.6826
+{txt}{space 9}55  {c |}{col 14}{res}{space 2} 31.09915{col 26}{space 2} 21.29386{col 37}{space 1}    1.46{col 46}{space 3}0.151{col 54}{space 4}-11.71503{col 67}{space 3} 73.91333
+{txt}{space 9}56  {c |}{col 14}{res}{space 2}-272.0323{col 26}{space 2} 101.0921{col 37}{space 1}   -2.69{col 46}{space 3}0.010{col 54}{space 4}-475.2916{col 67}{space 3}-68.77288
+{txt}{space 12} {c |}
+{space 8}year {c |}
+{space 7}2009  {c |}{col 14}{res}{space 2}  3.36267{col 26}{space 2}  5.41065{col 37}{space 1}    0.62{col 46}{space 3}0.537{col 54}{space 4} -7.51617{col 67}{space 3} 14.24151
+{txt}{space 7}2010  {c |}{col 14}{res}{space 2} 1.564047{col 26}{space 2} 6.259753{col 37}{space 1}    0.25{col 46}{space 3}0.804{col 54}{space 4}-11.02203{col 67}{space 3} 14.15012
+{txt}{space 7}2011  {c |}{col 14}{res}{space 2}-.3584617{col 26}{space 2} 7.076617{col 37}{space 1}   -0.05{col 46}{space 3}0.960{col 54}{space 4}-14.58695{col 67}{space 3} 13.87003
+{txt}{space 7}2012  {c |}{col 14}{res}{space 2} 4.542889{col 26}{space 2} 10.02585{col 37}{space 1}    0.45{col 46}{space 3}0.653{col 54}{space 4}-15.61544{col 67}{space 3} 24.70122
+{txt}{space 7}2013  {c |}{col 14}{res}{space 2} 21.16953{col 26}{space 2} 14.31089{col 37}{space 1}    1.48{col 46}{space 3}0.146{col 54}{space 4}-7.604453{col 67}{space 3} 49.94351
+{txt}{space 7}2014  {c |}{col 14}{res}{space 2} 58.99758{col 26}{space 2} 28.28476{col 37}{space 1}    2.09{col 46}{space 3}0.042{col 54}{space 4} 2.127248{col 67}{space 3} 115.8679
+{txt}{space 7}2015  {c |}{col 14}{res}{space 2} 91.38213{col 26}{space 2} 35.85721{col 37}{space 1}    2.55{col 46}{space 3}0.014{col 54}{space 4} 19.28638{col 67}{space 3} 163.4779
+{txt}{space 7}2016  {c |}{col 14}{res}{space 2} 87.84311{col 26}{space 2} 29.51874{col 37}{space 1}    2.98{col 46}{space 3}0.005{col 54}{space 4}  28.4917{col 67}{space 3} 147.1945
+{txt}{space 7}2017  {c |}{col 14}{res}{space 2} 76.93352{col 26}{space 2} 26.31978{col 37}{space 1}    2.92{col 46}{space 3}0.005{col 54}{space 4} 24.01404{col 67}{space 3}  129.853
+{txt}{space 7}2018  {c |}{col 14}{res}{space 2} 78.40647{col 26}{space 2} 28.37615{col 37}{space 1}    2.76{col 46}{space 3}0.008{col 54}{space 4} 21.35239{col 67}{space 3} 135.4605
+{txt}{space 12} {c |}
+{space 7}_cons {c |}{col 14}{res}{space 2}  244.909{col 26}{space 2} 121.8339{col 37}{space 1}    2.01{col 46}{space 3}0.050{col 54}{space 4}-.0545024{col 67}{space 3} 489.8725
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}{stata `"shellout using `"6000_LaTeX/table_staff_miscond_all_1.1.tex"'"':6000_LaTeX/table_staff_miscond_all_1.1.tex}
+{browse `"C:\Users\david\coding\01_PRISON_PHONE_paper"' :dir}{com} : {txt}{stata `"seeout using "6000_LaTeX/table_staff_miscond_all_1.1.txt", label"':seeout}
+
+{com}. 
+. **********
+. 
+. * Specification #3, Balanced Mundlak: 
+. * yit = alpha + xit*beta + xi_bar*zeta + xt_bar*eta + eit
+. use "2000_data/500_working/final_output_dta", replace
+{txt}
+{com}. 
+. drop if (balanced == 0)
+{txt}(22 observations deleted)
+
+{com}. 
+. local yit "inmate_noncon_all staff_miscond_all"
+{txt}
+{com}. local xit "oos_coll_15m total_pop"
+{txt}
+{com}. 
+. foreach x in `xit' {c -(}
+{txt}  2{com}.         bysort state: egen `x'_i_bar = mean(`x')
+{txt}  3{com}. {c )-}
+{txt}
+{com}. local xi_bar "*_i_bar"
+{txt}
+{com}. 
+. foreach x in `xit' {c -(}
+{txt}  2{com}.         bysort year: egen `x'_t_bar = mean(`x') 
+{txt}  3{com}. {c )-}
+{txt}
+{com}. local xt_bar "*_t_bar"
+{txt}
+{com}. 
+. local xit "c.oos_coll_15m c.total_pop"
+{txt}
+{com}. 
+. * SPECIFICATION #3 REGRESSION LOOP:
+. foreach y in `yit' {c -(}
+{txt}  2{com}.         reg `y' `xit' `xi_bar' `xt_bar', vce(cluster state_fips)
+{txt}  3{com}.         outreg2 using "6000_LaTeX/table_`y'_1.1.tex", dec(3) append ctitle(TWM) nocons keep(oos_coll_15m total_pop) label tex(frag) nonotes 
+{txt}  4{com}.         *addstat("F-Statistic", e(F))
+. {c )-}
+
+{txt}Linear regression                               Number of obs     = {res}       517
+                                                {txt}F(6, 46)          =  {res}     5.89
+                                                {txt}Prob > F          = {res}    0.0001
+                                                {txt}R-squared         = {res}    0.5607
+                                                {txt}Root MSE          =    {res} 50.841
+
+{txt}{ralign 84:(Std. err. adjusted for {res:47} clusters in {res:state_fips})}
+{hline 19}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 20}{c |}{col 32}    Robust
+{col 1} inmate_noncon_all{col 20}{c |} Coefficient{col 32}  std. err.{col 44}      t{col 52}   P>|t|{col 60}     [95% con{col 73}f. interval]
+{hline 19}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 6}oos_coll_15m {c |}{col 20}{res}{space 2} .7114757{col 32}{space 2} 1.250754{col 43}{space 1}    0.57{col 52}{space 3}0.572{col 60}{space 4}-1.806161{col 73}{space 3} 3.229112
+{txt}{space 9}total_pop {c |}{col 20}{res}{space 2}-.0032103{col 32}{space 2} .0007917{col 43}{space 1}   -4.06{col 52}{space 3}0.000{col 60}{space 4}-.0048039{col 73}{space 3}-.0016168
+{txt}oos_coll_15m_i_bar {c |}{col 20}{res}{space 2}-1.206469{col 32}{space 2} 3.490218{col 43}{space 1}   -0.35{col 52}{space 3}0.731{col 60}{space 4}-8.231914{col 73}{space 3} 5.818976
+{txt}{space 3}total_pop_i_bar {c |}{col 20}{res}{space 2} .0050158{col 32}{space 2} .0011117{col 43}{space 1}    4.51{col 52}{space 3}0.000{col 60}{space 4}  .002778{col 73}{space 3} .0072536
+{txt}oos_coll_15m_t_bar {c |}{col 20}{res}{space 2} -4.94204{col 32}{space 2}  2.14783{col 43}{space 1}   -2.30{col 52}{space 3}0.026{col 60}{space 4}-9.265398{col 73}{space 3}-.6186818
+{txt}{space 3}total_pop_t_bar {c |}{col 20}{res}{space 2} .0018214{col 32}{space 2} .0033196{col 43}{space 1}    0.55{col 52}{space 3}0.586{col 60}{space 4}-.0048606{col 73}{space 3} .0085035
+{txt}{space 13}_cons {c |}{col 20}{res}{space 2}-4.360268{col 32}{space 2} 71.88751{col 43}{space 1}   -0.06{col 52}{space 3}0.952{col 60}{space 4}-149.0623{col 73}{space 3} 140.3418
+{txt}{hline 19}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}{stata `"shellout using `"6000_LaTeX/table_inmate_noncon_all_1.1.tex"'"':6000_LaTeX/table_inmate_noncon_all_1.1.tex}
+{browse `"C:\Users\david\coding\01_PRISON_PHONE_paper"' :dir}{com} : {txt}{stata `"seeout using "6000_LaTeX/table_inmate_noncon_all_1.1.txt", label"':seeout}
+
+Linear regression                               Number of obs     = {res}       517
+                                                {txt}F(6, 46)          =  {res}     4.84
+                                                {txt}Prob > F          = {res}    0.0007
+                                                {txt}R-squared         = {res}    0.4035
+                                                {txt}Root MSE          =    {res} 100.14
+
+{txt}{ralign 84:(Std. err. adjusted for {res:47} clusters in {res:state_fips})}
+{hline 19}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 20}{c |}{col 32}    Robust
+{col 1} staff_miscond_all{col 20}{c |} Coefficient{col 32}  std. err.{col 44}      t{col 52}   P>|t|{col 60}     [95% con{col 73}f. interval]
+{hline 19}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 6}oos_coll_15m {c |}{col 20}{res}{space 2} 1.988053{col 32}{space 2} 2.214942{col 43}{space 1}    0.90{col 52}{space 3}0.374{col 60}{space 4}-2.470394{col 73}{space 3} 6.446501
+{txt}{space 9}total_pop {c |}{col 20}{res}{space 2}-.0054285{col 32}{space 2}  .001842{col 43}{space 1}   -2.95{col 52}{space 3}0.005{col 60}{space 4}-.0091362{col 73}{space 3}-.0017209
+{txt}oos_coll_15m_i_bar {c |}{col 20}{res}{space 2}   -5.342{col 32}{space 2} 4.133124{col 43}{space 1}   -1.29{col 52}{space 3}0.203{col 60}{space 4}-13.66155{col 73}{space 3} 2.977547
+{txt}{space 3}total_pop_i_bar {c |}{col 20}{res}{space 2} .0077841{col 32}{space 2} .0024584{col 43}{space 1}    3.17{col 52}{space 3}0.003{col 60}{space 4} .0028355{col 73}{space 3} .0127326
+{txt}oos_coll_15m_t_bar {c |}{col 20}{res}{space 2}-15.35917{col 32}{space 2} 5.359531{col 43}{space 1}   -2.87{col 52}{space 3}0.006{col 60}{space 4}-26.14735{col 73}{space 3}-4.570995
+{txt}{space 3}total_pop_t_bar {c |}{col 20}{res}{space 2} .0168824{col 32}{space 2} .0086521{col 43}{space 1}    1.95{col 52}{space 3}0.057{col 60}{space 4}-.0005334{col 73}{space 3} .0342982
+{txt}{space 13}_cons {c |}{col 20}{res}{space 2}-276.0128{col 32}{space 2} 181.5915{col 43}{space 1}   -1.52{col 52}{space 3}0.135{col 60}{space 4}-641.5375{col 73}{space 3} 89.51193
+{txt}{hline 19}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}{stata `"shellout using `"6000_LaTeX/table_staff_miscond_all_1.1.tex"'"':6000_LaTeX/table_staff_miscond_all_1.1.tex}
+{browse `"C:\Users\david\coding\01_PRISON_PHONE_paper"' :dir}{com} : {txt}{stata `"seeout using "6000_LaTeX/table_staff_miscond_all_1.1.txt", label"':seeout}
+
+{com}. 
+. **********
+. 
+. * Specification #4, Balanced Mundlak, adding xi_bar & xt_bar interaction: 
+. * yit = alpha + xit*beta + xi_bar*zeta + xt_bar*eta + (xi_bar#xt_bar)*pi + eit
+. use "2000_data/500_working/final_output_dta", replace
+{txt}
+{com}. 
+. *balancing dataset
+. drop if (balanced==0)
+{txt}(22 observations deleted)
+
+{com}. 
+. local yit "inmate_noncon_all staff_miscond_all"
+{txt}
+{com}. local xit "oos_coll_15m total_pop"
+{txt}
+{com}. 
+. foreach x in `xit' {c -(}
+{txt}  2{com}.         bysort state: egen `x'_i_bar = mean(`x') 
+{txt}  3{com}. {c )-}
+{txt}
+{com}. local xi_bar "c.*_i_bar"
+{txt}
+{com}. 
+. foreach x in `xit' {c -(}
+{txt}  2{com}.         bysort year: egen `x'_t_bar = mean(`x') 
+{txt}  3{com}. {c )-}
+{txt}
+{com}. local xt_bar "c.*_t_bar"
+{txt}
+{com}. 
+. local xit "c.oos_coll_15m c.total_pop"
+{txt}
+{com}. 
+. reg inmate_noncon_all `xit' `xi_bar'##`xt_bar', vce(cl state_fips)
+
+{txt}Linear regression                               Number of obs     = {res}       517
+                                                {txt}F(10, 46)         =  {res}    29.38
+                                                {txt}Prob > F          = {res}    0.0000
+                                                {txt}R-squared         = {res}    0.5866
+                                                {txt}Root MSE          =    {res} 49.519
+
+{txt}{ralign 107:(Std. err. adjusted for {res:47} clusters in {res:state_fips})}
+{hline 42}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 43}{c |}{col 55}    Robust
+{col 1}                        inmate_noncon_all{col 43}{c |} Coefficient{col 55}  std. err.{col 67}      t{col 75}   P>|t|{col 83}     [95% con{col 96}f. interval]
+{hline 42}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 29}oos_coll_15m {c |}{col 43}{res}{space 2}-.1644203{col 55}{space 2} .7236663{col 66}{space 1}   -0.23{col 75}{space 3}0.821{col 83}{space 4}-1.621085{col 96}{space 3} 1.292244
+{txt}{space 32}total_pop {c |}{col 43}{res}{space 2} .0005993{col 55}{space 2} .0017149{col 66}{space 1}    0.35{col 75}{space 3}0.728{col 83}{space 4}-.0028527{col 96}{space 3} .0040512
+{txt}{space 23}oos_coll_15m_i_bar {c |}{col 43}{res}{space 2}-29.79938{col 55}{space 2} 22.32848{col 66}{space 1}   -1.33{col 75}{space 3}0.189{col 83}{space 4}-74.74428{col 96}{space 3} 15.14552
+{txt}{space 26}total_pop_i_bar {c |}{col 43}{res}{space 2} .0088609{col 55}{space 2} .0029426{col 66}{space 1}    3.01{col 75}{space 3}0.004{col 83}{space 4} .0029377{col 96}{space 3}  .014784
+{txt}{space 23}oos_coll_15m_t_bar {c |}{col 43}{res}{space 2}-1.008886{col 55}{space 2} 2.750323{col 66}{space 1}   -0.37{col 75}{space 3}0.715{col 83}{space 4}-6.544999{col 96}{space 3} 4.527228
+{txt}{space 26}total_pop_t_bar {c |}{col 43}{res}{space 2}-.0022683{col 55}{space 2} .0061537{col 66}{space 1}   -0.37{col 75}{space 3}0.714{col 83}{space 4} -.014655{col 96}{space 3} .0101184
+{txt}{space 41} {c |}
+c.oos_coll_15m_i_bar#c.oos_coll_15m_t_bar {c |}{col 43}{res}{space 2}-.1366314{col 55}{space 2} .5573978{col 66}{space 1}   -0.25{col 75}{space 3}0.807{col 83}{space 4}-1.258615{col 96}{space 3} .9853521
+{txt}{space 41} {c |}
+{space 3}c.oos_coll_15m_i_bar#c.total_pop_t_bar {c |}{col 43}{res}{space 2} .0012721{col 55}{space 2} .0010536{col 66}{space 1}    1.21{col 75}{space 3}0.233{col 83}{space 4}-.0008487{col 96}{space 3} .0033928
+{txt}{space 41} {c |}
+{space 3}c.total_pop_i_bar#c.oos_coll_15m_t_bar {c |}{col 43}{res}{space 2}-.0000952{col 55}{space 2} .0000963{col 66}{space 1}   -0.99{col 75}{space 3}0.328{col 83}{space 4} -.000289{col 96}{space 3} .0000987
+{txt}{space 41} {c |}
+{space 6}c.total_pop_i_bar#c.total_pop_t_bar {c |}{col 43}{res}{space 2}-2.99e-07{col 55}{space 2} 1.19e-07{col 66}{space 1}   -2.50{col 75}{space 3}0.016{col 83}{space 4}-5.39e-07{col 96}{space 3}-5.80e-08
+{txt}{space 41} {c |}
+{space 36}_cons {c |}{col 43}{res}{space 2} 70.10661{col 55}{space 2} 132.3446{col 66}{space 1}    0.53{col 75}{space 3}0.599{col 83}{space 4}-196.2892{col 96}{space 3} 336.5024
+{txt}{hline 42}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. * SPECIFICATION #4 REGRESSION LOOP:
+. foreach y in `yit' {c -(}
+{txt}  2{com}.         reg `y' `xit' `xi_bar'##`xt_bar', vce(cl state_fips)
+{txt}  3{com}.         outreg2 using "6000_LaTeX/table_`y'_1.1.tex", dec(3) append ctitle(TWM+Int) nocons keep(oos_coll_15m total_pop) label tex(frag) nonotes 
+{txt}  4{com}.         *addstat("F-Statistic", e(F))
+. {c )-}
+
+{txt}Linear regression                               Number of obs     = {res}       517
+                                                {txt}F(10, 46)         =  {res}    29.38
+                                                {txt}Prob > F          = {res}    0.0000
+                                                {txt}R-squared         = {res}    0.5866
+                                                {txt}Root MSE          =    {res} 49.519
+
+{txt}{ralign 107:(Std. err. adjusted for {res:47} clusters in {res:state_fips})}
+{hline 42}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 43}{c |}{col 55}    Robust
+{col 1}                        inmate_noncon_all{col 43}{c |} Coefficient{col 55}  std. err.{col 67}      t{col 75}   P>|t|{col 83}     [95% con{col 96}f. interval]
+{hline 42}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 29}oos_coll_15m {c |}{col 43}{res}{space 2}-.1644203{col 55}{space 2} .7236663{col 66}{space 1}   -0.23{col 75}{space 3}0.821{col 83}{space 4}-1.621085{col 96}{space 3} 1.292244
+{txt}{space 32}total_pop {c |}{col 43}{res}{space 2} .0005993{col 55}{space 2} .0017149{col 66}{space 1}    0.35{col 75}{space 3}0.728{col 83}{space 4}-.0028527{col 96}{space 3} .0040512
+{txt}{space 23}oos_coll_15m_i_bar {c |}{col 43}{res}{space 2}-29.79938{col 55}{space 2} 22.32848{col 66}{space 1}   -1.33{col 75}{space 3}0.189{col 83}{space 4}-74.74428{col 96}{space 3} 15.14552
+{txt}{space 26}total_pop_i_bar {c |}{col 43}{res}{space 2} .0088609{col 55}{space 2} .0029426{col 66}{space 1}    3.01{col 75}{space 3}0.004{col 83}{space 4} .0029377{col 96}{space 3}  .014784
+{txt}{space 23}oos_coll_15m_t_bar {c |}{col 43}{res}{space 2}-1.008886{col 55}{space 2} 2.750323{col 66}{space 1}   -0.37{col 75}{space 3}0.715{col 83}{space 4}-6.544999{col 96}{space 3} 4.527228
+{txt}{space 26}total_pop_t_bar {c |}{col 43}{res}{space 2}-.0022683{col 55}{space 2} .0061537{col 66}{space 1}   -0.37{col 75}{space 3}0.714{col 83}{space 4} -.014655{col 96}{space 3} .0101184
+{txt}{space 41} {c |}
+c.oos_coll_15m_i_bar#c.oos_coll_15m_t_bar {c |}{col 43}{res}{space 2}-.1366314{col 55}{space 2} .5573978{col 66}{space 1}   -0.25{col 75}{space 3}0.807{col 83}{space 4}-1.258615{col 96}{space 3} .9853521
+{txt}{space 41} {c |}
+{space 3}c.oos_coll_15m_i_bar#c.total_pop_t_bar {c |}{col 43}{res}{space 2} .0012721{col 55}{space 2} .0010536{col 66}{space 1}    1.21{col 75}{space 3}0.233{col 83}{space 4}-.0008487{col 96}{space 3} .0033928
+{txt}{space 41} {c |}
+{space 3}c.total_pop_i_bar#c.oos_coll_15m_t_bar {c |}{col 43}{res}{space 2}-.0000952{col 55}{space 2} .0000963{col 66}{space 1}   -0.99{col 75}{space 3}0.328{col 83}{space 4} -.000289{col 96}{space 3} .0000987
+{txt}{space 41} {c |}
+{space 6}c.total_pop_i_bar#c.total_pop_t_bar {c |}{col 43}{res}{space 2}-2.99e-07{col 55}{space 2} 1.19e-07{col 66}{space 1}   -2.50{col 75}{space 3}0.016{col 83}{space 4}-5.39e-07{col 96}{space 3}-5.80e-08
+{txt}{space 41} {c |}
+{space 36}_cons {c |}{col 43}{res}{space 2} 70.10661{col 55}{space 2} 132.3446{col 66}{space 1}    0.53{col 75}{space 3}0.599{col 83}{space 4}-196.2892{col 96}{space 3} 336.5024
+{txt}{hline 42}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}{stata `"shellout using `"6000_LaTeX/table_inmate_noncon_all_1.1.tex"'"':6000_LaTeX/table_inmate_noncon_all_1.1.tex}
+{browse `"C:\Users\david\coding\01_PRISON_PHONE_paper"' :dir}{com} : {txt}{stata `"seeout using "6000_LaTeX/table_inmate_noncon_all_1.1.txt", label"':seeout}
+
+Linear regression                               Number of obs     = {res}       517
+                                                {txt}F(10, 46)         =  {res}    65.33
+                                                {txt}Prob > F          = {res}    0.0000
+                                                {txt}R-squared         = {res}    0.5560
+                                                {txt}Root MSE          =    {res} 86.738
+
+{txt}{ralign 107:(Std. err. adjusted for {res:47} clusters in {res:state_fips})}
+{hline 42}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 43}{c |}{col 55}    Robust
+{col 1}                        staff_miscond_all{col 43}{c |} Coefficient{col 55}  std. err.{col 67}      t{col 75}   P>|t|{col 83}     [95% con{col 96}f. interval]
+{hline 42}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 29}oos_coll_15m {c |}{col 43}{res}{space 2} -1.26585{col 55}{space 2} 2.427527{col 66}{space 1}   -0.52{col 75}{space 3}0.605{col 83}{space 4}-6.152209{col 96}{space 3}  3.62051
+{txt}{space 32}total_pop {c |}{col 43}{res}{space 2}  .008824{col 55}{space 2}  .002175{col 66}{space 1}    4.06{col 75}{space 3}0.000{col 83}{space 4}  .004446{col 96}{space 3}  .013202
+{txt}{space 23}oos_coll_15m_i_bar {c |}{col 43}{res}{space 2} 43.24044{col 55}{space 2} 75.52026{col 66}{space 1}    0.57{col 75}{space 3}0.570{col 83}{space 4} -108.774{col 96}{space 3} 195.2548
+{txt}{space 26}total_pop_i_bar {c |}{col 43}{res}{space 2}-.0047528{col 55}{space 2}  .021669{col 66}{space 1}   -0.22{col 75}{space 3}0.827{col 83}{space 4}-.0483703{col 96}{space 3} .0388647
+{txt}{space 23}oos_coll_15m_t_bar {c |}{col 43}{res}{space 2}-.4947429{col 55}{space 2} 7.801541{col 66}{space 1}   -0.06{col 75}{space 3}0.950{col 83}{space 4}-16.19843{col 96}{space 3} 15.20894
+{txt}{space 26}total_pop_t_bar {c |}{col 43}{res}{space 2} .0125712{col 55}{space 2} .0283893{col 66}{space 1}    0.44{col 75}{space 3}0.660{col 83}{space 4}-.0445736{col 96}{space 3} .0697159
+{txt}{space 41} {c |}
+c.oos_coll_15m_i_bar#c.oos_coll_15m_t_bar {c |}{col 43}{res}{space 2} .7294624{col 55}{space 2}  1.11459{col 66}{space 1}    0.65{col 75}{space 3}0.516{col 83}{space 4}-1.514091{col 96}{space 3} 2.973016
+{txt}{space 41} {c |}
+{space 3}c.oos_coll_15m_i_bar#c.total_pop_t_bar {c |}{col 43}{res}{space 2}-.0020833{col 55}{space 2}  .003394{col 66}{space 1}   -0.61{col 75}{space 3}0.542{col 83}{space 4}-.0089152{col 96}{space 3} .0047485
+{txt}{space 41} {c |}
+{space 3}c.total_pop_i_bar#c.oos_coll_15m_t_bar {c |}{col 43}{res}{space 2} -.000666{col 55}{space 2}  .000279{col 66}{space 1}   -2.39{col 75}{space 3}0.021{col 83}{space 4}-.0012276{col 96}{space 3}-.0001044
+{txt}{space 41} {c |}
+{space 6}c.total_pop_i_bar#c.total_pop_t_bar {c |}{col 43}{res}{space 2} 9.04e-08{col 55}{space 2} 1.04e-06{col 66}{space 1}    0.09{col 75}{space 3}0.931{col 83}{space 4}-2.01e-06{col 96}{space 3} 2.19e-06
+{txt}{space 41} {c |}
+{space 36}_cons {c |}{col 43}{res}{space 2}-259.7164{col 55}{space 2}  620.776{col 66}{space 1}   -0.42{col 75}{space 3}0.678{col 83}{space 4}-1509.274{col 96}{space 3} 989.8409
+{txt}{hline 42}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}{stata `"shellout using `"6000_LaTeX/table_staff_miscond_all_1.1.tex"'"':6000_LaTeX/table_staff_miscond_all_1.1.tex}
+{browse `"C:\Users\david\coding\01_PRISON_PHONE_paper"' :dir}{com} : {txt}{stata `"seeout using "6000_LaTeX/table_staff_miscond_all_1.1.txt", label"':seeout}
+
+{com}. 
+. **********
+. 
+. * Specification #5, balanced Mundlak, full interactions: 
+. * yit = alpha + xit*beta + xi_bar*zeta + xt_bar*eta + (xi_bar#xt_bar)*pi + xit#(xi_bar - x_bar)*omicron + xit#(xt_bar - x_bar)*rho + eit
+. use "2000_data/500_working/final_output_dta", replace
+{txt}
+{com}. 
+. drop if balanced==0
+{txt}(22 observations deleted)
+
+{com}. 
+. local yit "inmate_noncon_all staff_miscond_all"
+{txt}
+{com}. local xit "oos_coll_15m total_pop"
+{txt}
+{com}. 
+. foreach x in `xit' {c -(}
+{txt}  2{com}.         bysort state: egen `x'_i_bar = mean(`x') 
+{txt}  3{com}. {c )-}
+{txt}
+{com}. local xi_bar "*_i_bar"
+{txt}
+{com}. 
+. foreach x in `xit' {c -(}
+{txt}  2{com}.         bysort year: egen `x'_t_bar = mean(`x') 
+{txt}  3{com}. {c )-}
+{txt}
+{com}. local xt_bar "*_t_bar"
+{txt}
+{com}. 
+. foreach x in `xit' {c -(}
+{txt}  2{com}.         egen `x'_bar = mean(`x') 
+{txt}  3{com}. {c )-}
+{txt}
+{com}. 
+. * need to change this manually if xit changes!
+. local x_bar "oos_coll_15m_bar total_pop_bar"
+{txt}
+{com}. 
+. foreach x in `xit' {c -(}
+{txt}  2{com}.         gen `x'i_less_x = `x'_i_bar - `x'_bar
+{txt}  3{com}.         gen `x't_less_x = `x'_t_bar - `x'_bar
+{txt}  4{com}. {c )-}
+{txt}
+{com}. local xilessx "*i_less_x"
+{txt}
+{com}. local xtlessx "*t_less_x"
+{txt}
+{com}. 
+. local xit "c.oos_coll_15m c.total_pop"
+{txt}
+{com}. local xi_bar "c.*_i_bar"
+{txt}
+{com}. local xt_bar "c.*_t_bar"
+{txt}
+{com}. local xilessx "c.*i_less_x"
+{txt}
+{com}. local xtlessx "c.*t_less_x"
+{txt}
+{com}. 
+. * SPECIFICATION #5 REGRESSION LOOP:
+. foreach y in `yit' {c -(}
+{txt}  2{com}.         reg `y' `xit' `xi_bar' `xt_bar' (`xi_bar')#(`xt_bar') (`xit')#(`xilessx') (`xit')#(`xtlessx'), vce(cl state_fips)
+{txt}  3{com}.         *outreg2 using "6000_LaTeX/table_`y'_1.1.tex", dec(2) append ctitle(Unb Mundlak, ++Int) nocons keep(oos_coll_15m total_pop) 
+. {c )-}
+
+{txt}Linear regression                               Number of obs     = {res}       517
+                                                {txt}{help j_robustsingular:F(17, 46) }        =  {res}        .
+                                                {txt}Prob > F          = {res}         .
+                                                {txt}R-squared         = {res}    0.6540
+                                                {txt}Root MSE          =    {res}  45.66
+
+{txt}{ralign 107:(Std. err. adjusted for {res:47} clusters in {res:state_fips})}
+{hline 42}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 43}{c |}{col 55}    Robust
+{col 1}                        inmate_noncon_all{col 43}{c |} Coefficient{col 55}  std. err.{col 67}      t{col 75}   P>|t|{col 83}     [95% con{col 96}f. interval]
+{hline 42}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 29}oos_coll_15m {c |}{col 43}{res}{space 2}-.7617211{col 55}{space 2} 1.857992{col 66}{space 1}   -0.41{col 75}{space 3}0.684{col 83}{space 4}-4.501666{col 96}{space 3} 2.978223
+{txt}{space 32}total_pop {c |}{col 43}{res}{space 2} .0007498{col 55}{space 2} .0020843{col 66}{space 1}    0.36{col 75}{space 3}0.721{col 83}{space 4}-.0034457{col 96}{space 3} .0049452
+{txt}{space 23}oos_coll_15m_i_bar {c |}{col 43}{res}{space 2}-25.33622{col 55}{space 2} 58.03477{col 66}{space 1}   -0.44{col 75}{space 3}0.664{col 83}{space 4}-142.1541{col 96}{space 3} 91.48172
+{txt}{space 26}total_pop_i_bar {c |}{col 43}{res}{space 2}-.0086152{col 55}{space 2} .0836942{col 66}{space 1}   -0.10{col 75}{space 3}0.918{col 83}{space 4} -.177083{col 96}{space 3} .1598525
+{txt}{space 23}oos_coll_15m_t_bar {c |}{col 43}{res}{space 2} 1.089145{col 55}{space 2} 3.630904{col 66}{space 1}    0.30{col 75}{space 3}0.766{col 83}{space 4}-6.219486{col 96}{space 3} 8.397775
+{txt}{space 26}total_pop_t_bar {c |}{col 43}{res}{space 2}-.0020972{col 55}{space 2} .0091901{col 66}{space 1}   -0.23{col 75}{space 3}0.820{col 83}{space 4}-.0205959{col 96}{space 3} .0164015
+{txt}{space 41} {c |}
+c.oos_coll_15m_i_bar#c.oos_coll_15m_t_bar {c |}{col 43}{res}{space 2}-.5026359{col 55}{space 2} .6449526{col 66}{space 1}   -0.78{col 75}{space 3}0.440{col 83}{space 4}-1.800858{col 96}{space 3} .7955863
+{txt}{space 41} {c |}
+{space 3}c.oos_coll_15m_i_bar#c.total_pop_t_bar {c |}{col 43}{res}{space 2} .0014758{col 55}{space 2} .0025472{col 66}{space 1}    0.58{col 75}{space 3}0.565{col 83}{space 4}-.0036514{col 96}{space 3} .0066031
+{txt}{space 41} {c |}
+{space 3}c.total_pop_i_bar#c.oos_coll_15m_t_bar {c |}{col 43}{res}{space 2} .0005768{col 55}{space 2} .0011855{col 66}{space 1}    0.49{col 75}{space 3}0.629{col 83}{space 4}-.0018096{col 96}{space 3} .0029632
+{txt}{space 41} {c |}
+{space 6}c.total_pop_i_bar#c.total_pop_t_bar {c |}{col 43}{res}{space 2} 2.32e-07{col 55}{space 2} 3.82e-06{col 66}{space 1}    0.06{col 75}{space 3}0.952{col 83}{space 4}-7.46e-06{col 96}{space 3} 7.92e-06
+{txt}{space 41} {c |}
+{space 4}c.oos_coll_15m#c.oos_coll_15mi_less_x {c |}{col 43}{res}{space 2} .1749772{col 55}{space 2} .2875021{col 66}{space 1}    0.61{col 75}{space 3}0.546{col 83}{space 4}-.4037345{col 96}{space 3}  .753689
+{txt}{space 41} {c |}
+{space 7}c.oos_coll_15m#c.total_popi_less_x {c |}{col 43}{res}{space 2} .0001285{col 55}{space 2} .0000807{col 66}{space 1}    1.59{col 75}{space 3}0.118{col 83}{space 4} -.000034{col 96}{space 3} .0002911
+{txt}{space 41} {c |}
+{space 7}c.total_pop#c.oos_coll_15mi_less_x {c |}{col 43}{res}{space 2}-.0003896{col 55}{space 2} .0002016{col 66}{space 1}   -1.93{col 75}{space 3}0.059{col 83}{space 4}-.0007954{col 96}{space 3} .0000162
+{txt}{space 41} {c |}
+{space 10}c.total_pop#c.total_popi_less_x {c |}{col 43}{res}{space 2} 1.04e-09{col 55}{space 2} 3.15e-09{col 66}{space 1}    0.33{col 75}{space 3}0.742{col 83}{space 4}-5.29e-09{col 96}{space 3} 7.38e-09
+{txt}{space 41} {c |}
+{space 4}c.oos_coll_15m#c.oos_coll_15mt_less_x {c |}{col 43}{res}{space 2} .6309702{col 55}{space 2}  .952754{col 66}{space 1}    0.66{col 75}{space 3}0.511{col 83}{space 4}-1.286824{col 96}{space 3} 2.548765
+{txt}{space 41} {c |}
+{space 7}c.oos_coll_15m#c.total_popt_less_x {c |}{col 43}{res}{space 2}-.0008997{col 55}{space 2} .0025943{col 66}{space 1}   -0.35{col 75}{space 3}0.730{col 83}{space 4}-.0061218{col 96}{space 3} .0043224
+{txt}{space 41} {c |}
+{space 7}c.total_pop#c.oos_coll_15mt_less_x {c |}{col 43}{res}{space 2}-.0007773{col 55}{space 2} .0012613{col 66}{space 1}   -0.62{col 75}{space 3}0.541{col 83}{space 4}-.0033162{col 96}{space 3} .0017616
+{txt}{space 41} {c |}
+{space 10}c.total_pop#c.total_popt_less_x {c |}{col 43}{res}{space 2}-4.46e-07{col 55}{space 2} 3.99e-06{col 66}{space 1}   -0.11{col 75}{space 3}0.911{col 83}{space 4}-8.48e-06{col 96}{space 3} 7.59e-06
+{txt}{space 41} {c |}
+{space 36}_cons {c |}{col 43}{res}{space 2} 28.20811{col 55}{space 2}  209.544{col 66}{space 1}    0.13{col 75}{space 3}0.894{col 83}{space 4}-393.5821{col 96}{space 3} 449.9983
+{txt}{hline 42}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{txt}Linear regression                               Number of obs     = {res}       517
+                                                {txt}{help j_robustsingular:F(17, 46) }        =  {res}        .
+                                                {txt}Prob > F          = {res}         .
+                                                {txt}R-squared         = {res}    0.6534
+                                                {txt}Root MSE          =    {res}  77.25
+
+{txt}{ralign 107:(Std. err. adjusted for {res:47} clusters in {res:state_fips})}
+{hline 42}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 43}{c |}{col 55}    Robust
+{col 1}                        staff_miscond_all{col 43}{c |} Coefficient{col 55}  std. err.{col 67}      t{col 75}   P>|t|{col 83}     [95% con{col 96}f. interval]
+{hline 42}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 29}oos_coll_15m {c |}{col 43}{res}{space 2}-3.942265{col 55}{space 2} 4.818125{col 66}{space 1}   -0.82{col 75}{space 3}0.417{col 83}{space 4}-13.64065{col 96}{space 3} 5.756118
+{txt}{space 32}total_pop {c |}{col 43}{res}{space 2} .0141026{col 55}{space 2} .0048093{col 66}{space 1}    2.93{col 75}{space 3}0.005{col 83}{space 4}  .004422{col 96}{space 3} .0237833
+{txt}{space 23}oos_coll_15m_i_bar {c |}{col 43}{res}{space 2} 138.1512{col 55}{space 2} 93.56509{col 66}{space 1}    1.48{col 75}{space 3}0.147{col 83}{space 4} -50.1856{col 96}{space 3} 326.4879
+{txt}{space 26}total_pop_i_bar {c |}{col 43}{res}{space 2} .4418041{col 55}{space 2} .1302382{col 66}{space 1}    3.39{col 75}{space 3}0.001{col 83}{space 4} .1796482{col 96}{space 3}   .70396
+{txt}{space 23}oos_coll_15m_t_bar {c |}{col 43}{res}{space 2} 3.286378{col 55}{space 2} 7.205592{col 66}{space 1}    0.46{col 75}{space 3}0.650{col 83}{space 4}-11.21773{col 96}{space 3} 17.79048
+{txt}{space 26}total_pop_t_bar {c |}{col 43}{res}{space 2}-.0055641{col 55}{space 2} .0211955{col 66}{space 1}   -0.26{col 75}{space 3}0.794{col 83}{space 4}-.0482284{col 96}{space 3} .0371003
+{txt}{space 41} {c |}
+c.oos_coll_15m_i_bar#c.oos_coll_15m_t_bar {c |}{col 43}{res}{space 2}-.0767559{col 55}{space 2} 1.020285{col 66}{space 1}   -0.08{col 75}{space 3}0.940{col 83}{space 4}-2.130484{col 96}{space 3} 1.976972
+{txt}{space 41} {c |}
+{space 3}c.oos_coll_15m_i_bar#c.total_pop_t_bar {c |}{col 43}{res}{space 2}-.0059329{col 55}{space 2} .0041512{col 66}{space 1}   -1.43{col 75}{space 3}0.160{col 83}{space 4}-.0142888{col 96}{space 3}  .002423
+{txt}{space 41} {c |}
+{space 3}c.total_pop_i_bar#c.oos_coll_15m_t_bar {c |}{col 43}{res}{space 2} .0071263{col 55}{space 2} .0020341{col 66}{space 1}    3.50{col 75}{space 3}0.001{col 83}{space 4} .0030319{col 96}{space 3} .0112207
+{txt}{space 41} {c |}
+{space 6}c.total_pop_i_bar#c.total_pop_t_bar {c |}{col 43}{res}{space 2}-.0000207{col 55}{space 2} 6.03e-06{col 66}{space 1}   -3.43{col 75}{space 3}0.001{col 83}{space 4}-.0000328{col 96}{space 3}-8.56e-06
+{txt}{space 41} {c |}
+{space 4}c.oos_coll_15m#c.oos_coll_15mi_less_x {c |}{col 43}{res}{space 2} .5896577{col 55}{space 2} .3712671{col 66}{space 1}    1.59{col 75}{space 3}0.119{col 83}{space 4}-.1576643{col 96}{space 3}  1.33698
+{txt}{space 41} {c |}
+{space 7}c.oos_coll_15m#c.total_popi_less_x {c |}{col 43}{res}{space 2}-.0001085{col 55}{space 2} .0001368{col 66}{space 1}   -0.79{col 75}{space 3}0.432{col 83}{space 4}-.0003838{col 96}{space 3} .0001668
+{txt}{space 41} {c |}
+{space 7}c.total_pop#c.oos_coll_15mi_less_x {c |}{col 43}{res}{space 2}-.0001523{col 55}{space 2} .0002205{col 66}{space 1}   -0.69{col 75}{space 3}0.493{col 83}{space 4}-.0005961{col 96}{space 3} .0002916
+{txt}{space 41} {c |}
+{space 10}c.total_pop#c.total_popi_less_x {c |}{col 43}{res}{space 2}-1.33e-08{col 55}{space 2} 6.19e-09{col 66}{space 1}   -2.15{col 75}{space 3}0.037{col 83}{space 4}-2.58e-08{col 96}{space 3}-8.43e-10
+{txt}{space 41} {c |}
+{space 4}c.oos_coll_15m#c.oos_coll_15mt_less_x {c |}{col 43}{res}{space 2} 1.083845{col 55}{space 2} 2.172782{col 66}{space 1}    0.50{col 75}{space 3}0.620{col 83}{space 4}-3.289739{col 96}{space 3} 5.457429
+{txt}{space 41} {c |}
+{space 7}c.oos_coll_15m#c.total_popt_less_x {c |}{col 43}{res}{space 2} .0024662{col 55}{space 2} .0044978{col 66}{space 1}    0.55{col 75}{space 3}0.586{col 83}{space 4}-.0065874{col 96}{space 3} .0115198
+{txt}{space 41} {c |}
+{space 7}c.total_pop#c.oos_coll_15mt_less_x {c |}{col 43}{res}{space 2}-.0079509{col 55}{space 2}  .002101{col 66}{space 1}   -3.78{col 75}{space 3}0.000{col 83}{space 4}  -.01218{col 96}{space 3}-.0037219
+{txt}{space 41} {c |}
+{space 10}c.total_pop#c.total_popt_less_x {c |}{col 43}{res}{space 2} .0000216{col 55}{space 2} 6.13e-06{col 66}{space 1}    3.52{col 75}{space 3}0.001{col 83}{space 4} 9.23e-06{col 96}{space 3} .0000339
+{txt}{space 41} {c |}
+{space 36}_cons {c |}{col 43}{res}{space 2} 111.8801{col 55}{space 2} 471.4202{col 66}{space 1}    0.24{col 75}{space 3}0.813{col 83}{space 4}-837.0395{col 96}{space 3}   1060.8
+{txt}{hline 42}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. * MAKING 2ND SET OF TABLES NOW:
+. * (AND GRAPHS)
+. 
+. * #6: TWFE + total_pop + largest_reduc*T_3 + largest_reduc*T_2 + ... + largest_reduc*T2 + largest_reduc*T3
+. * yit = alpha + si*gamma + ft*delta + largest_reduc*T_3*beta1 + largest_reduc*T_2*beta2 + ... + largest*reduc3*beta6 + eit
+. use "2000_data/500_working/final_output_dta", replace
+{txt}
+{com}. 
+. local yit "inmate_noncon_all staff_miscond_all"
+{txt}
+{com}. 
+. bysort state: egen temp_max_reduc = min(fd_oos_coll_15m)
+{txt}
+{com}. gen max_reduc = abs(temp_max_reduc) 
+{txt}
+{com}. bysort state: gen temp_reduc_year_id = max_reduc + fd_oos_coll_15m 
+{txt}(49 missing values generated)
+
+{com}. bysort state: egen temp_reduc_year = min(year) if temp_reduc_year_id==0 & state!="FLORIDA"
+{txt}(491 missing values generated)
+
+{com}. bysort state: egen reduc_year = max(temp_reduc_year) if state!="FLORIDA"
+{txt}(11 missing values generated)
+
+{com}. drop temp_max_reduc temp_reduc_year_id temp_reduc_year
+{txt}
+{com}. 
+. * FL increased rate in 2012
+. *replace reduc_year = 2012 if state=="FLORIDA"
+. *replace max_reduc = -0.3 if state=="FLORIDA"
+. 
+. la var max_reduc "Largest Observed Out-of-State 15m Collect Call Cost Reduction"
+{txt}
+{com}. la var reduc_year "Year of Largest Observed Out-of-State 15m Collect Call Cost Reduction"
+{txt}
+{com}. 
+. * NOTE: FLORIDA HAS NO REDUCTIONS, BUT IN FACT, AN INCREASE! RATES UP BY $0.30 IN 2012
+. 
+. gen eventT_3 = (year==reduc_year-3)
+{txt}
+{com}. gen eventT_2 = (year==reduc_year-2)
+{txt}
+{com}. gen eventT0 = (year==reduc_year)
+{txt}
+{com}. gen eventT1 = (year==reduc_year+1)
+{txt}
+{com}. gen eventT2 = (year==reduc_year+2)
+{txt}
+{com}. gen eventT3 = (year==reduc_year+3)
+{txt}
+{com}. 
+. foreach T in eventT_3 eventT_2 eventT0 eventT1 eventT2 eventT3 {c -(}
+{txt}  2{com}.         gen max_reduc_`T' = max_reduc*`T'
+{txt}  3{com}. {c )-}
+{txt}
+{com}. 
+. local xit "c.total_pop"
+{txt}
+{com}. local max_reduc_eventT "c.max_reduc_*"
+{txt}
+{com}. 
+. * include:  c.crime_violent i.nined_crime_violent c.off_rapesa ? 
+. 
+. foreach y in `yit' {c -(}
+{txt}  2{com}.         reg `y' `max_reduc_eventT' `xit' i.state_fips i.year, vce(cl state_fips)
+{txt}  3{com}.         gen etime_T_3_`y' = _b[max_reduc_eventT_3]
+{txt}  4{com}.         gen etime_T_3_`y'_se = _se[max_reduc_eventT_3]
+{txt}  5{com}.         gen etime_T_2_`y' = _b[max_reduc_eventT_2]
+{txt}  6{com}.         gen etime_T_2_`y'_se = _se[max_reduc_eventT_2]
+{txt}  7{com}.         gen etime_T0_`y' = _b[max_reduc_eventT0]
+{txt}  8{com}.         gen etime_T0_`y'_se = _se[max_reduc_eventT0]
+{txt}  9{com}.         gen etime_T1_`y' = _b[max_reduc_eventT1]
+{txt} 10{com}.         gen etime_T1_`y'_se = _se[max_reduc_eventT1]
+{txt} 11{com}.         gen etime_T2_`y' = _b[max_reduc_eventT2]
+{txt} 12{com}.         gen etime_T2_`y'_se = _se[max_reduc_eventT2]
+{txt} 13{com}.         gen etime_T3_`y' = _b[max_reduc_eventT3]
+{txt} 14{com}.         gen etime_T3_`y'_se = _se[max_reduc_eventT3]
+{txt} 15{com}.         *outreg2 using "4000_outputs/table_`y'2.1.tex", dec(3) replace ctitle(Event Study, Unbalanced) nocons drop(i.state_fips i.year) title("`: var label `y''") label tex(frag) 
+. {c )-}
+
+{txt}Linear regression                               Number of obs     = {res}       537
+                                                {txt}{help j_robustsingular:F(16, 48) }        =  {res}        .
+                                                {txt}Prob > F          = {res}         .
+                                                {txt}R-squared         = {res}    0.8056
+                                                {txt}Root MSE          =    {res} 35.342
+
+{txt}{ralign 84:(Std. err. adjusted for {res:49} clusters in {res:state_fips})}
+{hline 19}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 20}{c |}{col 32}    Robust
+{col 1} inmate_noncon_all{col 20}{c |} Coefficient{col 32}  std. err.{col 44}      t{col 52}   P>|t|{col 60}     [95% con{col 73}f. interval]
+{hline 19}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+max_reduc_eventT_3 {c |}{col 20}{res}{space 2} .1711832{col 32}{space 2} .5547799{col 43}{space 1}    0.31{col 52}{space 3}0.759{col 60}{space 4}-.9442766{col 73}{space 3} 1.286643
+{txt}max_reduc_eventT_2 {c |}{col 20}{res}{space 2}  .462263{col 32}{space 2} .6124471{col 43}{space 1}    0.75{col 52}{space 3}0.454{col 60}{space 4}-.7691443{col 73}{space 3}  1.69367
+{txt}{space 1}max_reduc_eventT0 {c |}{col 20}{res}{space 2}-.6804738{col 32}{space 2} .6612565{col 43}{space 1}   -1.03{col 52}{space 3}0.309{col 60}{space 4}-2.010019{col 73}{space 3} .6490716
+{txt}{space 1}max_reduc_eventT1 {c |}{col 20}{res}{space 2} .8271004{col 32}{space 2} .9931605{col 43}{space 1}    0.83{col 52}{space 3}0.409{col 60}{space 4}-1.169783{col 73}{space 3} 2.823983
+{txt}{space 1}max_reduc_eventT2 {c |}{col 20}{res}{space 2} .1676054{col 32}{space 2} .8494114{col 43}{space 1}    0.20{col 52}{space 3}0.844{col 60}{space 4}-1.540251{col 73}{space 3} 1.875461
+{txt}{space 1}max_reduc_eventT3 {c |}{col 20}{res}{space 2}-.4255786{col 32}{space 2} .9831647{col 43}{space 1}   -0.43{col 52}{space 3}0.667{col 60}{space 4}-2.402364{col 73}{space 3} 1.551206
+{txt}{space 9}total_pop {c |}{col 20}{res}{space 2}-.0031231{col 32}{space 2} .0008047{col 43}{space 1}   -3.88{col 52}{space 3}0.000{col 60}{space 4} -.004741{col 73}{space 3}-.0015051
+{txt}{space 18} {c |}
+{space 8}state_fips {c |}
+{space 16}2  {c |}{col 20}{res}{space 2}-141.7957{col 32}{space 2} 16.36711{col 43}{space 1}   -8.66{col 52}{space 3}0.000{col 60}{space 4} -174.704{col 73}{space 3}-108.8874
+{txt}{space 16}4  {c |}{col 20}{res}{space 2} 10.16727{col 32}{space 2} 7.485565{col 43}{space 1}    1.36{col 52}{space 3}0.181{col 60}{space 4}-4.883467{col 73}{space 3} 25.21801
+{txt}{space 16}5  {c |}{col 20}{res}{space 2}-108.2844{col 32}{space 2} 8.366503{col 43}{space 1}  -12.94{col 52}{space 3}0.000{col 60}{space 4}-125.1063{col 73}{space 3}-91.46238
+{txt}{space 16}6  {c |}{col 20}{res}{space 2} 448.1115{col 32}{space 2} 94.64918{col 43}{space 1}    4.73{col 52}{space 3}0.000{col 60}{space 4} 257.8065{col 73}{space 3} 638.4164
+{txt}{space 16}8  {c |}{col 20}{res}{space 2} -84.8081{col 32}{space 2} 6.476427{col 43}{space 1}  -13.09{col 52}{space 3}0.000{col 60}{space 4}-97.82983{col 73}{space 3}-71.78637
+{txt}{space 16}9  {c |}{col 20}{res}{space 2} -90.2523{col 32}{space 2} 6.976974{col 43}{space 1}  -12.94{col 52}{space 3}0.000{col 60}{space 4}-104.2805{col 73}{space 3}-76.22416
+{txt}{space 15}10  {c |}{col 20}{res}{space 2}-119.3359{col 32}{space 2}  15.8902{col 43}{space 1}   -7.51{col 52}{space 3}0.000{col 60}{space 4}-151.2853{col 73}{space 3}-87.38649
+{txt}{space 15}12  {c |}{col 20}{res}{space 2} 427.5086{col 32}{space 2} 51.04221{col 43}{space 1}    8.38{col 52}{space 3}0.000{col 60}{space 4} 324.8814{col 73}{space 3} 530.1359
+{txt}{space 15}13  {c |}{col 20}{res}{space 2} 43.98219{col 32}{space 2}  17.6543{col 43}{space 1}    2.49{col 52}{space 3}0.016{col 60}{space 4} 8.485834{col 73}{space 3} 79.47855
+{txt}{space 15}16  {c |}{col 20}{res}{space 2}-141.1683{col 32}{space 2} 15.27759{col 43}{space 1}   -9.24{col 52}{space 3}0.000{col 60}{space 4} -171.886{col 73}{space 3}-110.4507
+{txt}{space 15}17  {c |}{col 20}{res}{space 2} 31.85815{col 32}{space 2} 16.94321{col 43}{space 1}    1.88{col 52}{space 3}0.066{col 60}{space 4}-2.208452{col 73}{space 3} 65.92475
+{txt}{space 15}18  {c |}{col 20}{res}{space 2}-56.34858{col 32}{space 2}  3.02962{col 43}{space 1}  -18.60{col 52}{space 3}0.000{col 60}{space 4}-62.44004{col 73}{space 3}-50.25712
+{txt}{space 15}19  {c |}{col 20}{res}{space 2}-105.1277{col 32}{space 2} 13.00426{col 43}{space 1}   -8.08{col 52}{space 3}0.000{col 60}{space 4}-131.2745{col 73}{space 3}-78.98092
+{txt}{space 15}20  {c |}{col 20}{res}{space 2}-91.28515{col 32}{space 2} 12.68165{col 43}{space 1}   -7.20{col 52}{space 3}0.000{col 60}{space 4}-116.7833{col 73}{space 3}-65.78698
+{txt}{space 15}21  {c |}{col 20}{res}{space 2} -84.8439{col 32}{space 2} 10.54113{col 43}{space 1}   -8.05{col 52}{space 3}0.000{col 60}{space 4}-106.0383{col 73}{space 3}-63.64954
+{txt}{space 15}22  {c |}{col 20}{res}{space 2} -85.9174{col 32}{space 2} 7.198757{col 43}{space 1}  -11.94{col 52}{space 3}0.000{col 60}{space 4}-100.3915{col 73}{space 3}-71.44333
+{txt}{space 15}23  {c |}{col 20}{res}{space 2}-144.7495{col 32}{space 2}  18.2802{col 43}{space 1}   -7.92{col 52}{space 3}0.000{col 60}{space 4}-181.5043{col 73}{space 3}-107.9947
+{txt}{space 15}24  {c |}{col 20}{res}{space 2}-63.54862{col 32}{space 2} 3.936683{col 43}{space 1}  -16.14{col 52}{space 3}0.000{col 60}{space 4}-71.46386{col 73}{space 3}-55.63339
+{txt}{space 15}25  {c |}{col 20}{res}{space 2} -110.176{col 32}{space 2} 12.21596{col 43}{space 1}   -9.02{col 52}{space 3}0.000{col 60}{space 4}-134.7378{col 73}{space 3}-85.61419
+{txt}{space 15}26  {c |}{col 20}{res}{space 2} 30.66832{col 32}{space 2} 15.15629{col 43}{space 1}    2.02{col 52}{space 3}0.049{col 60}{space 4} .1945588{col 73}{space 3} 61.14209
+{txt}{space 15}27  {c |}{col 20}{res}{space 2} -114.612{col 32}{space 2} 12.45492{col 43}{space 1}   -9.20{col 52}{space 3}0.000{col 60}{space 4}-139.6543{col 73}{space 3}-89.56968
+{txt}{space 15}28  {c |}{col 20}{res}{space 2}-87.77586{col 32}{space 2} 11.35374{col 43}{space 1}   -7.73{col 52}{space 3}0.000{col 60}{space 4}-110.6041{col 73}{space 3}-64.94764
+{txt}{space 15}29  {c |}{col 20}{res}{space 2} 48.93106{col 32}{space 2} 6.111406{col 43}{space 1}    8.01{col 52}{space 3}0.000{col 60}{space 4} 36.64326{col 73}{space 3} 61.21887
+{txt}{space 15}30  {c |}{col 20}{res}{space 2}-142.5787{col 32}{space 2} 18.82677{col 43}{space 1}   -7.57{col 52}{space 3}0.000{col 60}{space 4}-180.4324{col 73}{space 3}-104.7249
+{txt}{space 15}31  {c |}{col 20}{res}{space 2}-133.7469{col 32}{space 2} 16.42893{col 43}{space 1}   -8.14{col 52}{space 3}0.000{col 60}{space 4}-166.7794{col 73}{space 3}-100.7143
+{txt}{space 15}32  {c |}{col 20}{res}{space 2}-93.67227{col 32}{space 2} 9.826395{col 43}{space 1}   -9.53{col 52}{space 3}0.000{col 60}{space 4}-113.4296{col 73}{space 3}-73.91497
+{txt}{space 15}33  {c |}{col 20}{res}{space 2}-143.4562{col 32}{space 2} 18.14333{col 43}{space 1}   -7.91{col 52}{space 3}0.000{col 60}{space 4}-179.9359{col 73}{space 3}-106.9766
+{txt}{space 15}34  {c |}{col 20}{res}{space 2}-88.01849{col 32}{space 2} 4.810313{col 43}{space 1}  -18.30{col 52}{space 3}0.000{col 60}{space 4}-97.69028{col 73}{space 3}-78.34671
+{txt}{space 15}35  {c |}{col 20}{res}{space 2}-145.4107{col 32}{space 2} 16.89289{col 43}{space 1}   -8.61{col 52}{space 3}0.000{col 60}{space 4}-179.3762{col 73}{space 3}-111.4453
+{txt}{space 15}36  {c |}{col 20}{res}{space 2} 55.31581{col 32}{space 2} 23.20431{col 43}{space 1}    2.38{col 52}{space 3}0.021{col 60}{space 4} 8.660411{col 73}{space 3} 101.9712
+{txt}{space 15}37  {c |}{col 20}{res}{space 2}-3.042839{col 32}{space 2} 10.51263{col 43}{space 1}   -0.29{col 52}{space 3}0.773{col 60}{space 4}-24.17989{col 73}{space 3} 18.09422
+{txt}{space 15}38  {c |}{col 20}{res}{space 2}-158.6674{col 32}{space 2} 19.12334{col 43}{space 1}   -8.30{col 52}{space 3}0.000{col 60}{space 4}-197.1175{col 73}{space 3}-120.2174
+{txt}{space 15}39  {c |}{col 20}{res}{space 2} 65.89158{col 32}{space 2} 17.48694{col 43}{space 1}    3.77{col 52}{space 3}0.000{col 60}{space 4} 30.73172{col 73}{space 3} 101.0514
+{txt}{space 15}40  {c |}{col 20}{res}{space 2} -72.4335{col 32}{space 2} 5.923734{col 43}{space 1}  -12.23{col 52}{space 3}0.000{col 60}{space 4}-84.34396{col 73}{space 3}-60.52303
+{txt}{space 15}41  {c |}{col 20}{res}{space 2}-101.8236{col 32}{space 2} 8.510182{col 43}{space 1}  -11.96{col 52}{space 3}0.000{col 60}{space 4}-118.9345{col 73}{space 3}-84.71277
+{txt}{space 15}42  {c |}{col 20}{res}{space 2} 71.83068{col 32}{space 2} 18.70053{col 43}{space 1}    3.84{col 52}{space 3}0.000{col 60}{space 4} 34.23075{col 73}{space 3} 109.4306
+{txt}{space 15}44  {c |}{col 20}{res}{space 2}-146.1713{col 32}{space 2} 17.75575{col 43}{space 1}   -8.23{col 52}{space 3}0.000{col 60}{space 4}-181.8716{col 73}{space 3} -110.471
+{txt}{space 15}45  {c |}{col 20}{res}{space 2}-61.93629{col 32}{space 2}  3.63006{col 43}{space 1}  -17.06{col 52}{space 3}0.000{col 60}{space 4}-69.23502{col 73}{space 3}-54.63757
+{txt}{space 15}46  {c |}{col 20}{res}{space 2}-141.6467{col 32}{space 2} 17.25321{col 43}{space 1}   -8.21{col 52}{space 3}0.000{col 60}{space 4}-176.3365{col 73}{space 3}-106.9568
+{txt}{space 15}47  {c |}{col 20}{res}{space 2}-95.04843{col 32}{space 2} 8.390314{col 43}{space 1}  -11.33{col 52}{space 3}0.000{col 60}{space 4}-111.9183{col 73}{space 3}-78.17858
+{txt}{space 15}48  {c |}{col 20}{res}{space 2} 575.9539{col 32}{space 2} 91.92009{col 43}{space 1}    6.27{col 52}{space 3}0.000{col 60}{space 4} 391.1362{col 73}{space 3} 760.7716
+{txt}{space 15}49  {c |}{col 20}{res}{space 2}-138.7264{col 32}{space 2} 15.98692{col 43}{space 1}   -8.68{col 52}{space 3}0.000{col 60}{space 4}-170.8703{col 73}{space 3}-106.5826
+{txt}{space 15}50  {c |}{col 20}{res}{space 2}-146.3653{col 32}{space 2}  18.8705{col 43}{space 1}   -7.76{col 52}{space 3}0.000{col 60}{space 4} -184.307{col 73}{space 3}-108.4236
+{txt}{space 15}51  {c |}{col 20}{res}{space 2}-48.51201{col 32}{space 2} 4.282653{col 43}{space 1}  -11.33{col 52}{space 3}0.000{col 60}{space 4}-57.12286{col 73}{space 3}-39.90116
+{txt}{space 15}53  {c |}{col 20}{res}{space 2} 60.87809{col 32}{space 2} 6.312828{col 43}{space 1}    9.64{col 52}{space 3}0.000{col 60}{space 4}  48.1853{col 73}{space 3} 73.57088
+{txt}{space 15}54  {c |}{col 20}{res}{space 2} -126.778{col 32}{space 2} 15.74537{col 43}{space 1}   -8.05{col 52}{space 3}0.000{col 60}{space 4}-158.4362{col 73}{space 3}-95.11984
+{txt}{space 15}55  {c |}{col 20}{res}{space 2}-28.01999{col 32}{space 2} 3.061637{col 43}{space 1}   -9.15{col 52}{space 3}0.000{col 60}{space 4}-34.17582{col 73}{space 3}-21.86416
+{txt}{space 15}56  {c |}{col 20}{res}{space 2}-151.7648{col 32}{space 2} 18.52766{col 43}{space 1}   -8.19{col 52}{space 3}0.000{col 60}{space 4}-189.0172{col 73}{space 3}-114.5125
+{txt}{space 18} {c |}
+{space 14}year {c |}
+{space 13}2009  {c |}{col 20}{res}{space 2}-4.447911{col 32}{space 2} 3.261641{col 43}{space 1}   -1.36{col 52}{space 3}0.179{col 60}{space 4}-11.00588{col 73}{space 3} 2.110058
+{txt}{space 13}2010  {c |}{col 20}{res}{space 2} 4.265897{col 32}{space 2} 4.971482{col 43}{space 1}    0.86{col 52}{space 3}0.395{col 60}{space 4}-5.729937{col 73}{space 3} 14.26173
+{txt}{space 13}2011  {c |}{col 20}{res}{space 2} 6.003666{col 32}{space 2} 6.273668{col 43}{space 1}    0.96{col 52}{space 3}0.343{col 60}{space 4}-6.610389{col 73}{space 3} 18.61772
+{txt}{space 13}2012  {c |}{col 20}{res}{space 2} 6.108153{col 32}{space 2} 7.424214{col 43}{space 1}    0.82{col 52}{space 3}0.415{col 60}{space 4}-8.819229{col 73}{space 3} 21.03553
+{txt}{space 13}2013  {c |}{col 20}{res}{space 2} 12.48196{col 32}{space 2} 7.359957{col 43}{space 1}    1.70{col 52}{space 3}0.096{col 60}{space 4}-2.316225{col 73}{space 3} 27.28015
+{txt}{space 13}2014  {c |}{col 20}{res}{space 2} 28.13282{col 32}{space 2} 11.14428{col 43}{space 1}    2.52{col 52}{space 3}0.015{col 60}{space 4} 5.725745{col 73}{space 3} 50.53989
+{txt}{space 13}2015  {c |}{col 20}{res}{space 2}  32.1184{col 32}{space 2} 11.63863{col 43}{space 1}    2.76{col 52}{space 3}0.008{col 60}{space 4} 8.717369{col 73}{space 3} 55.51942
+{txt}{space 13}2016  {c |}{col 20}{res}{space 2} 29.05284{col 32}{space 2}  8.82919{col 43}{space 1}    3.29{col 52}{space 3}0.002{col 60}{space 4} 11.30056{col 73}{space 3} 46.80512
+{txt}{space 13}2017  {c |}{col 20}{res}{space 2} 28.46429{col 32}{space 2} 9.102042{col 43}{space 1}    3.13{col 52}{space 3}0.003{col 60}{space 4} 10.16341{col 73}{space 3} 46.76517
+{txt}{space 13}2018  {c |}{col 20}{res}{space 2} 29.73948{col 32}{space 2} 9.022425{col 43}{space 1}    3.30{col 52}{space 3}0.002{col 60}{space 4} 11.59868{col 73}{space 3} 47.88028
+{txt}{space 18} {c |}
+{space 13}_cons {c |}{col 20}{res}{space 2} 148.4268{col 32}{space 2} 19.88868{col 43}{space 1}    7.46{col 52}{space 3}0.000{col 60}{space 4} 108.4379{col 73}{space 3} 188.4156
+{txt}{hline 19}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{txt}Linear regression                               Number of obs     = {res}       539
+                                                {txt}{help j_robustsingular:F(16, 48) }        =  {res}        .
+                                                {txt}Prob > F          = {res}         .
+                                                {txt}R-squared         = {res}    0.6171
+                                                {txt}Root MSE          =    {res} 83.674
+
+{txt}{ralign 84:(Std. err. adjusted for {res:49} clusters in {res:state_fips})}
+{hline 19}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 20}{c |}{col 32}    Robust
+{col 1} staff_miscond_all{col 20}{c |} Coefficient{col 32}  std. err.{col 44}      t{col 52}   P>|t|{col 60}     [95% con{col 73}f. interval]
+{hline 19}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+max_reduc_eventT_3 {c |}{col 20}{res}{space 2}   1.6171{col 32}{space 2} 1.699785{col 43}{space 1}    0.95{col 52}{space 3}0.346{col 60}{space 4}-1.800547{col 73}{space 3} 5.034747
+{txt}max_reduc_eventT_2 {c |}{col 20}{res}{space 2} 3.056309{col 32}{space 2} 1.736124{col 43}{space 1}    1.76{col 52}{space 3}0.085{col 60}{space 4}-.4344015{col 73}{space 3}  6.54702
+{txt}{space 1}max_reduc_eventT0 {c |}{col 20}{res}{space 2} 1.553964{col 32}{space 2} 1.430415{col 43}{space 1}    1.09{col 52}{space 3}0.283{col 60}{space 4}-1.322078{col 73}{space 3} 4.430006
+{txt}{space 1}max_reduc_eventT1 {c |}{col 20}{res}{space 2} 1.444876{col 32}{space 2} 2.086509{col 43}{space 1}    0.69{col 52}{space 3}0.492{col 60}{space 4}-2.750332{col 73}{space 3} 5.640084
+{txt}{space 1}max_reduc_eventT2 {c |}{col 20}{res}{space 2} 1.703997{col 32}{space 2} 2.269931{col 43}{space 1}    0.75{col 52}{space 3}0.457{col 60}{space 4}-2.860006{col 73}{space 3}    6.268
+{txt}{space 1}max_reduc_eventT3 {c |}{col 20}{res}{space 2} 1.155479{col 32}{space 2} 2.226368{col 43}{space 1}    0.52{col 52}{space 3}0.606{col 60}{space 4}-3.320934{col 73}{space 3} 5.631893
+{txt}{space 9}total_pop {c |}{col 20}{res}{space 2} -.005813{col 32}{space 2} .0021222{col 43}{space 1}   -2.74{col 52}{space 3}0.009{col 60}{space 4}  -.01008{col 73}{space 3} -.001546
+{txt}{space 18} {c |}
+{space 8}state_fips {c |}
+{space 16}2  {c |}{col 20}{res}{space 2}-159.6915{col 32}{space 2} 43.16593{col 43}{space 1}   -3.70{col 52}{space 3}0.001{col 60}{space 4}-246.4824{col 73}{space 3}-72.90054
+{txt}{space 16}4  {c |}{col 20}{res}{space 2} 83.77444{col 32}{space 2} 20.31859{col 43}{space 1}    4.12{col 52}{space 3}0.000{col 60}{space 4} 42.92118{col 73}{space 3} 124.6277
+{txt}{space 16}5  {c |}{col 20}{res}{space 2}-69.48179{col 32}{space 2} 21.79899{col 43}{space 1}   -3.19{col 52}{space 3}0.003{col 60}{space 4}-113.3116{col 73}{space 3}-25.65198
+{txt}{space 16}6  {c |}{col 20}{res}{space 2} 786.0986{col 32}{space 2} 250.2605{col 43}{space 1}    3.14{col 52}{space 3}0.003{col 60}{space 4} 282.9161{col 73}{space 3} 1289.281
+{txt}{space 16}8  {c |}{col 20}{res}{space 2}-48.66528{col 32}{space 2} 17.00752{col 43}{space 1}   -2.86{col 52}{space 3}0.006{col 60}{space 4} -82.8612{col 73}{space 3}-14.46936
+{txt}{space 16}9  {c |}{col 20}{res}{space 2}-79.97383{col 32}{space 2} 18.34519{col 43}{space 1}   -4.36{col 52}{space 3}0.000{col 60}{space 4}-116.8593{col 73}{space 3}-43.08835
+{txt}{space 15}10  {c |}{col 20}{res}{space 2}-130.8567{col 32}{space 2} 41.60375{col 43}{space 1}   -3.15{col 52}{space 3}0.003{col 60}{space 4}-214.5067{col 73}{space 3}-47.20679
+{txt}{space 15}12  {c |}{col 20}{res}{space 2} 703.0707{col 32}{space 2}  135.365{col 43}{space 1}    5.19{col 52}{space 3}0.000{col 60}{space 4} 430.9011{col 73}{space 3} 975.2403
+{txt}{space 15}13  {c |}{col 20}{res}{space 2} 240.3332{col 32}{space 2} 46.65377{col 43}{space 1}    5.15{col 52}{space 3}0.000{col 60}{space 4} 146.5295{col 73}{space 3} 334.1369
+{txt}{space 15}16  {c |}{col 20}{res}{space 2}-148.4339{col 32}{space 2} 40.33987{col 43}{space 1}   -3.68{col 52}{space 3}0.001{col 60}{space 4}-229.5426{col 73}{space 3}-67.32515
+{txt}{space 15}17  {c |}{col 20}{res}{space 2} 154.0077{col 32}{space 2} 45.89004{col 43}{space 1}    3.36{col 52}{space 3}0.002{col 60}{space 4}  61.7396{col 73}{space 3} 246.2758
+{txt}{space 15}18  {c |}{col 20}{res}{space 2} 5.148523{col 32}{space 2} 8.704793{col 43}{space 1}    0.59{col 52}{space 3}0.557{col 60}{space 4}-12.35364{col 73}{space 3} 22.65068
+{txt}{space 15}19  {c |}{col 20}{res}{space 2}-89.73243{col 32}{space 2} 33.91349{col 43}{space 1}   -2.65{col 52}{space 3}0.011{col 60}{space 4}-157.9201{col 73}{space 3}-21.54478
+{txt}{space 15}20  {c |}{col 20}{res}{space 2}-77.22138{col 32}{space 2} 33.08527{col 43}{space 1}   -2.33{col 52}{space 3}0.024{col 60}{space 4}-143.7438{col 73}{space 3}-10.69897
+{txt}{space 15}21  {c |}{col 20}{res}{space 2}-28.49991{col 32}{space 2} 27.40979{col 43}{space 1}   -1.04{col 52}{space 3}0.304{col 60}{space 4}-83.61099{col 73}{space 3} 26.61117
+{txt}{space 15}22  {c |}{col 20}{res}{space 2} 39.10366{col 32}{space 2} 18.69575{col 43}{space 1}    2.09{col 52}{space 3}0.042{col 60}{space 4} 1.513326{col 73}{space 3} 76.69399
+{txt}{space 15}23  {c |}{col 20}{res}{space 2}-166.4648{col 32}{space 2} 48.05291{col 43}{space 1}   -3.46{col 52}{space 3}0.001{col 60}{space 4}-263.0817{col 73}{space 3}-69.84799
+{txt}{space 15}24  {c |}{col 20}{res}{space 2}-18.40585{col 32}{space 2} 10.34741{col 43}{space 1}   -1.78{col 52}{space 3}0.082{col 60}{space 4}-39.21072{col 73}{space 3} 2.399013
+{txt}{space 15}25  {c |}{col 20}{res}{space 2}-86.02405{col 32}{space 2} 31.75697{col 43}{space 1}   -2.71{col 52}{space 3}0.009{col 60}{space 4}-149.8757{col 73}{space 3}-22.17238
+{txt}{space 15}26  {c |}{col 20}{res}{space 2}  196.628{col 32}{space 2} 40.72343{col 43}{space 1}    4.83{col 52}{space 3}0.000{col 60}{space 4} 114.7481{col 73}{space 3} 278.5079
+{txt}{space 15}27  {c |}{col 20}{res}{space 2}-123.5205{col 32}{space 2} 32.84809{col 43}{space 1}   -3.76{col 52}{space 3}0.000{col 60}{space 4} -189.566{col 73}{space 3}  -57.475
+{txt}{space 15}28  {c |}{col 20}{res}{space 2}-109.7979{col 32}{space 2}   29.727{col 43}{space 1}   -3.69{col 52}{space 3}0.001{col 60}{space 4} -169.568{col 73}{space 3}-50.02772
+{txt}{space 15}29  {c |}{col 20}{res}{space 2}  166.609{col 32}{space 2} 16.98934{col 43}{space 1}    9.81{col 52}{space 3}0.000{col 60}{space 4} 132.4496{col 73}{space 3} 200.7684
+{txt}{space 15}30  {c |}{col 20}{res}{space 2}-152.9269{col 32}{space 2}  49.2148{col 43}{space 1}   -3.11{col 52}{space 3}0.003{col 60}{space 4}-251.8798{col 73}{space 3}-53.97387
+{txt}{space 15}31  {c |}{col 20}{res}{space 2}-112.5952{col 32}{space 2} 42.81327{col 43}{space 1}   -2.63{col 52}{space 3}0.011{col 60}{space 4} -198.677{col 73}{space 3}-26.51334
+{txt}{space 15}32  {c |}{col 20}{res}{space 2}-52.67096{col 32}{space 2} 25.37271{col 43}{space 1}   -2.08{col 52}{space 3}0.043{col 60}{space 4}-103.6862{col 73}{space 3}-1.655712
+{txt}{space 15}33  {c |}{col 20}{res}{space 2}-157.8416{col 32}{space 2} 47.35797{col 43}{space 1}   -3.33{col 52}{space 3}0.002{col 60}{space 4}-253.0611{col 73}{space 3}  -62.622
+{txt}{space 15}34  {c |}{col 20}{res}{space 2}-49.82764{col 32}{space 2} 12.47754{col 43}{space 1}   -3.99{col 52}{space 3}0.000{col 60}{space 4}-74.91542{col 73}{space 3}-24.73986
+{txt}{space 15}35  {c |}{col 20}{res}{space 2}-143.4287{col 32}{space 2} 44.37902{col 43}{space 1}   -3.23{col 52}{space 3}0.002{col 60}{space 4}-232.6587{col 73}{space 3}-54.19872
+{txt}{space 15}36  {c |}{col 20}{res}{space 2} 353.0741{col 32}{space 2} 61.90391{col 43}{space 1}    5.70{col 52}{space 3}0.000{col 60}{space 4}  228.608{col 73}{space 3} 477.5402
+{txt}{space 15}37  {c |}{col 20}{res}{space 2} 247.3193{col 32}{space 2} 27.70756{col 43}{space 1}    8.93{col 52}{space 3}0.000{col 60}{space 4} 191.6095{col 73}{space 3}  303.029
+{txt}{space 15}38  {c |}{col 20}{res}{space 2}-166.9669{col 32}{space 2} 49.92929{col 43}{space 1}   -3.34{col 52}{space 3}0.002{col 60}{space 4}-267.3565{col 73}{space 3}-66.57738
+{txt}{space 15}39  {c |}{col 20}{res}{space 2} 145.5685{col 32}{space 2}  46.1368{col 43}{space 1}    3.16{col 52}{space 3}0.003{col 60}{space 4} 52.80427{col 73}{space 3} 238.3328
+{txt}{space 15}40  {c |}{col 20}{res}{space 2}-40.43233{col 32}{space 2} 15.44503{col 43}{space 1}   -2.62{col 52}{space 3}0.012{col 60}{space 4}-71.48665{col 73}{space 3} -9.37801
+{txt}{space 15}41  {c |}{col 20}{res}{space 2}-79.50363{col 32}{space 2} 22.51719{col 43}{space 1}   -3.53{col 52}{space 3}0.001{col 60}{space 4}-124.7775{col 73}{space 3}-34.22979
+{txt}{space 15}42  {c |}{col 20}{res}{space 2} 379.5595{col 32}{space 2} 49.50628{col 43}{space 1}    7.67{col 52}{space 3}0.000{col 60}{space 4} 280.0204{col 73}{space 3} 479.0985
+{txt}{space 15}44  {c |}{col 20}{res}{space 2}-157.3992{col 32}{space 2} 46.37164{col 43}{space 1}   -3.39{col 52}{space 3}0.001{col 60}{space 4}-250.6356{col 73}{space 3}-64.16275
+{txt}{space 15}45  {c |}{col 20}{res}{space 2}-30.61624{col 32}{space 2} 9.530761{col 43}{space 1}   -3.21{col 52}{space 3}0.002{col 60}{space 4}-49.77912{col 73}{space 3}-11.45337
+{txt}{space 15}46  {c |}{col 20}{res}{space 2}-155.9928{col 32}{space 2} 45.15124{col 43}{space 1}   -3.45{col 52}{space 3}0.001{col 60}{space 4}-246.7755{col 73}{space 3}-65.21016
+{txt}{space 15}47  {c |}{col 20}{res}{space 2}-59.57115{col 32}{space 2} 21.92877{col 43}{space 1}   -2.72{col 52}{space 3}0.009{col 60}{space 4}-103.6619{col 73}{space 3}-15.48041
+{txt}{space 15}48  {c |}{col 20}{res}{space 2} 1031.951{col 32}{space 2} 243.0056{col 43}{space 1}    4.25{col 52}{space 3}0.000{col 60}{space 4} 543.3557{col 73}{space 3} 1520.547
+{txt}{space 15}49  {c |}{col 20}{res}{space 2}-149.2378{col 32}{space 2} 41.82134{col 43}{space 1}   -3.57{col 52}{space 3}0.001{col 60}{space 4}-233.3252{col 73}{space 3}-65.15035
+{txt}{space 15}50  {c |}{col 20}{res}{space 2}-153.4677{col 32}{space 2} 49.47023{col 43}{space 1}   -3.10{col 52}{space 3}0.003{col 60}{space 4}-252.9342{col 73}{space 3} -54.0011
+{txt}{space 15}51  {c |}{col 20}{res}{space 2} 53.96225{col 32}{space 2} 11.88744{col 43}{space 1}    4.54{col 52}{space 3}0.000{col 60}{space 4} 30.06094{col 73}{space 3} 77.86355
+{txt}{space 15}53  {c |}{col 20}{res}{space 2} 106.6923{col 32}{space 2} 16.41761{col 43}{space 1}    6.50{col 52}{space 3}0.000{col 60}{space 4} 73.68251{col 73}{space 3} 139.7022
+{txt}{space 15}54  {c |}{col 20}{res}{space 2}  -101.93{col 32}{space 2} 41.13389{col 43}{space 1}   -2.48{col 52}{space 3}0.017{col 60}{space 4}-184.6352{col 73}{space 3}-19.22475
+{txt}{space 15}55  {c |}{col 20}{res}{space 2} 35.69836{col 32}{space 2} 8.225791{col 43}{space 1}    4.34{col 52}{space 3}0.000{col 60}{space 4}  19.1593{col 73}{space 3} 52.23742
+{txt}{space 15}56  {c |}{col 20}{res}{space 2}-167.4034{col 32}{space 2} 48.56873{col 43}{space 1}   -3.45{col 52}{space 3}0.001{col 60}{space 4}-265.0573{col 73}{space 3}-69.74938
+{txt}{space 18} {c |}
+{space 14}year {c |}
+{space 13}2009  {c |}{col 20}{res}{space 2} -.964928{col 32}{space 2} 5.886742{col 43}{space 1}   -0.16{col 52}{space 3}0.870{col 60}{space 4}-12.80102{col 73}{space 3} 10.87116
+{txt}{space 13}2010  {c |}{col 20}{res}{space 2}-2.402233{col 32}{space 2} 6.330738{col 43}{space 1}   -0.38{col 52}{space 3}0.706{col 60}{space 4}-15.13103{col 73}{space 3} 10.32657
+{txt}{space 13}2011  {c |}{col 20}{res}{space 2}-9.911835{col 32}{space 2} 7.655508{col 43}{space 1}   -1.29{col 52}{space 3}0.202{col 60}{space 4}-25.30427{col 73}{space 3} 5.480596
+{txt}{space 13}2012  {c |}{col 20}{res}{space 2}-11.78447{col 32}{space 2} 10.65884{col 43}{space 1}   -1.11{col 52}{space 3}0.274{col 60}{space 4}-33.21549{col 73}{space 3} 9.646562
+{txt}{space 13}2013  {c |}{col 20}{res}{space 2} 12.63937{col 32}{space 2} 13.05072{col 43}{space 1}    0.97{col 52}{space 3}0.338{col 60}{space 4}-13.60086{col 73}{space 3}  38.8796
+{txt}{space 13}2014  {c |}{col 20}{res}{space 2} 38.97764{col 32}{space 2} 19.45701{col 43}{space 1}    2.00{col 52}{space 3}0.051{col 60}{space 4} -.143314{col 73}{space 3} 78.09858
+{txt}{space 13}2015  {c |}{col 20}{res}{space 2} 73.97444{col 32}{space 2} 30.56157{col 43}{space 1}    2.42{col 52}{space 3}0.019{col 60}{space 4} 12.52629{col 73}{space 3} 135.4226
+{txt}{space 13}2016  {c |}{col 20}{res}{space 2} 71.12203{col 32}{space 2} 22.01082{col 43}{space 1}    3.23{col 52}{space 3}0.002{col 60}{space 4} 26.86632{col 73}{space 3} 115.3777
+{txt}{space 13}2017  {c |}{col 20}{res}{space 2} 62.93046{col 32}{space 2}  19.4181{col 43}{space 1}    3.24{col 52}{space 3}0.002{col 60}{space 4} 23.88777{col 73}{space 3} 101.9732
+{txt}{space 13}2018  {c |}{col 20}{res}{space 2} 68.81099{col 32}{space 2} 22.02434{col 43}{space 1}    3.12{col 52}{space 3}0.003{col 60}{space 4} 24.52808{col 73}{space 3} 113.0939
+{txt}{space 18} {c |}
+{space 13}_cons {c |}{col 20}{res}{space 2} 148.8212{col 32}{space 2} 53.61825{col 43}{space 1}    2.78{col 52}{space 3}0.008{col 60}{space 4} 41.01453{col 73}{space 3}  256.628
+{txt}{hline 19}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. * constructing event study graphs
+. gen event_time = -3 if year==reduc_year-3
+{txt}(497 missing values generated)
+
+{com}. replace event_time = -2 if year==reduc_year-2
+{txt}(44 real changes made)
+
+{com}. *replace event_time = -1 if year==reduc_year-1 
+. replace event_time = 0 if year==reduc_year
+{txt}(48 real changes made)
+
+{com}. replace event_time = 1 if year==reduc_year + 1
+{txt}(46 real changes made)
+
+{com}. replace event_time = 2 if year==reduc_year + 2
+{txt}(43 real changes made)
+
+{com}. replace event_time = 3 if year==reduc_year + 3
+{txt}(41 real changes made)
+
+{com}. drop if event_time==.
+{txt}(275 observations deleted)
+
+{com}. 
+. foreach y in `yit' {c -(}
+{txt}  2{com}. gen reduc_etime_`y' = 0
+{txt}  3{com}. replace reduc_etime_`y' = etime_T_3_`y' if event_time==-3
+{txt}  4{com}. replace reduc_etime_`y' = etime_T_2_`y' if event_time==-2
+{txt}  5{com}. replace reduc_etime_`y' = etime_T0_`y' if event_time==0
+{txt}  6{com}. replace reduc_etime_`y' = etime_T1_`y' if event_time==1
+{txt}  7{com}. replace reduc_etime_`y' = etime_T2_`y' if event_time==2
+{txt}  8{com}. replace reduc_etime_`y' = etime_T3_`y' if event_time==3
+{txt}  9{com}. 
+. gen reduc_etime_`y'_u = reduc_etime_`y'
+{txt} 10{com}. replace reduc_etime_`y'_u = reduc_etime_`y'_u + etime_T_3_`y'_se*1.96 if event_time==-3
+{txt} 11{com}. replace reduc_etime_`y'_u = reduc_etime_`y'_u + etime_T_2_`y'_se*1.96 if event_time==-2
+{txt} 12{com}. replace reduc_etime_`y'_u = reduc_etime_`y'_u + etime_T0_`y'_se*1.96 if event_time==0
+{txt} 13{com}. replace reduc_etime_`y'_u = reduc_etime_`y'_u + etime_T1_`y'_se*1.96 if event_time==1
+{txt} 14{com}. replace reduc_etime_`y'_u = reduc_etime_`y'_u + etime_T2_`y'_se*1.96 if event_time==2
+{txt} 15{com}. replace reduc_etime_`y'_u = reduc_etime_`y'_u + etime_T3_`y'_se*1.96 if event_time==3
+{txt} 16{com}. 
+. gen reduc_etime_`y'_l = reduc_etime_`y'
+{txt} 17{com}. replace reduc_etime_`y'_l = reduc_etime_`y'_l - etime_T_3_`y'_se*1.96 if event_time==-3
+{txt} 18{com}. replace reduc_etime_`y'_l = reduc_etime_`y'_l - etime_T_2_`y'_se*1.96 if event_time==-2
+{txt} 19{com}. replace reduc_etime_`y'_l = reduc_etime_`y'_l - etime_T0_`y'_se*1.96 if event_time==0
+{txt} 20{com}. replace reduc_etime_`y'_l = reduc_etime_`y'_l - etime_T1_`y'_se*1.96 if event_time==1
+{txt} 21{com}. replace reduc_etime_`y'_l = reduc_etime_`y'_l - etime_T2_`y'_se*1.96 if event_time==2
+{txt} 22{com}. replace reduc_etime_`y'_l = reduc_etime_`y'_l - etime_T3_`y'_se*1.96 if event_time==3
+{txt} 23{com}. {c )-}
+{txt}(42 real changes made)
+(44 real changes made)
+(48 real changes made)
+(46 real changes made)
+(43 real changes made)
+(41 real changes made)
+(42 real changes made)
+(44 real changes made)
+(48 real changes made)
+(46 real changes made)
+(43 real changes made)
+(41 real changes made)
+(42 real changes made)
+(44 real changes made)
+(48 real changes made)
+(46 real changes made)
+(43 real changes made)
+(41 real changes made)
+(42 real changes made)
+(44 real changes made)
+(48 real changes made)
+(46 real changes made)
+(43 real changes made)
+(41 real changes made)
+(42 real changes made)
+(44 real changes made)
+(48 real changes made)
+(46 real changes made)
+(43 real changes made)
+(41 real changes made)
+(42 real changes made)
+(44 real changes made)
+(48 real changes made)
+(46 real changes made)
+(43 real changes made)
+(41 real changes made)
+
+{com}. 
+. * (cleaned-up for oral exam, sept 2024)
+. twoway (rspike reduc_etime_inmate_noncon_all_u reduc_etime_inmate_noncon_all_l event_time, mcolor(stc1)) || (scatter reduc_etime_inmate_noncon_all event_time, mcolor(stc1)), ///
+>         legend(off) name("inmate_noncon_all", replace) xtitle("0 = Year of Biggest Rate Reduction") ytitle(Counts of Allegations) ///
+>         xline(-0.5, lcolor(red) lwidth(0.1pt)) yline(0, lcolor(red) lwidth(0.1pt)) ///
+>         xlab(-3 "-3" -2 "-2" -1 "-1" 0 "0" 1 "1" 2 "2" 3 "3", nogrid) 
+{res}{txt}
+{com}. graph export "6000_LaTeX\inmate_noncon_all.eps", replace
+{txt}{p 0 4 2}
+file {bf}
+6000_LaTeX\inmate_noncon_all.eps{rm}
+saved as
+EPS
+format
+{p_end}
+
+{com}. graph export "6000_LaTeX\inmate_noncon_all.pdf", replace
+{txt}{p 0 4 2}
+file {bf}
+6000_LaTeX\inmate_noncon_all.pdf{rm}
+saved as
+PDF
+format
+{p_end}
+
+{com}. 
+. twoway (rspike reduc_etime_staff_miscond_all_u reduc_etime_staff_miscond_all_l event_time, mcolor(stc1)) || (scatter reduc_etime_staff_miscond_all event_time, mcolor(stc1)), ///
+>         legend(off) name("staff_miscond_all", replace) xtitle("0 = Year of Biggest Rate Reduction") ytitle(Counts of Allegations) ///
+>         xline(-0.5, lcolor(red) lwidth(0.1pt)) yline(0, lcolor(red) lwidth(0.1pt)) ///
+>         xlab(-3 "-3" -2 "-2" -1 "-1" 0 "0" 1 "1" 2 "2" 3 "3", nogrid) 
+{res}{txt}
+{com}. graph export "6000_LaTeX\staff_miscond_all.eps", replace
+{txt}{p 0 4 2}
+file {bf}
+6000_LaTeX\staff_miscond_all.eps{rm}
+saved as
+EPS
+format
+{p_end}
+
+{com}. graph export "6000_LaTeX\staff_miscond_all.pdf", replace
+{txt}{p 0 4 2}
+file {bf}
+6000_LaTeX\staff_miscond_all.pdf{rm}
+saved as
+PDF
+format
+{p_end}
+
+{com}. 
+. **********
+. 
+. * #7: same, but drop states that don't have PREA data for T_3 to T3 
+. * yit = alpha + si*gamma + ft*delta + largest_reduc*T_3*beta1 + largest_reduc*T_2*beta2 + ... + largest*reduc3*beta6 + eit
+. 
+. use "2000_data/500_working/final_output_dta", replace
+{txt}
+{com}. 
+. local yit "inmate_noncon_all staff_miscond_all"
+{txt}
+{com}. 
+. bysort state: egen temp_max_reduc = min(fd_oos_coll_15m)
+{txt}
+{com}. gen max_reduc = abs(temp_max_reduc) 
+{txt}
+{com}. bysort state: gen temp_reduc_year_id = max_reduc + fd_oos_coll_15m 
+{txt}(49 missing values generated)
+
+{com}. bysort state: egen temp_reduc_year = min(year) if temp_reduc_year_id==0 & state!="FLORIDA"
+{txt}(491 missing values generated)
+
+{com}. bysort state: egen reduc_year = max(temp_reduc_year) if state!="FLORIDA"
+{txt}(11 missing values generated)
+
+{com}. drop temp_max_reduc temp_reduc_year_id temp_reduc_year
+{txt}
+{com}. 
+. la var max_reduc "Largest Observed Out-of-State 15m Collect Call Cost Reduction"
+{txt}
+{com}. la var reduc_year "Year of Largest Observed Out-of-State 15m Collect Call Cost Reduction"
+{txt}
+{com}. 
+. * NOTE: FLORIDA HAS NO REDUCTIONS, BUT IN FACT, AN INCREASE! RATES UP BY $0.30 IN 2012
+. 
+. gen eventT_3 = (year==reduc_year-3)
+{txt}
+{com}. gen eventT_2 = (year==reduc_year-2)
+{txt}
+{com}. gen eventT0 = (year==reduc_year)
+{txt}
+{com}. gen eventT1 = (year==reduc_year+1)
+{txt}
+{com}. gen eventT2 = (year==reduc_year+2)
+{txt}
+{com}. gen eventT3 = (year==reduc_year+3)
+{txt}
+{com}. 
+. foreach T in eventT_3 eventT_2 eventT0 eventT1 eventT2 eventT3 {c -(}
+{txt}  2{com}.         gen max_reduc_`T' = max_reduc*`T'
+{txt}  3{com}. {c )-}
+{txt}
+{com}. 
+. local xit "c.total_pop"
+{txt}
+{com}. local max_reduc_eventT "c.max_reduc_*"
+{txt}
+{com}. 
+. bysort state: egen temp_timeline_check_1 = max(eventT_3) 
+{txt}
+{com}. bysort state: egen temp_timeline_check_2 = max(eventT3)
+{txt}
+{com}. bysort state: gen timeline_check = temp_timeline_check_1 + temp_timeline_check_2
+{txt}
+{com}. gen fulltimeline = (timeline_check==2)
+{txt}
+{com}. keep if fulltimeline==0 | state=="FLORIDA"
+{txt}(385 observations deleted)
+
+{com}. 
+. foreach y in `yit' {c -(}
+{txt}  2{com}.         reg `y' `max_reduc_eventT' `xit' i.state_fips i.year, vce(cl state_fips)
+{txt}  3{com}.         gen etime_T_3_`y' = _b[max_reduc_eventT_3]
+{txt}  4{com}.         gen etime_T_3_`y'_se = _se[max_reduc_eventT_3]
+{txt}  5{com}.         gen etime_T_2_`y' = _b[max_reduc_eventT_2]
+{txt}  6{com}.         gen etime_T_2_`y'_se = _se[max_reduc_eventT_2]
+{txt}  7{com}.         gen etime_T0_`y' = _b[max_reduc_eventT0]
+{txt}  8{com}.         gen etime_T0_`y'_se = _se[max_reduc_eventT0]
+{txt}  9{com}.         gen etime_T1_`y' = _b[max_reduc_eventT1]
+{txt} 10{com}.         gen etime_T1_`y'_se = _se[max_reduc_eventT1]
+{txt} 11{com}.         gen etime_T2_`y' = _b[max_reduc_eventT2]
+{txt} 12{com}.         gen etime_T2_`y'_se = _se[max_reduc_eventT2]
+{txt} 13{com}.         gen etime_T3_`y' = _b[max_reduc_eventT3]
+{txt} 14{com}.         gen etime_T3_`y'_se = _se[max_reduc_eventT3]
+{txt} 15{com}.         *outreg2 using "6000_LaTeX/table_`y'2.1.tex", dec(3) append ctitle(Event Study, Balanced) nocons drop(i.state_fips i.year) label tex(frag) 
+. {c )-}
+
+{txt}Linear regression                               Number of obs     = {res}       153
+                                                {txt}{help j_robustsingular:F(12, 13) }        =  {res}        .
+                                                {txt}Prob > F          = {res}         .
+                                                {txt}R-squared         = {res}    0.8508
+                                                {txt}Root MSE          =    {res} 49.204
+
+{txt}{ralign 84:(Std. err. adjusted for {res:14} clusters in {res:state_fips})}
+{hline 19}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 20}{c |}{col 32}    Robust
+{col 1} inmate_noncon_all{col 20}{c |} Coefficient{col 32}  std. err.{col 44}      t{col 52}   P>|t|{col 60}     [95% con{col 73}f. interval]
+{hline 19}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+max_reduc_eventT_3 {c |}{col 20}{res}{space 2}-1.368217{col 32}{space 2} 6.629748{col 43}{space 1}   -0.21{col 52}{space 3}0.840{col 60}{space 4}-15.69092{col 73}{space 3} 12.95448
+{txt}max_reduc_eventT_2 {c |}{col 20}{res}{space 2} .3309241{col 32}{space 2}  5.97138{col 43}{space 1}    0.06{col 52}{space 3}0.957{col 60}{space 4}-12.56946{col 73}{space 3} 13.23131
+{txt}{space 1}max_reduc_eventT0 {c |}{col 20}{res}{space 2} 3.164661{col 32}{space 2} 3.375144{col 43}{space 1}    0.94{col 52}{space 3}0.366{col 60}{space 4}-4.126894{col 73}{space 3} 10.45622
+{txt}{space 1}max_reduc_eventT1 {c |}{col 20}{res}{space 2}   .87359{col 32}{space 2} 2.332787{col 43}{space 1}    0.37{col 52}{space 3}0.714{col 60}{space 4} -4.16609{col 73}{space 3}  5.91327
+{txt}{space 1}max_reduc_eventT2 {c |}{col 20}{res}{space 2}-.9681115{col 32}{space 2} 3.129042{col 43}{space 1}   -0.31{col 52}{space 3}0.762{col 60}{space 4}-7.727996{col 73}{space 3} 5.791773
+{txt}{space 1}max_reduc_eventT3 {c |}{col 20}{res}{space 2} .6336261{col 32}{space 2} 3.136139{col 43}{space 1}    0.20{col 52}{space 3}0.843{col 60}{space 4}-6.141591{col 73}{space 3} 7.408843
+{txt}{space 9}total_pop {c |}{col 20}{res}{space 2}-.0021413{col 32}{space 2} .0005923{col 43}{space 1}   -3.62{col 52}{space 3}0.003{col 60}{space 4}-.0034209{col 73}{space 3}-.0008618
+{txt}{space 18} {c |}
+{space 8}state_fips {c |}
+{space 15}12  {c |}{col 20}{res}{space 2} 33.66684{col 32}{space 2}  31.5807{col 43}{space 1}    1.07{col 52}{space 3}0.306{col 60}{space 4} -34.5591{col 73}{space 3} 101.8928
+{txt}{space 15}17  {c |}{col 20}{res}{space 2}-320.6477{col 32}{space 2}  56.7885{col 43}{space 1}   -5.65{col 52}{space 3}0.000{col 60}{space 4}-443.3318{col 73}{space 3}-197.9636
+{txt}{space 15}24  {c |}{col 20}{res}{space 2} -392.138{col 32}{space 2} 71.64029{col 43}{space 1}   -5.47{col 52}{space 3}0.000{col 60}{space 4}-546.9074{col 73}{space 3}-237.3686
+{txt}{space 15}25  {c |}{col 20}{res}{space 2}-427.7234{col 32}{space 2} 77.83282{col 43}{space 1}   -5.50{col 52}{space 3}0.000{col 60}{space 4} -595.871{col 73}{space 3}-259.5758
+{txt}{space 15}26  {c |}{col 20}{res}{space 2}-319.2794{col 32}{space 2} 58.25612{col 43}{space 1}   -5.48{col 52}{space 3}0.000{col 60}{space 4}-445.1341{col 73}{space 3}-193.4247
+{txt}{space 15}29  {c |}{col 20}{res}{space 2}-289.2685{col 32}{space 2} 65.33641{col 43}{space 1}   -4.43{col 52}{space 3}0.001{col 60}{space 4}-430.4192{col 73}{space 3}-148.1177
+{txt}{space 15}31  {c |}{col 20}{res}{space 2}-445.8998{col 32}{space 2} 80.89098{col 43}{space 1}   -5.51{col 52}{space 3}0.000{col 60}{space 4}-620.6542{col 73}{space 3}-271.1455
+{txt}{space 15}34  {c |}{col 20}{res}{space 2}-417.7244{col 32}{space 2} 75.06573{col 43}{space 1}   -5.56{col 52}{space 3}0.000{col 60}{space 4}-579.8941{col 73}{space 3}-255.5548
+{txt}{space 15}36  {c |}{col 20}{res}{space 2}-304.9806{col 32}{space 2} 52.48913{col 43}{space 1}   -5.81{col 52}{space 3}0.000{col 60}{space 4}-418.3764{col 73}{space 3}-191.5847
+{txt}{space 15}38  {c |}{col 20}{res}{space 2}-468.5243{col 32}{space 2} 83.76493{col 43}{space 1}   -5.59{col 52}{space 3}0.000{col 60}{space 4}-649.4874{col 73}{space 3}-287.5611
+{txt}{space 15}44  {c |}{col 20}{res}{space 2} -456.738{col 32}{space 2} 82.45682{col 43}{space 1}   -5.54{col 52}{space 3}0.000{col 60}{space 4}-634.8752{col 73}{space 3}-278.6009
+{txt}{space 15}48  {c |}{col 20}{res}{space 2} 131.6605{col 32}{space 2} 4.225208{col 43}{space 1}   31.16{col 52}{space 3}0.000{col 60}{space 4} 122.5325{col 73}{space 3} 140.7885
+{txt}{space 15}55  {c |}{col 20}{res}{space 2}-359.1044{col 32}{space 2} 71.36628{col 43}{space 1}   -5.03{col 52}{space 3}0.000{col 60}{space 4}-513.2818{col 73}{space 3}-204.9269
+{txt}{space 18} {c |}
+{space 14}year {c |}
+{space 13}2009  {c |}{col 20}{res}{space 2}-15.72784{col 32}{space 2} 13.57923{col 43}{space 1}   -1.16{col 52}{space 3}0.268{col 60}{space 4}-45.06399{col 73}{space 3} 13.60831
+{txt}{space 13}2010  {c |}{col 20}{res}{space 2} 18.35111{col 32}{space 2} 13.71636{col 43}{space 1}    1.34{col 52}{space 3}0.204{col 60}{space 4}-11.28128{col 73}{space 3}  47.9835
+{txt}{space 13}2011  {c |}{col 20}{res}{space 2} 23.05197{col 32}{space 2} 17.89903{col 43}{space 1}    1.29{col 52}{space 3}0.220{col 60}{space 4}-15.61652{col 73}{space 3} 61.72047
+{txt}{space 13}2012  {c |}{col 20}{res}{space 2} 28.34212{col 32}{space 2} 15.87007{col 43}{space 1}    1.79{col 52}{space 3}0.097{col 60}{space 4}-5.943079{col 73}{space 3} 62.62732
+{txt}{space 13}2013  {c |}{col 20}{res}{space 2} 28.28368{col 32}{space 2} 17.63721{col 43}{space 1}    1.60{col 52}{space 3}0.133{col 60}{space 4}-9.819202{col 73}{space 3} 66.38657
+{txt}{space 13}2014  {c |}{col 20}{res}{space 2} 50.70179{col 32}{space 2} 30.70878{col 43}{space 1}    1.65{col 52}{space 3}0.123{col 60}{space 4}-15.64049{col 73}{space 3} 117.0441
+{txt}{space 13}2015  {c |}{col 20}{res}{space 2} 57.28649{col 32}{space 2} 33.49092{col 43}{space 1}    1.71{col 52}{space 3}0.111{col 60}{space 4}-15.06625{col 73}{space 3} 129.6392
+{txt}{space 13}2016  {c |}{col 20}{res}{space 2} 50.11206{col 32}{space 2} 22.43021{col 43}{space 1}    2.23{col 52}{space 3}0.044{col 60}{space 4} 1.654531{col 73}{space 3} 98.56958
+{txt}{space 13}2017  {c |}{col 20}{res}{space 2} 53.49582{col 32}{space 2} 21.75331{col 43}{space 1}    2.46{col 52}{space 3}0.029{col 60}{space 4} 6.500657{col 73}{space 3}  100.491
+{txt}{space 13}2018  {c |}{col 20}{res}{space 2} 56.28283{col 32}{space 2} 24.95048{col 43}{space 1}    2.26{col 52}{space 3}0.042{col 60}{space 4} 2.380604{col 73}{space 3} 110.1851
+{txt}{space 18} {c |}
+{space 13}_cons {c |}{col 20}{res}{space 2} 439.4695{col 32}{space 2} 91.82154{col 43}{space 1}    4.79{col 52}{space 3}0.000{col 60}{space 4} 241.1011{col 73}{space 3} 637.8378
+{txt}{hline 19}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{txt}Linear regression                               Number of obs     = {res}       154
+                                                {txt}{help j_robustsingular:F(12, 13) }        =  {res}        .
+                                                {txt}Prob > F          = {res}         .
+                                                {txt}R-squared         = {res}    0.6276
+                                                {txt}Root MSE          =    {res}  123.4
+
+{txt}{ralign 84:(Std. err. adjusted for {res:14} clusters in {res:state_fips})}
+{hline 19}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 20}{c |}{col 32}    Robust
+{col 1} staff_miscond_all{col 20}{c |} Coefficient{col 32}  std. err.{col 44}      t{col 52}   P>|t|{col 60}     [95% con{col 73}f. interval]
+{hline 19}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+max_reduc_eventT_3 {c |}{col 20}{res}{space 2}  26.9509{col 32}{space 2} 41.35353{col 43}{space 1}    0.65{col 52}{space 3}0.526{col 60}{space 4}-62.38797{col 73}{space 3} 116.2898
+{txt}max_reduc_eventT_2 {c |}{col 20}{res}{space 2} 36.78549{col 32}{space 2} 35.68856{col 43}{space 1}    1.03{col 52}{space 3}0.321{col 60}{space 4}-40.31495{col 73}{space 3} 113.8859
+{txt}{space 1}max_reduc_eventT0 {c |}{col 20}{res}{space 2} 13.75798{col 32}{space 2} 10.18828{col 43}{space 1}    1.35{col 52}{space 3}0.200{col 60}{space 4}-8.252456{col 73}{space 3} 35.76842
+{txt}{space 1}max_reduc_eventT1 {c |}{col 20}{res}{space 2} 10.12128{col 32}{space 2} 7.057178{col 43}{space 1}    1.43{col 52}{space 3}0.175{col 60}{space 4}-5.124827{col 73}{space 3} 25.36739
+{txt}{space 1}max_reduc_eventT2 {c |}{col 20}{res}{space 2} 6.723993{col 32}{space 2} 6.966648{col 43}{space 1}    0.97{col 52}{space 3}0.352{col 60}{space 4}-8.326535{col 73}{space 3} 21.77452
+{txt}{space 1}max_reduc_eventT3 {c |}{col 20}{res}{space 2} 8.523462{col 32}{space 2} 7.052049{col 43}{space 1}    1.21{col 52}{space 3}0.248{col 60}{space 4}-6.711563{col 73}{space 3} 23.75849
+{txt}{space 9}total_pop {c |}{col 20}{res}{space 2} -.003469{col 32}{space 2} .0015582{col 43}{space 1}   -2.23{col 52}{space 3}0.044{col 60}{space 4}-.0068354{col 73}{space 3}-.0001026
+{txt}{space 18} {c |}
+{space 8}state_fips {c |}
+{space 15}12  {c |}{col 20}{res}{space 2} 52.84384{col 32}{space 2} 87.51531{col 43}{space 1}    0.60{col 52}{space 3}0.556{col 60}{space 4}-136.2215{col 73}{space 3} 241.9092
+{txt}{space 15}17  {c |}{col 20}{res}{space 2} -412.995{col 32}{space 2} 145.9923{col 43}{space 1}   -2.83{col 52}{space 3}0.014{col 60}{space 4}-728.3921{col 73}{space 3}-97.59785
+{txt}{space 15}24  {c |}{col 20}{res}{space 2}-537.0362{col 32}{space 2} 180.7881{col 43}{space 1}   -2.97{col 52}{space 3}0.011{col 60}{space 4}-927.6053{col 73}{space 3}-146.4672
+{txt}{space 15}25  {c |}{col 20}{res}{space 2}-557.4695{col 32}{space 2} 207.2129{col 43}{space 1}   -2.69{col 52}{space 3}0.019{col 60}{space 4}-1005.126{col 73}{space 3}-109.8133
+{txt}{space 15}26  {c |}{col 20}{res}{space 2} -355.918{col 32}{space 2} 153.8194{col 43}{space 1}   -2.31{col 52}{space 3}0.038{col 60}{space 4}-688.2246{col 73}{space 3}-23.61145
+{txt}{space 15}29  {c |}{col 20}{res}{space 2} -357.886{col 32}{space 2} 172.4518{col 43}{space 1}   -2.08{col 52}{space 3}0.058{col 60}{space 4}-730.4455{col 73}{space 3} 14.67359
+{txt}{space 15}31  {c |}{col 20}{res}{space 2}-570.5732{col 32}{space 2} 215.7023{col 43}{space 1}   -2.65{col 52}{space 3}0.020{col 60}{space 4} -1036.57{col 73}{space 3}-104.5768
+{txt}{space 15}34  {c |}{col 20}{res}{space 2}-569.6492{col 32}{space 2} 186.0483{col 43}{space 1}   -3.06{col 52}{space 3}0.009{col 60}{space 4} -971.582{col 73}{space 3}-167.7164
+{txt}{space 15}36  {c |}{col 20}{res}{space 2}-225.4959{col 32}{space 2} 137.6225{col 43}{space 1}   -1.64{col 52}{space 3}0.125{col 60}{space 4}-522.8112{col 73}{space 3} 71.81938
+{txt}{space 15}38  {c |}{col 20}{res}{space 2}-624.7019{col 32}{space 2} 219.1542{col 43}{space 1}   -2.85{col 52}{space 3}0.014{col 60}{space 4}-1098.156{col 73}{space 3} -151.248
+{txt}{space 15}44  {c |}{col 20}{res}{space 2} -631.593{col 32}{space 2} 209.7664{col 43}{space 1}   -3.01{col 52}{space 3}0.010{col 60}{space 4}-1084.766{col 73}{space 3}-178.4202
+{txt}{space 15}48  {c |}{col 20}{res}{space 2} 244.1418{col 32}{space 2} 16.71428{col 43}{space 1}   14.61{col 52}{space 3}0.000{col 60}{space 4} 208.0328{col 73}{space 3} 280.2508
+{txt}{space 15}55  {c |}{col 20}{res}{space 2}-474.6761{col 32}{space 2} 185.1628{col 43}{space 1}   -2.56{col 52}{space 3}0.024{col 60}{space 4}-874.6961{col 73}{space 3}-74.65612
+{txt}{space 18} {c |}
+{space 14}year {c |}
+{space 13}2009  {c |}{col 20}{res}{space 2}-19.20815{col 32}{space 2}  17.4262{col 43}{space 1}   -1.10{col 52}{space 3}0.290{col 60}{space 4}-56.85516{col 73}{space 3} 18.43886
+{txt}{space 13}2010  {c |}{col 20}{res}{space 2}-23.73699{col 32}{space 2} 14.09855{col 43}{space 1}   -1.68{col 52}{space 3}0.116{col 60}{space 4}-54.19505{col 73}{space 3} 6.721073
+{txt}{space 13}2011  {c |}{col 20}{res}{space 2}-12.80754{col 32}{space 2}  13.9716{col 43}{space 1}   -0.92{col 52}{space 3}0.376{col 60}{space 4}-42.99135{col 73}{space 3} 17.37627
+{txt}{space 13}2012  {c |}{col 20}{res}{space 2}-5.097171{col 32}{space 2} 23.10251{col 43}{space 1}   -0.22{col 52}{space 3}0.829{col 60}{space 4}-55.00712{col 73}{space 3} 44.81278
+{txt}{space 13}2013  {c |}{col 20}{res}{space 2} 24.76583{col 32}{space 2} 43.39298{col 43}{space 1}    0.57{col 52}{space 3}0.578{col 60}{space 4}  -68.979{col 73}{space 3} 118.5107
+{txt}{space 13}2014  {c |}{col 20}{res}{space 2} 71.76389{col 32}{space 2} 51.36876{col 43}{space 1}    1.40{col 52}{space 3}0.186{col 60}{space 4}-39.21157{col 73}{space 3} 182.7394
+{txt}{space 13}2015  {c |}{col 20}{res}{space 2} 140.4537{col 32}{space 2}  85.9965{col 43}{space 1}    1.63{col 52}{space 3}0.126{col 60}{space 4}-45.33044{col 73}{space 3} 326.2378
+{txt}{space 13}2016  {c |}{col 20}{res}{space 2} 100.9715{col 32}{space 2} 47.52837{col 43}{space 1}    2.12{col 52}{space 3}0.053{col 60}{space 4}-1.707309{col 73}{space 3} 203.6503
+{txt}{space 13}2017  {c |}{col 20}{res}{space 2} 98.75022{col 32}{space 2} 53.20901{col 43}{space 1}    1.86{col 52}{space 3}0.086{col 60}{space 4}-16.20087{col 73}{space 3} 213.7013
+{txt}{space 13}2018  {c |}{col 20}{res}{space 2} 119.4203{col 32}{space 2} 56.04705{col 43}{space 1}    2.13{col 52}{space 3}0.053{col 60}{space 4}-1.661963{col 73}{space 3} 240.5026
+{txt}{space 18} {c |}
+{space 13}_cons {c |}{col 20}{res}{space 2} 574.8452{col 32}{space 2} 238.5896{col 43}{space 1}    2.41{col 52}{space 3}0.032{col 60}{space 4}  59.4036{col 73}{space 3} 1090.287
+{txt}{hline 19}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. * constructing event study graphs
+. gen event_time = -3 if year==reduc_year-3
+{txt}(147 missing values generated)
+
+{com}. replace event_time = -2 if year==reduc_year-2
+{txt}(9 real changes made)
+
+{com}. *replace event_time = -1 if year==reduc_year-1
+. replace event_time = 0 if year==reduc_year
+{txt}(13 real changes made)
+
+{com}. replace event_time = 1 if year==reduc_year + 1
+{txt}(11 real changes made)
+
+{com}. replace event_time = 2 if year==reduc_year + 2
+{txt}(8 real changes made)
+
+{com}. replace event_time = 3 if year==reduc_year + 3
+{txt}(6 real changes made)
+
+{com}. drop if event_time==.
+{txt}(100 observations deleted)
+
+{com}. 
+. foreach y in `yit' {c -(}
+{txt}  2{com}. gen reduc_etime_`y' = 0
+{txt}  3{com}. replace reduc_etime_`y' = etime_T_3_`y' if event_time==-3
+{txt}  4{com}. replace reduc_etime_`y' = etime_T_2_`y' if event_time==-2
+{txt}  5{com}. replace reduc_etime_`y' = etime_T0_`y' if event_time==0
+{txt}  6{com}. replace reduc_etime_`y' = etime_T1_`y' if event_time==1
+{txt}  7{com}. replace reduc_etime_`y' = etime_T2_`y' if event_time==2
+{txt}  8{com}. replace reduc_etime_`y' = etime_T3_`y' if event_time==3
+{txt}  9{com}. 
+. gen reduc_etime_`y'_u = reduc_etime_`y'
+{txt} 10{com}. replace reduc_etime_`y'_u = reduc_etime_`y'_u + etime_T_3_`y'_se*1.96 if event_time==-3
+{txt} 11{com}. replace reduc_etime_`y'_u = reduc_etime_`y'_u + etime_T_2_`y'_se*1.96 if event_time==-2
+{txt} 12{com}. replace reduc_etime_`y'_u = reduc_etime_`y'_u + etime_T0_`y'_se*1.96 if event_time==0
+{txt} 13{com}. replace reduc_etime_`y'_u = reduc_etime_`y'_u + etime_T1_`y'_se*1.96 if event_time==1
+{txt} 14{com}. replace reduc_etime_`y'_u = reduc_etime_`y'_u + etime_T2_`y'_se*1.96 if event_time==2
+{txt} 15{com}. replace reduc_etime_`y'_u = reduc_etime_`y'_u + etime_T3_`y'_se*1.96 if event_time==3
+{txt} 16{com}. 
+. gen reduc_etime_`y'_l = reduc_etime_`y'
+{txt} 17{com}. replace reduc_etime_`y'_l = reduc_etime_`y'_l - etime_T_3_`y'_se*1.96 if event_time==-3
+{txt} 18{com}. replace reduc_etime_`y'_l = reduc_etime_`y'_l - etime_T_2_`y'_se*1.96 if event_time==-2
+{txt} 19{com}. replace reduc_etime_`y'_l = reduc_etime_`y'_l - etime_T0_`y'_se*1.96 if event_time==0
+{txt} 20{com}. replace reduc_etime_`y'_l = reduc_etime_`y'_l - etime_T1_`y'_se*1.96 if event_time==1
+{txt} 21{com}. replace reduc_etime_`y'_l = reduc_etime_`y'_l - etime_T2_`y'_se*1.96 if event_time==2
+{txt} 22{com}. replace reduc_etime_`y'_l = reduc_etime_`y'_l - etime_T3_`y'_se*1.96 if event_time==3
+{txt} 23{com}. {c )-}
+{txt}(7 real changes made)
+(9 real changes made)
+(13 real changes made)
+(11 real changes made)
+(8 real changes made)
+(6 real changes made)
+(7 real changes made)
+(9 real changes made)
+(13 real changes made)
+(11 real changes made)
+(8 real changes made)
+(6 real changes made)
+(7 real changes made)
+(9 real changes made)
+(13 real changes made)
+(11 real changes made)
+(8 real changes made)
+(6 real changes made)
+(7 real changes made)
+(9 real changes made)
+(13 real changes made)
+(11 real changes made)
+(8 real changes made)
+(6 real changes made)
+(7 real changes made)
+(9 real changes made)
+(13 real changes made)
+(11 real changes made)
+(8 real changes made)
+(6 real changes made)
+(7 real changes made)
+(9 real changes made)
+(13 real changes made)
+(11 real changes made)
+(8 real changes made)
+(6 real changes made)
+
+{com}. 
+. twoway (rspike reduc_etime_inmate_noncon_all_u reduc_etime_inmate_noncon_all_l event_time, mcolor(stc1)) || (scatter reduc_etime_inmate_noncon_all event_time, mcolor(stc1)), ///
+>         legend(off) name("inmate_noncon_all_balanced", replace) xtitle("0 = Year of Biggest Rate Reduction") ytitle(Counts of Allegations) ///
+>         xline(-0.5, lcolor(red) lwidth(0.1pt)) yline(0, lcolor(red) lwidth(0.1pt)) ///
+>         xlab(-3 "-3" -2 "-2" -1 "-1" 0 "0" 1 "1" 2 "2" 3 "3", nogrid) 
+{res}{txt}
+{com}. graph export "6000_LaTeX\inmate_noncon_all_balanced.eps", replace
+{txt}{p 0 4 2}
+file {bf}
+6000_LaTeX\inmate_noncon_all_balanced.eps{rm}
+saved as
+EPS
+format
+{p_end}
+
+{com}. graph export "6000_LaTeX\inmate_noncon_all_balanced.pdf", replace
+{txt}{p 0 4 2}
+file {bf}
+6000_LaTeX\inmate_noncon_all_balanced.pdf{rm}
+saved as
+PDF
+format
+{p_end}
+
+{com}. 
+. twoway (rspike reduc_etime_staff_miscond_all_u reduc_etime_staff_miscond_all_l event_time, mcolor(stc1)) || (scatter reduc_etime_staff_miscond_all event_time, mcolor(stc1)), ///
+>         legend(off) name("staff_miscond_all_balanced", replace) xtitle("0 = Year of Biggest Rate Reduction") ytitle(Counts of Allegations) ///
+>         xline(-0.5, lcolor(red) lwidth(0.1pt)) yline(0, lcolor(red) lwidth(0.1pt)) ///
+>         xlab(-3 "-3" -2 "-2" -1 "-1" 0 "0" 1 "1" 2 "2" 3 "3", nogrid) 
+{res}{txt}
+{com}. graph export "6000_LaTeX\staff_miscond_all_balanced.eps", replace
+{txt}{p 0 4 2}
+file {bf}
+6000_LaTeX\staff_miscond_all_balanced.eps{rm}
+saved as
+EPS
+format
+{p_end}
+
+{com}. graph export "6000_LaTeX\staff_miscond_all_balanced.pdf", replace
+{txt}{p 0 4 2}
+file {bf}
+6000_LaTeX\staff_miscond_all_balanced.pdf{rm}
+saved as
+PDF
+format
+{p_end}
+
+{com}. 
+. **********
+. 
+. * not sure why I left this here??
+. *STOP
+. 
+. /*
+> 
+> **********
+> 
+> use "2000_data/500_working/final_output_dta", replace
+> 
+> * original DiD variable, focus of DiD regressions
+> gen d1 = treat_base
+> gen post1 = caps_enact
+> gen w1 = d1*post1
+> 
+> * Basic DID regression:
+> * reg Y w1 d1 time, vce(cluster id)
+> * worried about "anticipation" in 2013 --> dropping that year's observations
+> drop if year==2013
+> drop year_10
+> 
+> eststo clear
+> foreach outcome in inmate_noncon_all inmate_noncon_subs inmate_contact_all inmate_contact_subs staff_miscond_all staff_miscond_subs staff_harassment_all staff_harassment_subs {c -(}
+>         eststo: qui reg `outcome' w1 d1 year_*, vce(cluster state_fips)
+> {c )-}
+> esttab, star(* 0.10 ** 0.05 *** 0.01) se drop(year_5 year_6 year_7 year_8 year_9) 
+> 
+> **********
+> 
+> * Allow a separate effect in each of the treated time periods:
+> * Can show it is the ATT for each t.
+> 
+> eststo clear
+> foreach outcome in inmate_noncon_all inmate_noncon_subs inmate_contact_all inmate_contact_subs staff_miscond_all staff_miscond_subs staff_harassment_all staff_harassment_subs {c -(}
+>         eststo: qui reg `outcome' c.w1#c.year_* d1 year_*, vce(cluster state_fips)
+> {c )-}
+> esttab, star(* 0.10 ** 0.05 *** 0.01) se drop(year_5 year_6 year_7 year_8 year_9 c.w1#c.year_5 c.w1#c.year_6 c.w1#c.year_7 c.w1#c.year_8 c.w1#c.year_9) 
+> 
+> **********
+> 
+> * Add a covariate to the general equation with homogeneous time effects: 
+> 
+> *** demeaning control variables 
+> foreach control in total_pop oneplus_tot_pop oneminus_tot_pop unsen_tot_pop unsen_m_pop unsen_f_pop total_m_pop total_f_pop oneplus_m_pop oneplus_f_pop oneminus_m_pop oneminus_f_pop operational_cap design_cap rated_cap lowest_cap_pct highest_cap_pct age_1824 age_2534 age_3544 age_4554 age_55p educ_anycoll educ_hs educ_nohs sent_1m sent_1_2 sent_2_5 sent_5_10 sent_10_25 sent_25p sent_life sent_miss off_manslaughter off_assault off_drugs off_fraud off_larceny off_cartheft off_murder off_burglary off_publicorder off_rapesa off_robbery off_othprop off_othviolent off_other off_missing crime_violent crime_public crime_property crime_drugs crime_other crime_missing {c -(}
+>         sum `control' if treat_base
+>         gen `control'_dm = `control' - r(mean)
+>         la var `control'_dm "`control' Covariate De-Meaned"
+> {c )-}
+> 
+> * reg Y w1 d1 i.year_* w1#controls_dm i.year_*#controls controls c.d1#controls nined_controls, vce(cl state_fips)
+> /*
+> eststo clear
+> foreach outcome in inmate_noncon_all inmate_noncon_subs inmate_contact_all inmate_contact_subs staff_miscond_all staff_miscond_subs staff_harassment_all staff_harassment_subs {c -(}
+>         eststo: qui reg `outcome' w1 d1 i.year_* c.w1#c.`controls'_dm i.year_*#c.`controls' `controls' c.d1#c.`controls' nined_`controls', vce(cluster state_fips)
+> {c )-}
+> esttab, star(* 0.10 ** 0.05 *** 0.01) se drop() 
+> */
+> *** not entirely sure if this is correctly-done, removed the interaction with 
+> 
+> **********
+> 
+> * Add a covariate to the general equation with heterogeneous time effects:
+> 
+> * de-meaned and nined controls already created 
+> * sum x1 if d
+> * gen x1_dm_1 = x1 - r(mean)
+> 
+> * believe all are equivalent 
+> * xtreg logy c.w#c.f2014 c.w#c.f2015 c.w#c.f2014#c.x1_dm_1 c.w#c.f2015#c.x1_dm_1 i.year c.f2014#c.x1 c.f2015#c.x1,  fe vce(cluster id)
+> * reg logy c.w#c.f2014 c.w#c.f2015 c.w#c.f2014#c.x1_dm_1 c.w#c.f2015#c.x1_dm_1 i.year c.f2014#c.x1 c.f2015#c.x1 d x1 c.d#c.x1, vce(cluster id)
+> * reg logy c.w#c.f2014 c.w#c.f2015 c.w#c.f2014#c.x1_dm_1 c.w#c.f2015#c.x1_dm_1 i.year i.year#c.x1 d x1 c.d#c.x1, vce(cluster id)
+> 
+> local controls "total_pop design_cap"
+> 
+> eststo clear
+> foreach outcome in inmate_noncon_all inmate_noncon_subs inmate_contact_all inmate_contact_subs staff_miscond_all staff_miscond_subs staff_harassment_all staff_harassment_subs {c -(}
+>         eststo: qui reg `outcome' c.w1#c.year_* i.year_* d1 c.w1#c.year_*#c.`controls'_dm i.year_*#c.`controls' `controls' c.d1#c.`controls' nined_`controls', vce(cluster state_fips)
+> {c )-}
+> esttab, star(* 0.10 ** 0.05 *** 0.01) se drop(c.w1#c.year_5 c.w1#c.year_6 c.w1#c.year_7 c.w1#c.year_8 c.w1#c.year_9) 
+> 
+> * counts: staff_miscond_all > staff_harassment_all > inmate_noncon_all > inmate_contact_all > *_subs
+> 
+> **********
+>         
+> * Now use margins to account for the sampling error in the mean of x1. It is
+> * important to have w defined as the time-varying treatment variable
+> 
+> *** don't really understand this part, what is going on????
+> /* local controls "total_pop design_cap"
+> 
+> eststo clear
+> foreach outcome in inmate_noncon_all inmate_noncon_subs inmate_contact_all inmate_contact_subs staff_miscond_all staff_miscond_subs staff_harassment_all staff_harassment_subs {c -(}
+>         reg `outcome' c.w1#c.year_* c.w#c.year_*#c.`controls'_dm i.year_* c.year_*#c.`controls' d1 `controls' c.d1#c.`controls', vce(cluster id)
+>         margins, dydx(w1) at(f2014 = 1 f2015 = 0) subpop(if d == 1) vce(uncond)
+>         margins, dydx(w1) at(f2014 = 0 f2015 = 1) subpop(if d == 1) vce(uncond)
+>         
+> {c )-}
+> */
+> 
+> *********************************************************************
+> 
+> * taking inmate facing lowered rate as exogenous
+> * defining treatment as state experiencing a drop > X
+> * need to define X across my balanced panel: 37states*12years=
+> 
+> * using staggered treatment and post definitions
+> * treatment if largest absolute decrease <= $1.6585, chosen as a natural threshold
+> * generating treatment = (min_FD_abs <= 1.6585)
+> * THIS THRESHOLD IS HARD CODED, NEED TO UPDATE MANUALLY IF DATASET CHANGES *
+> 
+> use "2000_data/500_working/final_output_dta", replace
+> local controls "total_pop"
+> 
+> bysort state: egen min_FD_abs = min(fd_oos_coll_15m) if year>=2007
+> bysort state: gen temp_treatment = (abs(min_FD_abs) >=7.99 & min_FD_abs!=.)
+> bysort state: egen avg_temp_treatment = mean(temp_treatment)
+> gen treatment = (avg_temp_treatment>0)
+> drop temp_*
+> 
+> *tab year if inmate_contact_all!=., gen(year_)
+> 
+> 
+> /*
+> * graph depicting how I made the choice: 
+> bysort state: egen temp_min_FD_abs = min(fd_oos_coll_15m) if year>=2007
+> sort temp_min_FD_abs
+> drop if year!=2014
+> gen n=_n
+> gen temp_min_FD_abs_diff = temp_min_FD_abs[_n] - temp_min_FD_abs[_n-1]
+> egen temp_max_min_FD_abs_diff_qtl = max(temp_min_FD_abs_diff) if n!=35
+> order state year temp_*
+> tw scatter temp_min_FD_abs_diff n, xline(11)
+> */
+> 
+> * highest year is 2018
+> * lowest year is 2007
+> bysort state: gen temp_dq_column = fd_oos_coll_15m - min_FD_abs
+> bysort state: gen temp_dq = (temp_dq_column==0) if treatment==1
+> 
+> bysort state: replace temp_dq = temp_dq[_n-1] if temp_dq[_n-1] == 1
+> * 1 in 2009, 1 in 2010, 1 in 2011, 3 in 2012, 1 in 2013, 4 in 2014
+> bysort state: egen temp_calc_dq = sum(temp_dq)
+> 
+> * flag when gap is biggest 
+> * egen maybe? 
+> **want var with year when largest drop happens, 
+> **minyear=year if temp_dq==0
+> ** egen minyear=min(temp), by(state)
+> ** want to know current year in ref to treatment year 
+> ** gen eventT = year-minyear
+> ** could use minyear total and remove by(state)
+> ** could get one minyeartotal and one minyear, by(state)
+> 
+> * treatment cohort variables 
+> gen dq = (temp_calc_dq == 10)
+> gen dqp1 = (temp_calc_dq == 9)
+> gen dqp2 = (temp_calc_dq == 8)
+> gen dqp3 = (temp_calc_dq == 7)
+> gen dqp4 = (temp_calc_dq == 6)
+> gen dqp5 = (temp_calc_dq == 5)
+> gen dqinf = (treatment==0)
+> 
+> **********
+> 
+> * should be setup now with dq through dqp5, and dqinf for treatment==0 !
+> foreach control in total_pop design_cap {c -(}
+>         foreach t in dq dqp1 dqp2 dqp3 dqp4 dqp5 dqinf {c -(} 
+>                 sum `control' if `t' 
+>                 gen `control'_dm_`t' = `control' - r(mean)
+>         {c )-}
+> {c )-}
+> 
+> /*
+> 
+> * year_4 = 2007, omitted
+> * year_15 = 2018 = T, final year
+> * year_6 = 2009 = NJ year, dq
+> eststo clear
+> * inmate_noncon_subs inmate_contact_all inmate_contact_subs staff_miscond_all staff_miscond_subs staff_harassment_all staff_harassment_subs 
+> foreach outcome in inmate_noncon_all {c -(} 
+>         xtset state_fips year
+>         display "test 1"
+>         eststo: qui xtreg `outcome' c.dq*#c.year_* c.dq*#c.year_*#c.`controls'_dm_* i.year_* i.year_*#c.`controls' nined_`controls', fe vce(cluster state_fips)
+>         lincom (c.dq#c.year_6 + c.dq#c.year_7 + c.dq#c.year_8 + c.dq#c.year_9 + c.dq#c.year_10 + c.dq#c.year_11 + c.dq#c.year_12 + c.dq#c.year_13 + c.dq#c.year_14 + c.dq#c.year_15)/10
+>         lincom (c.dqp1#c.year_7 + c.dqp1#c.year_8 + c.dqp1#c.year_9 + c.dqp1#c.year_10 + c.dqp1#c.year_11 + c.dqp1#c.year_12 + c.dqp1#c.year_13 + c.dqp1#c.year_14 + c.dqp1#c.year_15)/9
+>         lincom (c.dqp2#c.year_8 + c.dqp2#c.year_9 + c.dqp2#c.year_10 + c.dqp2#c.year_11 + c.dqp2#c.year_12 + c.dqp2#c.year_13 + c.dqp2#c.year_14 + c.dqp2#c.year_15)/8
+>         lincom (c.dqp3#c.year_9 + c.dqp3#c.year_10 + c.dqp3#c.year_11 + c.dqp3#c.year_12 + c.dqp3#c.year_13 + c.dqp3#c.year_14 + c.dqp3#c.year_15)/7
+>         lincom (c.dqp4#c.year_10 + c.dqp4#c.year_11 + c.dqp4#c.year_12 + c.dqp4#c.year_13 + c.dqp4#c.year_14 + c.dqp4#c.year_15)/6
+>         lincom (c.dqp5#c.year_11 + c.dqp5#c.year_12 + c.dqp5#c.year_13 + c.dqp5#c.year_14 + c.dqp5#c.year_15)/5
+> {c )-}
+> esttab, star(* 0.10 ** 0.05 *** 0.01) se drop() 
+> 
+> * lincom is to compute average effect by treatment cohort, dq - dqp5 (2009-2014)
+> 
+> **********
+> 
+> xtset state_fips year
+> 
+> eststo clear
+> foreach outcome in inmate_noncon_all inmate_noncon_subs inmate_contact_all inmate_contact_subs staff_miscond_all staff_miscond_subs staff_harassment_all staff_harassment_subs {c -(} 
+>         eststo: qui xtreg `outcome' c.dq*#c.year_* c.dq*#c.year_*#c.`controls'_dm_* i.year_* i.year_*#c.`controls' nined_`controls', fe vce(cluster state_fips)
+>         margins, dydx()
+> {c )-}
+> esttab, star(* 0.10 ** 0.05 *** 0.01) se drop() 
+> 
+> */
+> 
+> */
+. 
+. log close
+      {txt}name:  {res}<unnamed>
+       {txt}log:  {res}C:\Users\david\coding\01_PRISON_PHONE_paper\3000_code\SMCL_logs\4_final_output.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res} 9 Dec 2025, 12:17:37
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}

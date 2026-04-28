@@ -1,0 +1,12 @@
+		(1)	(2)	(3)	(4)
+VARIABLES	LABELS	TWFE	TWFE	TWM	TWM+Int
+					
+oos_coll_15m	Treatment	1.893	1.841	1.988	-1.266
+		(2.256)	(2.235)	(2.215)	(2.428)
+total_pop	Prison Pop.	-0.006***	-0.011**	-0.005***	0.009***
+		(0.002)	(0.005)	(0.002)	(0.002)
+total_pop2	Pop. Squared		0.000		
+			(0.000)		
+					
+Observations		539	539	517	517
+R-squared		0.616	0.618	0.403	0.556

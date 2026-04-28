@@ -1,0 +1,215 @@
+\documentclass[10pt,a4paper]{article}
+\begin{document}
+
+\title{Prison Phone Rate Cap / PREA Paper}
+\author{David Ford}
+\maketitle
+
+\section{Working Notes:}
+\textbf{-Missing Observation and Potential Defier Notes} \\ 
+-\underline{Louisiana}: Potential defier, 2015 above cap. Called main office, finance dept., procurement dept., emailed produrement dept. lady on 4/28. \\ 
+-\underline{Maryland}: missing 2009-2011 debit rates. \\ 
+-\underline{Mississippi}: Potential defier, 2014 above cap. Emailed 4/26, told to submit records request, submitted request on 4/27. \\
+-\underline{New Mexico}: was missing 2009-2010, imputed using 2004-2008 rate, \underline{might be inaccurate}, emailed DOC 4/21,  awaiting response. \\
+-\underline{Oklahoma}: Potential defier, 2014-2016 above cap. Missing 2018. Spoke with someone on 4/26, told to submit records request, submitted request on 4/27. \\
+-\underline{Rhode Island}: Potential defier, 2014-2015. Emailed on 4/26. \\
+-\underline{Texas}: Potential defier, 2014-2015. Emailed 4/26, told to submit records request, submitted request on 4/27. \\
+-\underline{Virginia}: Missing 2015-2018. Emailed on 4/22, under review as of 4/25. \\
+
+\noindent \textbf{-Other Notes:} \\
+-May be feasible to look into regular assaults a smaller subset of states. Data available annually for some states, monthly for others, but it isn't uniformly collected or reported. Notes from original search are in `Meeting 5'. \\
+-Will set T=0 for when states have rates below the caps. If states always have low rates, will need to address that. May set T=0 for every year, may assign T=0 to a random year for each state. \\ 
+-Note: not 100\% sure what is meant by original phone rate dataset N/A's. I have two separate CSV files, one with `NA's', and the other where I have removed them. \\
+-Note: if some years are missing from regressions, need to 999 the missing values that are causing this. \\
+-Need to put in more work on literature review section, start looking into PREA research perhaps. \\
+-On pretrend graphs, look into population weights, use fw=VARIABLE option, or something similar, inmate populations should matter. \\
+
+
+
+
+
+\section{Abstract}
+This paper will seek to explore the relationship between exorbitant prison phone rates and prison violence as measured by Prison Rape Elimination Act sexual assault reports. With few options for outside communication, phone calls are in many cases the preferred option for inmates who want to converse with their family and friends. With a 15-minute phone call costing as much as \$18.30 in some cases, employment difficult or impossible to find, and sub-minimum wages oftentimes, prisoners may find it nearly impossible to afford making phone call. In efforts to combat this problem in November 2013, the FCC passed a ruling that capped interstate prison phone call rates at \$0.21-\$0.25 per minute, in some cases reducing the cost of a 15-minute phone call by over 75\%. Following this drastic reduction in cost, phone calls in many states suddenly became much more affordable, opening up communication options with the outside world, and perhaps reducing incentives to commit acts of sexual violence. \\
+
+
+
+
+
+\section{Introduction}
+\noindent \textbf{The Timeline} \\
+-November 2012: The Federal Communications Commission filed a Notice of Proposed Rulemaking regarding rate caps on interstate phone calls from state prisons. \\
+-November 2013: The new regulations were passed, limiting rates to \$0.21/minute for debit or prepaid calls, and \$0.25 for collect calls. \\
+-February 2014: These rates went into effect. \\
+-October 2015: The FCC issued further regulations reducing the prison phone caps to \$0.11/minute, and jail phone rates to \$0.14-\$0.22/minute, as well as reforms on fee structures, such as payment fees, billing fees, money transferring fees, refund fees, etc. Shortly thereafter, phone companies filed suit. \\
+-2016: a partial stay was issued on the 2015 regulations, preventing the new 2015 rate caps, although the fee regulations still went into effect. \\
+-2017: President Trump appointed Ajit Pai as Chair of the FCC. Pai announced that the FCC would stop defending in-state caps. Additionally, the 2015 rate caps were struck down, while the 2013 caps and the 2015 fee regulations stayed in place. \\
+
+\noindent With few alternatives, inmates rely heavily on phone calls to communicate with their friends and family. Additionally, many inmates have no access to jobs, and those that do have access are oftentimes paid wages below the standard federal minimum wage. With direct costs upwards of \$15 for a 15-minute phone call in numerous states, phone calls may be difficult to afford for many state prisoners. \\
+
+\noindent When it comes to prisons, policymakers have concerns regarding violence and assaults between inmates, or between inmates and staff. I therefore intend to use a difference in differences estimation to explore the relationship between increased ability to communicate with the outside world via more affordable phone rates, and reports of sexual assault as measured by the Prison Rape Elimination Act (PREA) of 2003. In this estimation, the treatment group will be those states which are constrained by the early-2014 FCC phone rate caps, and the control group will be those states which were already below the caps in 2013. The study will focus on the years 2008-2018, as data before and after this range is unavailable. Excluding Hawaii, I will consider 49 states, with 26 states in the treatment grou pand 23 states in the control group. \\ 
+
+\noindent In September 2003, the United States enacted the PREA in order to better track and reduce the incidence of sexual assault perpetrated on inmates. As a result of this act, state prisons were required to monitor various forms of sexual assault and uniformly report their findings to a federal governing body. \\
+
+\noindent Using this PREA data, as well as phone rate data collected by Prison Phone Justice and supplemented by my own searches through contracts between state Departments of Correction and phone companies, I will investigate whether those states constrained by the FCC phone caps saw a significant change in reported sexual assaults following the FCC phone rate caps. \\
+
+\noindent As evidence to support the relevancy between prison phone call costs and call volume, I have found San Francisco and New York City articles (sfgov.org and nypost.com respectively) that support my prior assumptions. In August 2020, SF made jail phone calls free and reportedly saw a 41\% call volume increase ``overnight''. Further, SF jails reported a 30\% increase in 2016 when they reduced the price of a call from \$2.75 to \$2.10. In August 2018, NYC similarly made jail phone calls free and afterwards saw a 30\% increase in call volumes. \\
+
+
+
+
+
+\section{Literature Review}
+1. Jonathan Kurtzville (2020) - job market paper concerning overcrowding and prison assault volumes in California, a state with particularly robust public data. \\
+
+\noindent 2. Sanchez, Aizpurua, Ricarte, \& Barry (2021) - "Personal, Criminal, and Social Predictors of Suicide Attempts in Prison". Cite studies that have found that inmates who report near-lethal self-harm and suicide attempts also report significantly lower social support. Claim that Rivlin and colleagues (2013) found that inmates who reported near lethal suicide attempts in prison also reported none or few close or good friends outside prison, as well as less phone calls and visits from family and friends during imprisonment. State that prominent theories suggest that social support reduces suicide risk by increasing feelings of belongingness. \\
+
+\noindent 3. Suto \& Arnaut (2010) - "Suicide in Prison: A Qualitative Study". Claim that suicide is 2x more common among US inmates than the general US population, third leading cause of prison death after natural causes and AIDS. Point out that suicides in prison may be underreported as accidental deaths. \\
+
+\noindent 4. Slackman (2014) - “Calling From prison: Economic Determinante of Inmate Payphone Rates”. Inmate telephone businesses supposedly make up a \$1.2B industry. Nearly 90\% of prisoners in state prisons use services provided by just three companies. Claim that 40\% of prison phone calls fail to connect, argue that this is shifting the burden to those families that DO connect. \\
+
+\noindent 5. Fuchs (2019) - “Behind Bars: The Urgency and Simplicity of Prison Phone Reform”. Briefly recounts Wright story, the namesake for the Wright Petition, the FCC phone rate mandate. States that inmates typically either make collect calls, pay via debit, or have pre-paid phone accounts. Sometimes inmates pay, sometimes their families pay. Studies typically show that inmates and their families are more likely to be low-income than the general population. Point out that prison wages are typically less than \$1/hr. Claim that studies have shown that a powerful predictor of re-offending is a failure to maintain family and community connections while incarcerated. Seems that in 2015 FCC order, they themselves point out that rate caps increased call volumes without compromising correctional facility security requirements. 2015 order applied to within-state calls as well as the previously-regulared interstate calls. \\
+
+
+
+
+
+\section{Data}
+May find interesting survey data in the prisoner census which is conducted every 5 years. Have yet to dive into this deeply. \\
+
+\noindent Suicide data was available from 2000-2019 as rate per 100k inmates, but only in four year buckets. However, these buckets closely align to the phone rate policy, so they may still be a viable outcome worth consideration \\
+
+\noindent Mortality by state-year also exists in 2001 and 2008-2018, but not by specific cause. Very noisy, as most deaths are from natural causes, and I would be unable to differentiate between causes \\
+
+\noindent \textbf{-Variable descriptions:} \\
+\underline{General Data}: \\
+-\underline{state\_abbrev} - two letter state codes \\
+-\underline{state\_fips} - Federal Information Processing System codes for each state \\
+-\underline{state} - state names \\
+-\underline{year} - year for that row/observation \\
+-\underline{caps\_enact} - a binary indicator variable, 0 until 2014 when FCC caps were enacted \\
+-\underline{coll\_cap} - FCC interstate phone rate cap on collect calls, voted in late 2013, imposed in Feb 2014 \\
+-\underline{pre\_cap} - FCC interstate phone rate cap on prepaid calls, voted in late 2013, imposed in Feb 2014 \\
+-\underline{debit\_cap} - FCC interstate phone rate cap on debit calls, voted in late 2013, imposed in Feb 2014 \\
+-\underline{T\_coll} - T=0 when state average collect call rate first observed under FCC caps \\
+-\underline{T\_pre} - T=0 when state average prepaid call rate first observed under FCC caps \\
+-\underline{T\_debit} - T=0 when state average debit call rate first observed under FCC caps \\
+\\
+
+\underline{Prison Rape Elimination Act (PREA) Data}: \\
+-Established in 2003, there are a number of metrics that are tracked by state-year through 2018. The number of prisoners in custody on December 31st, inmate nonconsensual acts both alleged and substantiated, inmate abusive contact both alleged and substantiated, staff sexual misconduct both alleged and substantiated, and staff sexual harassment both alleged and substantiated. \\
+-\underline{inmate\_contact\_all} - alleged contact of any person without his or her consent, or by coercion, or contact of a person AND touching, either directly or through the clothing. 2004-2018 \\
+-\underline{inmate\_contact\_subs} - substantiated contact of any person without his or her consent, or by coercion, or contact of a person AND touching, either directly or through the clothing. 2004-2018 \\
+-\underline{inmate\_noncon\_all} - alleged contact of any person without his or her concent, or by coercion, or contact of a person who is unable to consent or refuse AND some form of penetration is involved. 2004-2018 \\
+-\underline{inmate\_noncon\_subs} - substantiated contact of any person without his or her concent, or by coercion, or contact of a person who is unable to consent or refuse AND some form of penetration is involved. 2004-2018 \\
+-\underline{staff\_harassment\_all} - alleged repeated verbal comments or gestures of a sexual nature to an offender by a staff member, contractor, or volunteer, including demeaning references to gender, sexually suggestive or derogatory comments about body or clothing, or obscene language or gestures. 2004-2018 \\
+-\underline{staff\_harassment\_subs} - substantiatedrepeated verbal comments or gestures of a sexual nature to an offender by a staff member, contractor, or volunteer, including demeaning references to gender, sexually suggestive or derogatory comments about body or clothing, or obscene language or gestures. 2004-2018 \\
+-\underline{staff\_miscond\_all} - alleged threatened, coerced, attempted, or completed sexual contact, assault or battery between staff and offenders. 2004-2018 \\
+-\underline{staff\_miscond\_subs} - substantiated threatened, coerced, attempted, or completed sexual contact, assault or battery between staff and offenders. 2004-2018 \\
+-\underline{prisoners\_in\_custody\_eoy} - reported number of prisoners held in custody as of Dec 31st. 2009-2018 \\
+-\underline{prisoners\_in\_custody\_moy} - reported number of prisoners held in custody as of Jun 30th. 2004-2008 \\
+\\
+
+\underline{Bureau of Justice Statistics (BJS) Data}: \\
+-The BJS tracks prison population / capacity data for each gender state-year \\
+-\underline{total\_oneplus\_custody\_pop} - population of prisoners held in the physical custody of state or feredal prisons or local jails for sentences greater than one year, regardless of authority that has jurisdiction. 2000-2019 \\
+-\underline{male\_oneplus\_custody\_pop} - same as above, but only males. 2000-2019 \\
+-\underline{female\_oneplus\_custody\_pop} -  same as above, but only females. 2000-2019 \\
+-\underline{total\_oneminus\_custody\_pop} - population of prisoners held in the physical custody of state or federal prisons or local jails for sentences LESS than one year, regardless of authority that has jurisdiction. 2000-2019 \\
+-\underline{male\_oneminus\_custody\_pop} - same as above, but only males. 2000-2019 \\
+-\underline{female\_oneminus\_custody\_pop} - same as above, but only females. 2000-2019 \\
+-\underline{total\_unsen\_custody\_pop} - population of prisoners held in the physical custody of the state or federal prisons or local jails who have yet to be sentenced, regardless of authority that has jurisdiction. 2000-2019 \\
+-\underline{male\_unsen\_custody\_pop} - same as above, but only males. 2000-2019 \\
+-\underline{female\_unsen\_custody\_pop} - same as above, but only females. 2000-2019 \\
+-\underline{total\_custody\_pop} -  sum of above three total numbers. 2000-2019 \\
+-\underline{total\_male\_pop} -  sum of above three male numbers. 2000-2019 \\
+-\underline{total\_female\_pop} -  sum of above three female numbers. 2000-2019 \\
+-\underline{rated\_cap} - the number of beds or inmates assigned by a rating official to institutions within a jurisdiction. 2011-2019 \\
+-\underline{operational\_cap} - the number of inmates that can be accommodated based on a facility's staff, existing programs, and services. 2011-2019 \\
+-\underline{design\_cap} - the number of inmates that planners or architects intended for a facility. 2011-2019 \\
+-\underline{lowest\_cap\_pct} - the minimum number of beds across three capacity measures: design capacity, operational capacity, and rated capacity. 2011-2019 \\
+-\underline{highest\_cap\_pct} - the maximum number of beds reported across the three capacity measures: design capacity, operational capacity, and rated capacity. 2011-2019 \\
+-\underline{custody\_pop} - reported number of prisoners in custody from BJS capacity dataset \\
+\\
+
+\underline{Prisonphonejustice.org phone Rate Data}: 
+-Prison Phone Justice - website that compiles phone rates by type of payment (collect/prepaid/debit) by state-year \\
+-\underline{is\_ld\_coll\_fee} - Within State Long Distance Collect Call Fee \\
+-\underline{is\_ld\_coll\_rate} - Within State Long Distance Collect Call Minute Rate \\
+-\underline{is\_ld\_pre\_fee} - Within State Long Distance Prepaid Call Fee \\
+-\underline{is\_ld\_pre\_rate} - Within State Long Distance Prepaid Call Minute Rate \\
+-\underline{is\_ld\_debit\_fee} - Within State Long Distance Debit Call Fee \\
+-\underline{is\_ld\_debit\_rate} - Within State Long Distance Debit Call Minute Rate \\
+-\underline{oos\_ld\_coll\_fee} - Out of State Long Distance Collect Call Fee \\
+-\underline{oos\_ld\_coll\_rate} - Out of State Long Distance Collect Call Minute Rate \\
+-\underline{oos\_ld\_pre\_fee} - Out of State Long Distance Prepaid Call Fee \\
+-\underline{oos\_ld\_pre\_rate} - Out of State Long Distance Prepaid Call Minute Rate \\
+-\underline{oos\_ld\_debit\_fee} - Out of State Long Distance Debit Call Fee \\
+-\underline{oos\_ld\_debit\_rate} - Out of State Long Distance Debit Call Minute Rate \\
+-\underline{missing\_oos\_coll} - binary indicator variable, 1 if out-of-state long distance collect call minute rate state-year observation is missing \\
+-\underline{missing\_oos\_pre} - binary indicator variable, 1 if out-of-state long distance prepaid call minute rate state-year observation is missing \\
+-\underline{missing\_oos\_debit} - binary indicator variable, 1 if out-of-state long distance debit call minute rate state-year observation is missing \\
+-\underline{is\_ld\_coll\_15m\_total} - Within State Long Distance Collect Call 15 minute total cost, including fee \\
+-\underline{is\_ld\_coll\_15m\_nofee} - Within State Long Distance Collect Call total cost, excliding fee \\
+-\underline{is\_ld\_pre\_15m\_total} - Within State Long Distance Prepaid Call 15 minute total cost, including fee \\
+-\underline{is\_ld\_pre\_15m\_nofee} - Within State Long Distance Prepaid Call total cost, excliding fee \\
+-\underline{is\_ld\_debit\_15m\_total} - Within State Long Distance Debit Call 15 minute total cost, including fee \\
+-\underline{is\_ld\_debit\_15m\_nofee} - Within State Long Distance Debit Call total cost, excliding fee \\
+-\underline{oos\_ld\_coll\_15m\_total} - Out of State Long Distance Collect Call 15 minute total cost, including fee \\
+-\underline{oos\_ld\_coll\_15m\_nofee} - Out of State Long Distance Collect Call total cost, excliding fee \\
+-\underline{oos\_ld\_pre\_15m\_total} - Out of State Long Distance Prepaid Call 15 minute  total cost, including fee \\
+-\underline{oos\_ld\_pre\_15m\_nofee} - Out of State Long Distance Prepaid Call total cost, excliding fee \\
+-\underline{oos\_ld\_debit\_15m\_total} - Out of State Long Distance Debit Call 15 minute total cost, including fee \\
+-\underline{oos\_ld\_debit\_15m\_nofee} - Out of State Long Distance Debit Call total cost, excliding fee \\
+\\
+
+\underline{Prisonpolicy.org Data}: 
+-Preliminary phone rate data that I found, I believe this was sourced from the above prisonphonejustice.org website \\
+-\underline{oos\_avg\_rate} - average of long distance phone calls across states. 2008-2018, incomplete set \\
+-\underline{is\_avg\_rate} - average of long distance phone calls within the state. 2008-2019, incomplete set \\
+
+
+
+
+
+\section{Method}
+\noindent Design of the analysis will be Difference in Differences. The states that were charging rates above the phone rate cap when the FCC policy was implemented in February 2014 will be considered the treated group, and states which were already below the rate and therefore unconstrained will be considered the control group.  \\
+
+\noindent Formalize a DiD equation to be shown here \\
+
+\noindent Will presumably show various pretrend graphs at this point in an attempt to support the parallel trend assumption \\
+
+
+
+
+
+\section{Results}
+It looks like I would use the estout command from Stata to insert output results with the stars and such. \\
+\\
+
+May insert the graphs I constucted for ``Meeting 7'', or similar graphs constructed using the newer phone rate data. \\
+
+
+
+
+
+\section{Conclusion}
+May be possible that increased happiness caused by increased outside communication reduces tendencies to sexually assault other inmates. \\
+\\
+
+May be possible that discussing assault occurrences with family/friends increases the propensity to report. \\
+\\
+
+Staff on inmate assaults may then be more interesting, as the staff presumably have not faced major changes in their communication abilities. \\
+
+
+
+
+
+\section{References}
+Insert references when relevant\\
+
+
+
+
+
+\end{document}

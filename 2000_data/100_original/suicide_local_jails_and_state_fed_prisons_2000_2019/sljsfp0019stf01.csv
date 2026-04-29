@@ -1,0 +1,34 @@
+Bureau of Justice Statistics,,
+Filename: sljsfp0019stf01.csv,,
+"Figure 1. Number of suicides in local jails and state and federal prisons, 2000–2019",,
+"Report title: Suicide in Local Jails and State and Federal Prisons, 2000–2019 – Statistical Tables   NCJ 300731",,
+"Data source: Bureau of Justice Statistics, Federal Law Enforcement Agency Deaths in Custody Reporting Program, 2015–2019; Mortality in Correctional Institutions, 2000–2019; and National Prisoner Statistics program, 2001–2019",,
+"Author: E. Ann Carson, Ph.D., BJS Statistician",,
+Refer questions to: askbjs@usdoj.gov 202-307-0765,,
+Date of version: 10/7/2021,,
+,,
+"Figure 1. Number of suicides in local jails and state and federal prisons, 2000–2019",,
+Year,Local jails,State and federal prisons*
+2000,289,
+2001,313,186
+2002,314,185
+2003,296,205
+2005,299,210
+2005,286,226
+2006,278,231
+2007,283,233
+2008,228,218
+2009,304,223
+2010,305,226
+2011,311,202
+2012,301,224
+2013,328,206
+2014,368,273
+2015,369,239
+2016,334,272
+2017,317,285
+2018,339,341
+2019,355,340
+"Note: Jail counts exclude and prison counts include deaths in the combined jail and prison systems in Alaska, Connecticut, Delaware, Hawaii, Rhode Island, and Vermont. See table 1 for counts.",,
+*Includes deaths in publicly and privately operated state facilities. Includes deaths in Federal Bureau of Prisons facilities and excludes deaths in privately operated federal facilities. See Methodology.,,
+"Source: Bureau of Justice Statistics, Federal Law Enforcement Agency Deaths in Custody Reporting Program, 2015–2019; Mortality in Correctional Institutions, 2000–2019; and National Prisoner Statistics program, 2001–2019.",,

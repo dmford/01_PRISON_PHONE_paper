@@ -1,0 +1,32 @@
+Bureau of Justice Statistics,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Filename: msfp0118stat09.csv,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Appendix table 9. Rate of unnatural deaths per 100,000 state prisoners within each demographic group, by decedent characteristics, 2006–2018 (3-year rolling averages)",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Report title: Mortality in State and Federal Prisons, 2001-2018 – Statistical Tables  NCJ 255970",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Data source: Bureau of Justice Statistics, Mortality in Correctional Institutions, 2006–2018; National Prisoner Statistics, 2006–2018; Survey of Inmates in State Correctional Facilities, 2004; and Survey of Prison Inmates, 2016",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Author: E. Ann Carson, Ph.D., BJS Statistician",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Refer questions to: askbjs@usdoj.gov 202-307-0765,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Date of version: 4/29/2021,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Appendix table 9. Rate of unnatural deaths per 100,000 state prisoners within each demographic group, by decedent characteristics, 2006–2018 (3-year rolling averages)",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Characteristic,,2008,,,2009,,,2010,,,2011,,,2012,,,2013,,,2014,,,2015,,,2016,,,2017,2018
+,Total,26,,,25,,,26,,,27,,,28,,,29,,,31,,,32,,,36,,,42,50
+Sex,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,Male,27,,,26,,,26,,,27,,,29,,,29,,,31,,,33,,,37,,,43,53
+,Female,15,,,15,,,16,,,18,,,18,,,17,,,20,,,22,,,23,,,19,22
+Race/ethnicity,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,White/a,43,,,44,,,44,,,47,,,49,,,50,,,53,,,57,,,63,,,70,82
+,Black/a,15,,,15,,,16,,,16,,,18,,,18,,,20,,,22,,,26,,,34,44
+,Hispanic,21,,,19,,,20,,,20,,,21,,,23,,,25,,,25,,,26,,,30,38
+,"Other/a,b",13,,,10,,,11,,,11,,,11,,,10,,,10,,,11,,,12,,,12,13
+Age,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,17 or younger,41, !,,40, !,,41, !,,31, !,,38, !,,23, !,,29, !,,33, !,,37, !,,0,0
+,18–24,18,,,19,,,19,,,18,,,19,,,19,,,22,,,24,,,30,,,36,41
+,25–34,23,,,22,,,23,,,23,,,23,,,24,,,26,,,29,,,30,,,35,44
+,35–44,27,,,26,,,27,,,29,,,30,,,31,,,30,,,33,,,38,,,45,51
+,45–54,30,,,30,,,30,,,32,,,33,,,32,,,35,,,36,,,39,,,43,56
+,55 or older,40,,,36,,,38,,,39,,,46,,,46,,,51,,,46,,,48,,,55,65
+"Note: Unnatural deaths include deaths caused by suicide, accident, homicide, or drug or alcohol intoxication. Based on 3-year rolling averages. Labels show the most recent year only (for example, 2006–2008 is shown as 2008). Includes deaths in private state facilities. Mortality rates are per 100,000 inmates held in the custody of state prisons. Mortality rates are based on the annual number of deaths and a 1-day custody population on December 31.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"! Interpret with caution. Estimate is based on 10 or fewer cases, or coefficient of variation is greater than 50%. See Methodology – Interpreting rates among small populations, p. 24.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"a/Excludes persons of Hispanic origin (e.g., “white” refers to non-Hispanic whites and “black” refers to non-Hispanic blacks).",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"b/Includes Asians, Native Hawaiians or Other Pacific Islanders, American Indians or Alaska Natives, and persons of two or more races. Due to the small number of deaths and prison populations of American Indians and Alaska Natives, Asians, and Native Hawaiians and Other Pacific Islanders, mortality rates for these populations are unstable and not shown. See Methodology.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Source: Bureau of Justice Statistics, Mortality in Correctional Institutions, 2006–2018; National Prisoner Statistics, 2006–2018; Survey of Inmates in State Correctional Facilities, 2004; and Survey of Prison Inmates, 2016.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,

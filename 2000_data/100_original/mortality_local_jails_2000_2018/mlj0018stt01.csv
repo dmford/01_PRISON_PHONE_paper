@@ -1,0 +1,31 @@
+Bureau of Justice Statistics,,,,,,,,,,,,,
+Filename: mlj0018stt01.csv,,,,,,,,,,,,,
+"Table 1. Number of deaths of local jail inmates, by cause of death, 2000 and 2008–2018",,,,,,,,,,,,,
+"Report title: Mortality in Local Jails, 2000-2018 - Statistical Tables  NCJ 256002",,,,,,,,,,,,,
+"Data source: Bureau of Justice Statistics, Mortality in Correctional Institutions, 2000 and 2008–2018",,,,,,,,,,,,,
+"Author: E. Ann Carson, Ph.D., BJS Statistician",,,,,,,,,,,,,
+Refer questions to: askbjs@usdoj.gov 202-307-0765,,,,,,,,,,,,,
+Date of version: 4/29/2021,,,,,,,,,,,,,
+,,,,,,,,,,,,,
+"Table 1. Number of deaths of local jail inmates, by cause of death, 2000 and 2008–2018",,,,,,,,,,,,,
+Cause of death,,2000,2008/a,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018
+,All causes,903,959,961,918,888,959,985,"1,052","1,093","1,072","1,099","1,120"
+Illness,,516,444,490,477,425,527,482,502,518,537,522,515
+,Heart disease,198,181,208,242,236,269,260,242,256,298,281,290
+,AIDS-related/b,57,32,27,26,13,21,20,17,10,12,13,9
+,Cancer,31,25,47,34,32,44,40,38,41,47,41,34
+,Respiratory disease,31,32,32,18,20,28,30,42,34,26,34,35
+,Liver disease,23,32,30,25,12,28,18,27,20,19,17,9
+,All other illnesses/c,176,142,146,132,112,137,114,136,157,135,136,138
+Suicide,,289,228,304,305,311,301,328,368,369,332,314,335
+Drug/alcohol intoxication,,37,45,65,54,73,57,72,94,92,112,150,178
+Accident,,24,15,26,23,27,18,31,25,26,19,22,28
+Homicide/d,,17,16,23,20,21,22,28,25,30,31,29,27
+Other/unknown,,17,8,25,13,21,25,18,24,34,23,25,23
+Missing,,3,203,28,26,10,9,26,14,24,18,37,14
+Note: Data may have been revised from previously published statistics. See Methodology.,,,,,,,,,,,,,
+"a/In 2008, a high number of illness cases were missing cause-of-death information and were classified as missing.",,,,,,,,,,,,,
+b/Includes persons who died of illness and were identified as HIV-positive or having AIDS at the time of death.,,,,,,,,,,,,,
+"c/Includes other specified illnesses (such as cerebrovascular disease, influenza, and other non-leading natural causes of death) and unspecified illnesses.",,,,,,,,,,,,,
+"d/Includes homicides committed by other inmates, incidental to the use of force by staff, or resulting from assaults sustained prior to incarceration.",,,,,,,,,,,,,
+"Source: Bureau of Justice Statistics, Mortality in Correctional Institutions, 2000 and 2008–2018.",,,,,,,,,,,,,

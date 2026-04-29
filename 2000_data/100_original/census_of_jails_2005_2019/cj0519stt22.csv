@@ -1,0 +1,43 @@
+Bureau of Justice Statistics,,,,,,,
+Filename: cj0519stt22.csv,,,,,,,
+"Table 22. Characteristics of confined inmates in the Federal Bureau of Prisons’ detention facilities and in local jails, midyear 2019",,,,,,,
+"Report title: Census of Jails, 2005–2019 – Statistical Tables  NCJ 255406",,,,,,,
+"Data source: Bureau of Justice Statistics, Census of Jails, 2019",,,,,,,
+"Authors: Zhen Zeng, Ph.D., and Todd D. Minton, BJS Statisticians",,,,,,,
+Refer questions to: askbjs@usdoj.gov 202-307-0765,,,,,,,
+Date of version: 10/7/2021,,,,,,,
+,,,,,,,
+"Table 22. Characteristics of confined inmates in the Federal Bureau of Prisons’ detention facilities and in local jails, midyear 2019",,,,,,,
+,,Number/a,,Percent,,,
+Characteristic,,Federal detention facilities,Local jails/b,Federal detention facilities,,Local jails/b,
+,U.S. total,"11,490","734,470",100,%,100,%
+Adults/c,,"11,490","731,580",100,%,99.6,%
+,Male,"10,580","621,070",92.1,,84.6,
+,Female,910,"110,510",7.9,,15,
+Juveniles/d,,0,"2,880",0,%,0.4,%
+Race/ethnicity,,,,,,,
+,White/e,"2,240","362,920",19.5,%,49.4,%
+,Black/e,"3,260","247,060",28.4,,33.6,
+,Hispanic,"5,360","106,920",46.6,,14.6,
+,American Indian/Alaska Native/e,160,"10,220",1.4,,1.4,
+,Asian/e,470,"4,720",4.1,,0.6,
+,Native Hawaiian/Other Pacific Islander/e,0,770,0,,0.1,
+,Two or more races/e,0,"1,850",0,,0.3,
+Conviction status,,,,,,,
+,Convicted/f,"4,050","253,730",35.2,%,34.5,%
+,Unconvicted/g,"7,430","480,740",64.7,,65.5,
+Conditional release violation,,,,,,,
+,Probation,610,"97,540",5.3,%,13.3,%
+,Parole,10,"28,950",0.1,,3.9,
+Citizenship status,,,,,,,
+,U.S. citizen,"7,810","572,830",68,%,78,%
+,Non-U.S. citizen,"2,490","39,620",21.7,,5.4,
+,Unknown,"1,180","122,010",10.3,,16.6,
+a/Data were adjusted for survey and item nonresponse and rounded to the nearest 10. See Methodology. Details may not sum to totals due to rounding. ,,,,,,,
+"b/Includes all locally operated jails in 45 states and the District of Columbia. Includes 15 locally operated jails in Alaska. Excludes the Federal Bureau of Prisons’ detention facilities and the combined jail and prison systems in Alaska, Connecticut, Delaware, Hawaii, Rhode Island, and Vermont.",,,,,,,
+c/Inmates age 18 or older. ,,,,,,,
+d/Inmates younger than age 18.,,,,,,,
+"e/Excludes persons of Hispanic origin (e.g., “white” refers to non-Hispanic whites and “black” refers to non-Hispanic blacks).",,,,,,,
+f/Sentenced or awaiting sentencing on a conviction.,,,,,,,
+g/Awaiting court action on a current charge or held in jail for other reasons.,,,,,,,
+"Source: Bureau of Justice Statistics, Census of Jails, 2019.  ",,,,,,,

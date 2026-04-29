@@ -1,0 +1,36 @@
+Bureau of Justice Statistics,,,,,,,,,,,,,,,,
+Filename: mlj0018stt17.csv,,,,,,,,,,,,,,,,
+"Table 17. Number and percent of local jail jurisdictions reporting to Mortality in Correctional Institutions, by number of deaths reported each year, 2000–2018",,,,,,,,,,,,,,,,
+"Report title: Mortality in Local Jails, 2000-2018 - Statistical Tables  NCJ 256002",,,,,,,,,,,,,,,,
+"Data source: Bureau of Justice Statistics, Mortality in Correctional Institutions, 2000–2018",,,,,,,,,,,,,,,,
+"Author: E. Ann Carson, Ph.D., BJS Statistician",,,,,,,,,,,,,,,,
+Refer questions to: askbjs@usdoj.gov 202-307-0765,,,,,,,,,,,,,,,,
+Date of version: 4/29/2021,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,
+"Table 17. Number and percent of local jail jurisdictions reporting to Mortality in Correctional Institutions, by number of deaths reported each year, 2000–2018",,,,,,,,,,,,,,,,
+,,Number of jail jurisdictions reporting deaths,,,,,,,,,,,,,,
+,,0 deaths,,,,1 death,,,,2 or more deaths,,,,"Median jail jurisdiction daily population, by number of deaths reported*",,
+Year,Number of reporting jurisdictions,Number,Percent,,,Number,Percent,,,Number,Percent,,,0 deaths,1 death,2 or more deaths
+2000,"2,984","2,550",85.5,%,,288,9.7,%,,146,4.9,%,,41,146,"1,076"
+2001,"2,969","2,485",83.7,,,331,11.1,,,153,5.2,,,45,151,995
+2002,"2,954","2,470",83.6,,,331,11.2,,,153,5.2,,,50,167,"1,208"
+2003,"2,937","2,427",82.6,,,349,11.9,,,161,5.5,,,52,166,"1,125"
+2004,"2,920","2,402",82.3,,,367,12.6,,,151,5.2,,,55,231,"1,246"
+2005,"2,894","2,372",82,,,362,12.5,,,160,5.5,,,58,211,"1,167"
+2006,"2,866","2,327",81.2,,,368,12.8,,,171,6,,,60,191,"1,324"
+2007,"2,845","2,312",81.3,,,349,12.3,,,184,6.5,,,60,218,"1,190"
+2008,"2,831","2,329",82.3,,,346,12.2,,,156,5.5,,,63,246,"1,353"
+2009,"2,742","2,239",81.7,,,332,12.1,,,171,6.2,,,63,219,"1,269"
+2010,"2,747","2,245",81.7,,,342,12.4,,,160,5.8,,,64,197,"1,278"
+2011,"2,738","2,217",81,,,350,12.8,,,171,6.2,,,62,228,"1,137"
+2012,"2,797","2,258",80.7,,,373,13.3,,,166,5.9,,,64,253,"1,121"
+2013,"2,695","2,152",79.9,,,370,13.7,,,173,6.4,,,64,207,"1,048"
+2014,"2,777","2,197",79.1,,,398,14.3,,,182,6.6,,,65,195,"1,056"
+2015,"2,789","2,199",78.8,,,398,14.3,,,192,6.9,,,62,232,986
+2016,"2,784","2,213",79.5,,,374,13.4,,,197,7.1,,,67,204,955
+2017,"2,808","2,231",79.5,,,377,13.4,,,200,7.1,,,66,220,"1,022"
+2018,"2,805","2,200",78.4,,,383,13.7,,,222,7.9,,,63,220,945
+"Annual average, 2000–2018","2,836","2,307",81.3,%,,357,12.6,%,,172,6.1,%,,58,205,"1,121"
+Note: Data may have been revised from previously published statistics. Details may not sum to totals due to rounding. Includes all jails that reported data on populations or deaths. See Methodology.,,,,,,,,,,,,,,,,
+*Median is calculated using the average daily population of all jails with that number of deaths.,,,,,,,,,,,,,,,,
+"Source: Bureau of Justice Statistics, Mortality in Correctional Institutions, 2000–2018.",,,,,,,,,,,,,,,,

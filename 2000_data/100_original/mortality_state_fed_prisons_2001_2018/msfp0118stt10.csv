@@ -1,0 +1,36 @@
+Bureau of Justice Statistics,,,,,,,,,,,,
+Filename: msfp0118stt10.csv,,,,,,,,,,,,
+"Table 10. Number of deaths in state prisons, by cause of death and decedent characteristics, 2001–2018",,,,,,,,,,,,
+"Report title: Mortality in State and Federal Prisons, 2001-2018 – Statistical Tables  NCJ 255970",,,,,,,,,,,,
+"Data source: Bureau of Justice Statistics, Mortality in Correctional Institutions, 2001–2018",,,,,,,,,,,,
+"Author: E. Ann Carson, Ph.D., BJS Statistician",,,,,,,,,,,,
+Refer questions to: askbjs@usdoj.gov 202-307-0765,,,,,,,,,,,,
+Date of version: 4/29/2021,,,,,,,,,,,,
+,,,,,,,,,,,,
+"Table 10. Number of deaths in state prisons, by cause of death and decedent characteristics, 2001–2018",,,,,,,,,,,,
+,,,Illness,,,,,,,,,
+Characteristic,,All causes/a,Heart disease,Cancer,Liver disease,AIDS-related/b,Respiratory disease,All other illnesses/c,Suicide,Drug/alcohol intoxication,Accident,Homicide/d
+,Total,"61,130","15,855","16,777","5,432","1,932","3,824","9,535","3,870","1,235",618,"1,258"
+Sex,,,,,,,,,,,,
+,Male,"58,651","15,324","16,143","5,242","1,834","3,631","9,016","3,663","1,191",599,"1,251"
+,Female,"2,476",531,634,190,98,193,518,207,44,19,7
+Race/ethnicity,,,,,,,,,,,,
+,White/e,"32,102","8,473","9,262","3,025",437,"2,203","4,489","2,268",639,351,561
+,Black/e,"21,076","5,887","5,784","1,219","1,272","1,211","3,641",809,306,170,447
+,Hispanic,"6,703","1,242","1,447","1,044",203,356,"1,215",615,237,79,213
+,American Indian/Alaska Native/e,646,142,141,99,11,27,93,67,35,11,13
+,Asian/Native Hawaiian/Other Pacific Islander/two or more races/e,504,94,118,35,8,21,80,96,17,5,22
+Age,,,,,,,,,,,,
+,17 or younger,22,2,4,1,0,1,1,11,0,1,1
+,18–24,"1,207",143,72,15,19,62,138,486,67,41,140
+,25–34,"4,344",716,376,87,247,203,553,"1,243",323,106,371
+,35–44,"8,566","1,970","1,384",636,743,400,"1,313","1,098",394,151,322
+,45–54,"16,380","3,875","4,508","2,345",656,768,"2,662",705,305,131,238
+,55 or older,"30,584","9,145","10,429","2,345",267,"2,389","4,864",325,146,187,185
+"Note: Data may have been revised from previously published statistics. Details may not sum to totals due to missing data. Excludes executions. For execution data, see Capital Punishment, 2017: Selected Findings (NCJ 253060, BJS, July 2019). See Methodology. Includes deaths in private state facilities. There were 99 prisoners whose race or ethnicity was unknown, 27 whose age was unknown, and 3 whose sex was unknown.",,,,,,,,,,,,
+a/Includes other causes not specified and missing and unknown causes.,,,,,,,,,,,,
+b/Includes persons who died of illness and were identified as HIV-positive or having AIDS at the time of death.,,,,,,,,,,,,
+"c/Includes other specified illnesses (such as cerebrovascular disease, influenza, and other nonleading natural causes of death) and unspecified illnesses.",,,,,,,,,,,,
+"d/Includes homicides committed by other prisoners, incidental to the use of force by staff, or resulting from injuries sustained prior to incarceration.",,,,,,,,,,,,
+"e/Excludes persons of Hispanic origin (e.g., “white” refers to non-Hispanic whites and “black” refers to non-Hispanic blacks).",,,,,,,,,,,,
+"Source: Bureau of Justice Statistics, Mortality in Correctional Institutions, 2001–2018.",,,,,,,,,,,,

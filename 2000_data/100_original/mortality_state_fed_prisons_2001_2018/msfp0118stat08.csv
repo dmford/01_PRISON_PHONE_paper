@@ -1,0 +1,31 @@
+Bureau of Justice Statistics,,,,,,,,,,,,
+Filename: msfp0118stat08.csv,,,,,,,,,,,,
+"Appendix table 8. Mortality rate due to all other illnesses per 100,000 state prisoners within each demographic group, by decedent characteristics, 2006–2018 (3-year rolling averages)",,,,,,,,,,,,
+"Report title: Mortality in State and Federal Prisons, 2001-2018 – Statistical Tables  NCJ 255970",,,,,,,,,,,,
+"Data source: Bureau of Justice Statistics, Mortality in Correctional Institutions, 2006–2018; National Prisoner Statistics, 2006–2018; Survey of Inmates in State Correctional Facilities, 2004; and Survey of Prison Inmates, 2016",,,,,,,,,,,,
+"Author: E. Ann Carson, Ph.D., BJS Statistician",,,,,,,,,,,,
+Refer questions to: askbjs@usdoj.gov 202-307-0765,,,,,,,,,,,,
+Date of version: 4/29/2021,,,,,,,,,,,,
+,,,,,,,,,,,,
+"Appendix Table 8. Mortality rate due to all other illnesses per 100,000 state prisoners within each demographic group, by decedent characteristics, 2006–2018 (3-year rolling averages)",,,,,,,,,,,,
+Characteristic,,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018
+,Total,48,48,43,41,40,40,40,40,41,43,44
+Sex,,,,,,,,,,,,
+,Male,49,49,44,41,41,41,40,41,42,44,45
+,Female,36,39,39,32,31,30,32,29,26,25,30
+Race/ethnicity,,,,,,,,,,,,
+,White/a,65,66,61,59,60,61,61,64,66,69,68
+,Black/a,48,50,45,43,41,39,40,39,41,43,46
+,Hispanic,32,30,27,23,26,27,28,25,24,25,28
+,"Other/a,b",12,11,10,9,7,6,6,6,8,8,8
+Age,,,,,,,,,,,,
+,17 or younger,0,0,0,0,0,0,0,0,0,0,0
+,18–24,4,5,4,4,5,4,4,4,4,3,3
+,25–34,9,9,7,7,6,6,5,5,5,7,7
+,35–44,28,27,21,18,17,16,14,14,14,14,14
+,45–54,84,78,72,65,64,58,55,50,47,45,46
+,55 or older,350,351,302,273,255,250,244,244,238,236,233
+"Note: Excludes cancer; heart, liver, and respiratory diseases; and AIDS-related illnesses. Based on 3-year rolling averages. Labels show the most recent year only (for example, 2006–2008 is shown as 2008). Includes deaths in private state facilities. Mortality rates are per 100,000 inmates held in the custody of state prisons. Mortality rates are based on the annual number of deaths and a 1-day custody population on December 31.",,,,,,,,,,,,
+"a/Excludes persons of Hispanic origin (e.g., “white” refers to non-Hispanic whites and “black” refers to non-Hispanic blacks).",,,,,,,,,,,,
+"b/Includes Asians, Native Hawaiians or Other Pacific Islanders, American Indians or Alaska Natives, and persons of two or more races. Due to the small number of deaths and prison populations of American Indians and Alaska Natives, Asians, and Native Hawaiians and Other Pacific Islanders, mortality rates for these populations are unstable and not shown. See Methodology.",,,,,,,,,,,,
+"Source: Bureau of Justice Statistics, Mortality in Correctional Institutions, 2006–2018; National Prisoner Statistics, 2006–2018; Survey of Inmates in State Correctional Facilities, 2004; and Survey of Prison Inmates, 2016.",,,,,,,,,,,,

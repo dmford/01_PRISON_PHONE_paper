@@ -1,0 +1,33 @@
+Bureau of Justice Statistics,,
+Filename: msfp0118stf02.csv,,
+"Figure 2. Mortality rate per 100,000 state and federal prisoners, 2001–2018",,
+"Report title: Mortality in State and Federal Prisons, 2001-2018 – Statistical Tables  NCJ 255970",,
+"Data source: Bureau of Justice Statistics, Mortality in Correctional Institutions, 2001-2018, and National Prisoner Statistics, 2001-2018; and Federal Bureau of Prisons, 2001-2018",,
+"Author: E. Ann Carson, Ph.D., BJS Statistician",,
+Refer questions to: askbjs@usdoj.gov 202-307-0765,,
+Date of version: 4/29/2021,,
+,,
+"Figure 2. Mortality rate per 100,000 state and federal prisoners, 2001–2018",,
+Mortality rate,State/a,Federal/b
+2001,242,220
+2002,243,233
+2003,257,228
+2004,251,210
+2005,251,244
+2006,249,201
+2007,258,222
+2008,261,241
+2009,259,220
+2010,246,224
+2011,260,220
+2012,265,198
+2013,274,230
+2014,274,262
+2015,296,283
+2016,303,252
+2017,323,246
+2018,344,250
+Note: Mortality rates are based on the annual number of deaths and a 1-day custody population on December 31. See tables 4 and 6 for rates.,,
+a/Includes deaths in private state facilities.,,
+b/Excludes deaths in private federal facilities.,,
+"Source: Bureau of Justice Statistics, Mortality in Correctional Institutions, 2001-2018, and National Prisoner Statistics, 2001-2018; and Federal Bureau of Prisons, 2001-2018.",,

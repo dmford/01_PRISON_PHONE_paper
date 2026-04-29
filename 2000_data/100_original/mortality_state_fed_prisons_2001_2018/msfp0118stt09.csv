@@ -1,0 +1,32 @@
+Bureau of Justice Statistics,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Filename: msfp0118stt09.csv,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Table 9. Mortality rate per 100,000 state prisoners, by decedent characteristics, 2001 and 2008–2018",,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Report title: Mortality in State and Federal Prisons, 2001-2018 – Statistical Tables  NCJ 255970",,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Data source: Bureau of Justice Statistics, Mortality in Correctional Institutions, 2001 and 2008–2018; National Prisoner Statistics, 2001 and 2008–2018; Survey of Inmates in State Correctional Facilities, 2004; and Survey of Prison Inmates, 2016",,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Author: E. Ann Carson, Ph.D., BJS Statistician",,,,,,,,,,,,,,,,,,,,,,,,,,,
+Refer questions to: askbjs@usdoj.gov 202-307-0765,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Date of version: 4/29/2021,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Table 9. Mortality rate per 100,000 state prisoners, by decedent characteristics, 2001 and 2008–2018",,,,,,,,,,,,,,,,,,,,,,,,,,,
+Characteristic,,2001,,,2008,,,2009,2010,,,2011,,,2012,2013,2014,,,2015,2016,,,2017,,,2018
+,Total,242,,,261,,,259,246,,,260,,,265,274,274,,,296,303,,,323,,,344
+Sex,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,Male,250,,,267,,,266,255,,,267,,,275,282,282,,,306,315,,,337,,,356
+,Female,131,,,173,,,163,128,,,160,,,131,159,171,,,167,161,,,148,,,203
+Race/ethnicity,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,White/a,345,,,413,,,412,396,,,461,,,439,468,473,,,515,535,,,561,,,580
+,Black/a,234,,,230,,,243,233,,,222,,,245,246,254,,,282,293,,,316,,,344
+,Hispanic,139,,,147,,,134,129,,,121,,,145,153,141,,,142,144,,,164,,,191
+,"Other/a,b",59,,,67,,,49,47,,,45,,,49,45,53,,,50,48,,,44,,,47
+Age,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,17 or younger,68,!,,115,!,,0,140,!,,111,!,,0,0,206,!,,0,120,!,,126,!,,0
+,18–24,39,,,34,,,35,35,,,26,,,38,40,35,,,47,53,,,48,,,58
+,25–34,64,,,51,,,48,50,,,47,,,46,53,53,,,55,61,,,78,,,85
+,35–44,181,,,131,,,136,114,,,123,,,113,104,104,,,106,117,,,124,,,128
+,45–54,584,,,442,,,427,389,,,384,,,368,364,349,,,347,321,,,317,,,363
+,55 or older,"2,032",,,"1,859",,,"1,737","1,580",,,"1,632",,,"1,615","1,619","1,563",,,"1,618","1,579",,,"1,624",,,"1,606"
+"Note: Data may have been revised from previously published statistics. Excludes executions. For execution data, see Capital Punishment, 2017: Selected Findings (NCJ 253060, BJS, July 2019). Includes deaths in private state facilities. Mortality rates are based on the annual number of deaths and a 1-day custody population on December 31.",,,,,,,,,,,,,,,,,,,,,,,,,,,
+"! Interpret with caution. Estimate is based on 10 or fewer cases, or coefficient of variation is greater than 50%. See Methodology – Interpreting rates among small populations, p. 24.",,,,,,,,,,,,,,,,,,,,,,,,,,,
+"a/Excludes persons of Hispanic origin (e.g., “white” refers to non-Hispanic whites and “black” refers to non-Hispanic blacks).",,,,,,,,,,,,,,,,,,,,,,,,,,,
+"b/Includes Asians, Native Hawaiians or Other Pacific Islanders, American Indians or Alaska Natives, and persons of two or more races. Due to the small number of deaths and prison populations of American Indians and Alaska Natives, Asians, and Native Hawaiians and Other Pacific Islanders, mortality rates for these populations are unstable and not shown. See Methodology.",,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Source: Bureau of Justice Statistics, Mortality in Correctional Institutions, 2001 and 2008–2018; National Prisoner Statistics, 2001 and 2008–2018; Survey of Inmates in State Correctional Facilities, 2004; and Survey of Prison Inmates, 2016.",,,,,,,,,,,,,,,,,,,,,,,,,,,

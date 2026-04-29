@@ -1,0 +1,33 @@
+Bureau of Justice Statistics,,,,,,,,,
+Filename: ssvacf1218stt01.csv,,,,,,,,,
+"Table 1. Allegations and substantiated incidents of sexual victimization, by type of adult correctional facility, 2012-2018",,,,,,,,,
+"Report title: Survey of Sexual Victimization in Adult Correctional Facilities, 2012-2018 – Statistical Tables  NCJ 252836",,,,,,,,,
+"Data source: Bureau of Justice Statistics, Survey of Sexual Victimization, 2012-2018",,,,,,,,,
+"Authors: Laura M. Maruschak and Emily D. Buehler, Ph.D., BJS Statisticians",,,,,,,,,
+Refer questions to: askbjs@usdoj.gov 202-307-0765,,,,,,,,,
+Date of version: 6/2/2021,,,,,,,,,
+,,,,,,,,,
+"Table 1. Allegations and substantiated incidents of sexual victimization, by type of adult correctional facility, 2012-2018",,,,,,,,,
+Type of facility,,,2018,2017,2016,2015,2014,2013,2012
+,Total allegations,,"27,826","26,103","27,215","24,514","18,805","13,568","10,047"
+Prisons,,,"18,884","17,851","19,030","18,519","13,708","9,850","7,575"
+,Public/a,,"17,370","16,947","17,779","17,533","12,876","9,273","7,151"
+,,Federal,922,741,699,740,776,879,718
+,,State ,"16,448","16,206","17,080","16,793","12,100","8,394","6,433"
+,Private,,"1,514",904,"1,251",986,832,577,424
+Jails/b,,,"8,651","8,092","7,930","5,809","4,905","3,577","2,411"
+Other adult facilities/c,,,291,160,255,186,192,141,61
+,Total substantiated incidents,,"1,673","1,518","1,642","1,466","1,515","1,239",953
+Prisons,,,"1,094",949,"1,013",866,881,782,656
+,Public/a,,906,879,918,822,777,717,612
+,,Federal,24,18,20,19,13,13,24
+,,State ,882,861,898,803,764,704,588
+,Private,,188,70,95,44,104,65,44
+Jails/b,,,547,557,608,576,616,441,292
+Other adult facilities/c,,,32,11,21,24,^,16,6
+"Note: Includes inmate-on-inmate nonconsensual sexual acts, inmate-on-inmate abusive sexual contact, staff-on-inmate sexual misconduct, and staff-on-inmate sexual harassment. Excludes inmate-on-inmate sexual harassment. Data may have been revised from previously published statistics. Details may not sum to totals due to rounding. See appendix table 1 for standard errors.",,,,,,,,,
+^Too few cases to provide a reliable estimate.,,,,,,,,,
+a/Includes state-operated facilities that are intended for adults but sometimes hold juveniles and facilities that are operated by the Federal Bureau of Prisons.,,,,,,,,,
+b/Includes local and private jails.,,,,,,,,,
+"c/Includes military prisons, dedicated U.S. Immigration and Customs Enforcement facilities, and Indian country jails. Excludes Indian country jails that house only juveniles.",,,,,,,,,
+"Source: Bureau of Justice Statistics, Survey of Sexual Victimization, 2012-2018.",,,,,,,,,

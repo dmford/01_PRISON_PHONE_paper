@@ -1,0 +1,36 @@
+Bureau of Justice Statistics,,,
+Filename: sljsfp0019stf02.csv,,,
+"Figure 2. Rate of suicides per 100,000 inmates in local jails and 100,000 prisoners in state and federal prisons, 2000–2019",,,
+"Report title: Suicide in Local Jails and State and Federal Prisons, 2000–2019 – Statistical Tables   NCJ 300731",,,
+"Data source: Bureau of Justice Statistics, Federal Law Enforcement Agency Deaths in Custody Reporting Program, 2015–2019; Mortality in Correctional Institutions, 2000–2019; and National Prisoner Statistics program, 2001–2019",,,
+"Author: E. Ann Carson, Ph.D., BJS Statistician",,,
+Refer questions to: askbjs@usdoj.gov 202-307-0765,,,
+Date of version: 10/7/2021,,,
+,,,
+"Figure 2. Rate of suicides per 100,000 inmates in local jails and 100,000 prisoners in state and federal prisons, 2000–2019",,,
+Year,Local jails/a,State prisons/b,Federal prisons/c
+2000,48,,
+2001,49,14,13
+2002,47,14,12
+2003,43,16,4
+2005,42,16,7
+2005,39,17,8
+2006,36,17,7
+2007,36,16,11
+2008,29,15,13
+2009,41,15,12
+2010,42,16,6
+2011,43,14,10
+2012,40,16,11
+2013,46,15,8
+2014,50,20,14
+2015,52,18,12
+2016,47,21,12
+2017,43,22,16
+2018,46,26,19
+2019,49,27,20
+"Note: Jail rates exclude and state prison rates include deaths in the combined jail and prison systems in Alaska, Connecticut, Delaware, Hawaii, Rhode Island, and Vermont. Data may have been revised from previously published statistics. See Methodology. See table 1 for rates.",,,
+"a/Based on the annual number of suicides and the average daily population (ADP) in local jails. In 2000, the ADP was estimated by taking the average of January 1 and December 31 inmate population counts.",,,
+b/Based on the annual number of suicides and the December 31 custody population in state prisons. Includes deaths and populations in publicly and privately operated state facilities.,,,
+c/Based on the annual number of suicides and the December 31 custody population in federal prisons. Includes deaths and populations in Federal Bureau of Prisons facilities and excludes deaths and populations in privately operated federal facilities. See Methodology.,,,
+"Source: Bureau of Justice Statistics, Federal Law Enforcement Agency Deaths in Custody Reporting Program, 2015–2019; Mortality in Correctional Institutions, 2000–2019; and National Prisoner Statistics program, 2001–2019.",,,

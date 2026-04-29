@@ -1,0 +1,74 @@
+Bureau of Justice Statistics,,,,,,,,,,,,,
+Filename: ssvacf0911t01.csv,,,,,,,,,,,,,
+"Table 1. Allegations of sexual victimization reported by federal and state prison authorities, by type of victimization, 2011",,,,,,,,,,,,,
+"Report title: Survey of Sexual Violence in Adult Correctional Facilities, 2009-11 NCJ 244227",,,,,,,,,,,,,
+"Data source: Survey of Sexual Violence, 2011",,,,,,,,,,,,,
+"Author(s): Ramona R. Rantala, Jessica Rexroat, Allen J. Beck",,,,,,,,,,,,,
+Refer questions to: askbjs@usdoj.gov 202-307-0765,,,,,,,,,,,,,
+Date of version: 1/9/14,,,,,,,,,,,,,
+,,,,,,,,,,,,,
+ ,,,,,,,,,,,,,
+"Table 1. Allegations of sexual victimization reported by federal and state prison authorities, by type of victimization, 2011",,,,,,,,,,,,,
+,,,Inmate-on-inmate,,,,,,Staff-on-inmate,,,,
+,,,Nonconsensual sexual acts,,,Abusive sexual contact,,,Sexual misconduct,,,Sexual harassment,
+Jurisdiction and facility,,Prisoners in custody on 12/31/2011a,Alleged,Substantiated,,Alleged,Substantiated,,Alleged,Substantiated,,Alleged,Substantiated
+,Total,"1,373,194","2,002",133,,"1,028",161,,"1,992",207,,"1,231",45
+Federal,,"176,228",77,3,,42,1,,230,3,,139,2
+State,,"1,196,966","1,925",130,,986,160,,"1,762",204,,"1,092",43
+,Alabama,"26,268",27,4,,17,2,,32,12,,12,1
+,Alaska,"3,708",9,4,,4,1,,1,0,,0,0
+,Arizona/b,"33,492",48,3,,21,2,,53,4,,/,/
+,Arkansas,"14,090",3,1,,11,5,,9,4,,5,1
+,California,"146,881",104,2,,38,1,,54,0,,5,0
+,Colorado,"17,559",16,2,,18,3,,42,8,,7,0
+,Connecticut,"17,022",16,0,,19,3,,4,0,,0,0
+,Delaware,"6,546",28,5,,19,1,,8,2,,5,1
+,Florida,"89,034",223,1,,57,1,,169,4,,374,1
+,Georgia/c,"47,229",69,1,,/,/,,33,4,,10,0
+,Hawaii,"3,687",4,1,,0,0,,2,0,,1,0
+,"Idaho/b,c","5,138",5,3,,/,/,,4,0,,/,/
+,Illinois,"48,427",25,2,,7,2,,18,2,,0,0
+,Indiana,"24,450",23,1,,21,7,,17,5,,5,3
+,Iowa,"9,115",24,2,,64,21,,47,16,,10,0
+,Kansas,"9,256",81,4,,26,2,,43,2,,22,1
+,Kentucky,"11,951",22,2,,15,2,,21,3,,2,0
+,Louisiana,"15,893",14,2,,2,0,,25,3,,11,0
+,Maine,"1,978",8,0,,3,0,,4,0,,0,0
+,"Maryland/b,c","22,923",13,0,,/,/,,17,0,,/,/
+,Massachusetts,"11,467",29,0,,19,1,,18,1,,2,0
+,Michigan,"42,904",33,5,,27,9,,24,7,,307,4
+,Minnesota/d,"9,309",21,0,,10,0,,8,1,,0,0
+,Mississippi,"10,721",13,0,,1,0,,5,3,,0,0
+,Missouri,"30,969",74,14,,29,3,,117,6,,64,7
+,Montana,"1,707",9,3,,2,0,,9,1,,2,0
+,Nebraska,"4,657",29,1,,17,2,,39,3,,28,2
+,Nevada,"12,159",33,3,,9,0,,18,3,,20,0
+,New Hampshire,"2,423",4,1,,14,0,,6,0,,0,0
+,New Jersey,"20,755",8,0,,1,1,,5,1,,1,0
+,New Mexico,"3,834",6,1,,0,0,,2,0,,0,0
+,New York,"55,196",60,5,,14,3,,184,4,,24,2
+,North Carolina,"39,632",42,1,,27,7,,137,19,,72,6
+,North Dakota,"1,385",3,1,,1,0,,1,0,,2,0
+,Ohio,"47,957",64,8,,30,11,,46,8,,5,0
+,Oklahoma,"17,724",26,1,,32,5,,23,10,,6,2
+,Oregon,"13,728",21,0,,13,3,,14,0,,3,2
+,Pennsylvania,"48,515",30,2,,6,3,,49,5,,16,0
+,Rhode Island,"3,032",7,1,,6,4,,4,1,,0,0
+,South Carolina,"22,343",0,0,,0,0,,2,2,,0,0
+,South Dakota,"3,551",2,1,,4,0,,2,1,,0,0
+,Tennessee/b,"14,684",20,0,,22,3,,21,2,,16,0
+,Texas/e,"141,353",393,8,,195,9,,109,12,,/,/
+,Utah,"5,294",10,3,,18,3,,7,4,,0,0
+,Vermont,"1,531",14,8,,17,9,,20,7,,3,2
+,Virginia,"28,962",16,0,,18,3,,21,9,,5,0
+,Washington,"17,109",134,6,,62,9,,221,15,,31,3
+,West Virginia,"5,149",12,2,,14,6,,14,2,,7,1
+,Wisconsin,"22,352",44,12,,17,7,,28,6,,5,1
+,Wyoming,"1,917",6,3,,19,6,,5,2,,4,3
+/ Not reported.,,,,,,,,,,,,,
+"a/Excludes inmates in privately operated facilities and facilities operated and administered by local governments. Counts were based on National Prisoner Statistics, 2011, “Inmates in custody of state or federal correctional facilities, excluding private prisons, December 31, 1978–2011,” generated using the Corrections Statistical Analysis Tool at www.bjs.gov.",,,,,,,,,,,,,
+b/Allegations of staff sexual harassment could not be counted separately from staff sexual misconduct.,,,,,,,,,,,,,
+c/Allegations of abusive sexual contact could not be counted separately from allegations of nonconsensual sexual acts.,,,,,,,,,,,,,
+d/Counts of nonconsensual sexual acts were based on completed acts only.,,,,,,,,,,,,,
+e/Agency did not record allegations of staff sexual harassment.,,,,,,,,,,,,,
+"Source: Bureau of Justice Statistics, Survey of Sexual Violence, 2011.",,,,,,,,,,,,,

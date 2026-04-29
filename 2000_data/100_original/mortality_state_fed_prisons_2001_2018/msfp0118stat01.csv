@@ -1,0 +1,35 @@
+Bureau of Justice Statistics,,,,,,,,,,,,,,,
+Filename: msfp0118stat01.csv,,,,,,,,,,,,,,,
+"Appendix table 1. Estimated number of state and federal prisoners in custody, by prisoner characteristics, 2001–2018",,,,,,,,,,,,,,,
+"Report title: Mortality in State and Federal Prisons, 2001-2018 – Statistical Tables  NCJ 255970",,,,,,,,,,,,,,,
+"Data source: Bureau of Justice Statistics, National Corrections Reporting Program, 2001–2018; National Prisoner Statistics, 2001–2018; Survey of Inmates in State and Federal Correctional Facilities, 2004; and Survey of Prison Inmates, 2016",,,,,,,,,,,,,,,
+"Author: E. Ann Carson, Ph.D., BJS Statistician",,,,,,,,,,,,,,,
+Refer questions to: askbjs@usdoj.gov 202-307-0765,,,,,,,,,,,,,,,
+Date of version: 4/29/2021,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+"Appendix Table 1. Estimated number of state and federal prisoners in custody, by prisoner characteristics, 2001–2018",,,,,,,,,,,,,,,
+Characteristic,,,"Custody population, 2001–2018",2001,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018
+,Total,,"25,595,000","1,322,600","1,489,800","1,490,600","1,487,500","1,466,400","1,443,500","1,444,100","1,439,200","1,405,800","1,382,900","1,374,000","1,351,900"
+Federal/a,,,"2,906,100","137,100","165,300","171,000","173,100","176,200","176,500","173,800","169,500","160,700","154,200","154,600","151,500"
+State/b,,,"22,688,900","1,185,500","1,324,500","1,319,600","1,314,400","1,290,200","1,267,000","1,270,300","1,269,700","1,245,100","1,228,700","1,219,400","1,200,400"
+,Sex,,,,,,,,,,,,,,
+,,Male,"21,102,600","1,109,400","1,230,600","1,227,500","1,222,900","1,201,100","1,180,600","1,181,500","1,179,400","1,156,000","1,139,900","1,130,800","1,111,900"
+,,Female,"1,586,300","76,100","93,900","92,100","91,500","89,100","86,400","88,800","90,300","89,100","88,800","88,700","88,500"
+,Race/ethnicity,,,,,,,,,,,,,,
+,,White/c,"7,433,600","387,900","441,100","430,400","424,700","414,600","407,800","406,100","406,300","396,100","385,400","384,000","379,000"
+,,Black/c,"8,379,200","495,400","502,800","493,200","481,800","467,900","454,600","448,200","437,000","421,000","409,600","401,800","393,200"
+,,Hispanic,"4,709,300","232,200","272,400","277,400","278,600","270,900","260,900","262,100","261,800","258,300","266,100","266,600","263,300"
+,,"Other/c,d","2,166,800","70,000","108,300","118,600","129,300","136,800","143,700","153,900","164,700","169,600","167,600","167,000","164,900"
+,Age,,,,,,,,,,,,,,
+,,17 or younger,"33,000","2,900","2,600","2,500","2,100","1,800","1,400","1,100","1,000",900,800,800,600
+,,18–24,"3,268,600","218,000","197,900","198,700","196,000","189,100","180,400","173,700","161,300","145,500","134,800","124,800","113,700"
+,,25–34,"7,494,300","401,700","439,200","437,300","434,800","424,400","413,800","415,300","417,700","407,700","400,000","395,700","385,700"
+,,35–44,"6,189,100","362,000","356,600","343,700","334,200","324,100","318,200","320,500","323,700","322,500","322,600","326,100","328,200"
+,,45–54,"3,908,900","153,000","240,600","243,500","245,600","242,300","238,000","236,500","235,000","229,400","224,900","219,700","213,900"
+,,55 or older,"1,795,000","47,800","87,600","93,900","101,700","108,500","115,300","123,100","131,100","139,100","145,600","152,300","158,300"
+Note: Data are rounded to the nearest 100. Data may have been revised from previously published statistics. Details may not sum to totals due to missing data. All populations are based on a custody count as of December 31.,,,,,,,,,,,,,,,
+a/Excludes prisoners in private federal facilities.,,,,,,,,,,,,,,,
+b/Includes prisoners in private state facilities.,,,,,,,,,,,,,,,
+"c/Excludes persons of Hispanic origin (e.g., “white” refers to non-Hispanic whites and “black” refers to non-Hispanic blacks).",,,,,,,,,,,,,,,
+"d/Includes Asians, Native Hawaiians or Other Pacific Islanders, American Indians or Alaska Natives, and persons of two or more races.",,,,,,,,,,,,,,,
+"Source: Bureau of Justice Statistics, National Corrections Reporting Program, 2001–2018; National Prisoner Statistics, 2001–2018; Survey of Inmates in State and Federal Correctional Facilities, 2004; and Survey of Prison Inmates, 2016.",,,,,,,,,,,,,,,

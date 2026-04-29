@@ -1,0 +1,32 @@
+Bureau of Justice Statistics,,,,,,,,,,,,,,,,,,,,,,,,
+Filename: msfp0118stat05.csv,,,,,,,,,,,,,,,,,,,,,,,,
+"Appendix table 5. Heart disease mortality rate per 100,000 state prisoners within each demographic group, by decedent characteristics, 2006–2018 (3-year rolling averages)",,,,,,,,,,,,,,,,,,,,,,,,
+"Report title: Mortality in State and Federal Prisons, 2001-2018 – Statistical Tables  NCJ 255970",,,,,,,,,,,,,,,,,,,,,,,,
+"Data source: Bureau of Justice Statistics, Mortality in Correctional Institutions, 2006–2018; National Prisoner Statistics, 2006–2018; Survey of Inmates in State Correctional Facilities, 2004; and Survey of Prison Inmates, 2016",,,,,,,,,,,,,,,,,,,,,,,,
+"Author: E. Ann Carson, Ph.D., BJS Statistician",,,,,,,,,,,,,,,,,,,,,,,,
+Refer questions to: askbjs@usdoj.gov 202-307-0765,,,,,,,,,,,,,,,,,,,,,,,,
+Date of version: 4/29/2021,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,
+"Appendix Table 5. Heart disease mortality rate per 100,000 state prisoners within each demographic group, by decedent characteristics, 2006–2018 (3-year rolling averages)",,,,,,,,,,,,,,,,,,,,,,,,
+Characteristic,,2008,2009,2010,,,2011,,,2012,,,2013,2014,,,2015,,,2016,,,2017,2018
+,Total,64,64,64,,,65,,,64,,,67,68,,,73,,,78,,,84,87
+Sex,,,,,,,,,,,,,,,,,,,,,,,,
+,Male,67,66,66,,,67,,,67,,,69,71,,,76,,,81,,,88,91
+,Female,33,37,30,,,30,,,27,,,31,31,,,35,,,37,,,39,37
+Race/ethnicity,,,,,,,,,,,,,,,,,,,,,,,,
+,White/a,99,99,101,,,107,,,107,,,114,117,,,127,,,136,,,147,151
+,Black/a,62,63,64,,,65,,,66,,,67,69,,,76,,,82,,,92,95
+,Hispanic,30,29,28,,,25,,,23,,,24,24,,,26,,,25,,,27,31
+,"Other/a,b",12,12,10,,,8,,,9,,,11,13,,,12,,,11,,,9,10
+Age,,,,,,,,,,,,,,,,,,,,,,,,
+,17 or younger,0,0,14, !,,16, !,,19, !,,0,29, !,,33, !,,37, !,,0,0
+,18–24,4,4,4,,,4,,,3,,,5,5,,,7,,,5,,,4,5
+,25–34,8,8,8,,,8,,,7,,,7,8,,,9,,,10,,,10,11
+,35–44,31,31,32,,,33,,,30,,,28,25,,,24,,,24,,,26,26
+,45–54,106,98,94,,,90,,,86,,,82,80,,,81,,,83,,,85,85
+,55 or older,550,526,488,,,468,,,448,,,455,450,,,467,,,472,,,490,484
+"Note: Based on 3-year rolling averages. Labels show the most recent year only (for example, 2006–2008 is shown as 2008). Includes deaths in private state facilities. Mortality rates are per 100,000 inmates held in the custody of state prisons. Mortality rates are based on the annual number of deaths and a 1-day custody population on December 31.",,,,,,,,,,,,,,,,,,,,,,,,
+"! Interpret with caution. Estimate is based on 10 or fewer cases, or coefficient of variation is greater than 50%. See Methodology – Interpreting rates among small populations, p. 24.",,,,,,,,,,,,,,,,,,,,,,,,
+"a/Excludes persons of Hispanic origin (e.g., “white” refers to non-Hispanic whites and “black” refers to non-Hispanic blacks).",,,,,,,,,,,,,,,,,,,,,,,,
+"b/Includes Asians, Native Hawaiians or Other Pacific Islanders, American Indians or Alaska Natives, and persons of two or more races. Due to the small number of deaths and prison populations of American Indians and Alaska Natives, Asians, and Native Hawaiians and Other Pacific Islanders, mortality rates for these populations are unstable and not shown. See Methodology.",,,,,,,,,,,,,,,,,,,,,,,,
+"Source: Bureau of Justice Statistics, Mortality in Correctional Institutions, 2006–2018; National Prisoner Statistics, 2006–2018; Survey of Inmates in State Correctional Facilities, 2004; and Survey of Prison Inmates, 2016.",,,,,,,,,,,,,,,,,,,,,,,,

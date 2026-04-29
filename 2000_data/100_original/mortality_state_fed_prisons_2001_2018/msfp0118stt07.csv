@@ -1,0 +1,31 @@
+Bureau of Justice Statistics,,,,,,,,,,,,,
+Filename: msfp0118stt07.csv,,,,,,,,,,,,,
+"Table 7. Number of state prisoner deaths, by decedent characteristics, 2001 and 2008–2018",,,,,,,,,,,,,
+"Report title: Mortality in State and Federal Prisons, 2001-2018 – Statistical Tables  NCJ 255970",,,,,,,,,,,,,
+"Data source: Bureau of Justice Statistics, Mortality in Correctional Institutions, 2001 and 2008–2018",,,,,,,,,,,,,
+"Author: E. Ann Carson, Ph.D., BJS Statistician",,,,,,,,,,,,,
+Refer questions to: askbjs@usdoj.gov 202-307-0765,,,,,,,,,,,,,
+Date of version: 4/29/2021,,,,,,,,,,,,,
+,,,,,,,,,,,,,
+"Table 7. Number of state prisoner deaths, by decedent characteristics, 2001 and 2008–2018",,,,,,,,,,,,,
+Characteristic,,2001,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018
+,Total,"2,869","3,452","3,417","3,233","3,351","3,357","3,478","3,484","3,682","3,729","3,943","4,135"
+Sex,,,,,,,,,,,,,
+,Male,"2,769","3,289","3,267","3,116","3,208","3,244","3,337","3,330","3,533","3,586","3,811","3,954"
+,Female,100,163,150,117,143,113,141,154,149,143,131,180
+Race/ethnicity,,,,,,,,,,,,,
+,White/a,"1,340","1,822","1,774","1,680","1,912","1,789","1,901","1,921","2,040","2,063","2,156","2,198"
+,Black/a,"1,161","1,157","1,199","1,121","1,037","1,113","1,104","1,108","1,189","1,201","1,268","1,352"
+,Hispanic,322,400,372,359,329,379,402,368,367,382,437,503
+,American Indian/Alaska Native/a,25,36,31,36,36,40,37,43,52,51,47,48
+,Asian/Native Hawaiian/Other Pacific Islander/two or more races/a,16,37,27,25,25,30,33,44,33,29,27,30
+Age,,,,,,,,,,,,,
+,17 or younger,2,3,0,3,2,0,0,2,0,1,1,0
+,18–24,86,67,69,69,50,69,69,56,68,72,60,66
+,25–34,256,222,210,217,200,190,221,221,226,246,308,328
+,35–44,656,468,467,382,397,360,334,335,342,379,405,421
+,45–54,893,"1,063","1,039",956,930,876,861,821,795,721,697,776
+,55 or older,972,"1,629","1,631","1,606","1,771","1,862","1,993","2,049","2,250","2,298","2,472","2,543"
+"Note: Data may have been revised from previously published statistics. Details may not sum to totals due to missing data. Excludes executions. For execution data, see Capital Punishment, 2017: Selected Findings (NCJ 253060, BJS, July 2019). See Methodology. Includes deaths in private state facilities.",,,,,,,,,,,,,
+"a/Excludes persons of Hispanic origin (e.g., “white” refers to non-Hispanic whites and “black” refers to non-Hispanic blacks).",,,,,,,,,,,,,
+"Source: Bureau of Justice Statistics, Mortality in Correctional Institutions, 2001 and 2008–2018.",,,,,,,,,,,,,

@@ -1,0 +1,78 @@
+Bureau of Justice Statistics,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Filename: msfp0118stt15.csv,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Table 15. Average annual mortality rate per 100,000 state and federal prisoners, by cause of death and jurisdiction, 2001–2018",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Report title: Mortality in State and Federal Prisons, 2001-2018 – Statistical Tables  NCJ 255970",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Data source: Bureau of Justice Statistics, Mortality in Correctional Institutions, 2001–2018, and National Prisoner Statistics, 2001–2018; and Federal Bureau of Prisons, 2001–2018",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Author: E. Ann Carson, Ph.D., BJS Statistician",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Refer questions to: askbjs@usdoj.gov 202-307-0765,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Date of version: 4/29/2021,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Table 15. Average annual mortality rate per 100,000 state and federal prisoners, by cause of death and jurisdiction, 2001–2018",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,Illness,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Jurisdiction,,All causes/a,Heart disease,,,Cancer,,,Liver disease,,,AIDS-related/b,,,Respiratory,,,All other illnesses/c,,,Suicide,,,Drug/alcohol intoxication,,,Accident/d,,,Homicide/e,
+Federal/f,,232,...,,,...,,,...,,,6,,,...,,,202,,,11,,,...,,,4,,,6,
+State/g,,269,70,,,74,,,24,,,9,,,17,,,42,,,17,,,5,,,3,,,6,
+,Alabama,352,81,,,89,,,30,,,8,,,24,,,63,,,9,,,3,,,4,,,10,
+,Alaska/h,194,46,,,31,,,19,,,1,!,,4,!,,26,,,37,,,11,,,10,!,,4,!
+,Arizona,237,56,,,62,,,30,,,5,,,13,,,30,,,17,,,11,,,2,,,8,
+,Arkansas,363,122,,,97,,,26,,,10,,,18,,,37,,,21,,,17,,,6,,,6,
+,California,244,42,,,60,,,24,,,4,,,17,,,50,,,21,,,12,,,2,,,10,
+,Colorado,217,42,,,44,,,35,,,0,!,,16,,,39,,,20,,,9,,,4,,,8,
+,Connecticut/i,151,37,,,21,,,21,,,4,,,9,,,31,,,24,,,1,!,,2,!,,2,!
+,Delaware/i,230,58,,,53,,,21,,,17,,,12,,,28,,,27,,,5,!,,1,!,,2,!
+,Florida,313,67,,,92,,,24,,,18,,,21,,,55,,,10,,,10,,,4,,,8,
+,Georgia,237,79,,,60,,,13,,,9,,,19,,,30,,,13,,,1,!,,2,,,8,
+,Hawaii/i,169,31,,,44,,,18,,,4,!,,7,!,,24,,,29,,,4,!,,1,!,,5,!
+,Idaho,215,56,,,53,,,19,,,3,!,,11,,,31,,,28,,,4,!,,4,!,,3,!
+,Illinois,195,56,,,62,,,10,,,8,,,11,,,26,,,16,,,2,,,2,,,2,
+,Indiana,255,68,,,69,,,22,,,5,,,17,,,37,,,17,,,9,,,4,,,6,
+,Iowa,183,40,,,63,,,11,,,3,!,,18,,,22,,,20,,,2,!,,1,!,,1,!
+,Kansas,264,73,,,76,,,30,,,1,!,,18,,,39,,,16,,,4,!,,5,!,,2,!
+,Kentucky,373,125,,,118,,,27,,,13,,,19,,,55,,,9,,,1,!,,2,!,,3,!
+,Louisiana/j,535,165,,,162,,,41,,,32,,,25,,,68,,,12,,,1,!,,6,,,3,!
+,Maine,198,62,,,48,,,16,!,,3,!,,16,!,,21,!,,11,!,,5,!,,0,,,13,!
+,Maryland,260,65,,,55,,,21,,,27,,,11,,,29,,,20,,,16,,,2,!,,12,
+,Massachusetts,336,92,,,92,,,34,,,5,,,15,,,49,,,31,,,5,,,5,!,,2,!
+,Michigan,265,79,,,90,,,21,,,5,,,15,,,27,,,16,,,4,,,3,,,3,
+,Minnesota,148,30,,,44,,,20,,,1,!,,6,,,27,,,16,,,3,!,,1,!,,1,!
+,Mississippi,359,131,,,90,,,17,,,9,,,18,,,49,,,17,,,1,!,,5,,,10,
+,Missouri,266,73,,,81,,,29,,,5,,,15,,,39,,,13,,,4,,,1,!,,4,
+,Montana,292,56,,,80,,,45,,,4,!,,18,,,45,,,33,,,5,!,,2,!,,4,!
+,Nebraska,234,53,,,53,,,30,,,5,!,,11,!,,26,,,22,,,6,,,4,!,,7,!
+,Nevada,282,68,,,64,,,19,,,4,!,,12,,,58,,,18,,,3,!,,2,!,,5,
+,New Hampshire,255,56,,,99,,,24,,,6,!,,9,!,,26,,,26,,,11,!,,0,,,0,
+,New Jersey,234,74,,,55,,,14,,,20,,,14,,,31,,,12,,,5,,,2,,,3,
+,New Mexico,268,60,,,69,,,48,,,3,!,,14,,,32,,,24,,,6,!,,1,!,,9,
+,New York,250,66,,,72,,,19,,,21,,,11,,,22,,,22,,,5,,,3,,,3,
+,North Carolina,242,66,,,79,,,20,,,11,,,16,,,32,,,10,,,1,!,,4,,,2,
+,North Dakota,79,16,!,,20,!,,8,!,,4,!,,0,,,12,!,,16,!,,4,!,,0,,,0,
+,Ohio,245,70,,,84,,,13,,,4,,,18,,,34,,,14,,,2,,,1,!,,3,
+,Oklahoma,336,88,,,85,,,38,,,7,,,19,,,45,,,20,,,9,,,7,,,14,
+,Oregon,248,53,,,76,,,36,,,3,!,,12,,,33,,,15,,,5,,,3,!,,4,
+,Pennsylvania,330,94,,,95,,,29,,,5,,,21,,,60,,,18,,,3,,,2,,,2,
+,Rhode Island/i,192,46,,,36,,,5,!,,9,!,,9,!,,15,!,,45,,,9,!,,5,!,,2,!
+,South Carolina,315,119,,,68,,,21,,,9,,,13,,,49,,,17,,,3,,,2,!,,13,
+,South Dakota,209,49,,,46,,,29,,,2,!,,21,,,21,,,28,,,2,!,,7,!,,5,!
+,Tennessee,408,124,,,112,,,42,,,12,,,20,,,55,,,19,,,8,,,4,,,9,
+,Texas,272,68,,,68,,,29,,,6,,,21,,,55,,,18,,,1,,,3,,,3,
+,Utah,273,66,,,58,,,22,,,0,,,11,,,48,,,44,,,6,!,,3,!,,9,!
+,Vermont/i,205,50,,,39,,,33,,,9,!,,3,!,,33,,,30,,,9,!,,0,,,0,
+,Virginia,286,76,,,98,,,28,,,10,,,15,,,37,,,11,,,3,,,2,,,3,
+,Washington,209,49,,,60,,,23,,,3,!,,18,,,32,,,14,,,3,!,,4,,,3,!
+,West Virginia,412,156,,,110,,,28,,,7,!,,19,,,65,,,11,,,3,!,,2,!,,7,!
+,Wisconsin,200,56,,,66,,,12,,,3,,,16,,,21,,,21,,,2,!,,1,!,,0,!
+,Wyoming,283,103,,,46,,,38,,,3,!,,22,!,,41,,,22,!,,5,!,,3,!,,0,
+"Note: Data may have been revised from previously published statistics. Details may not sum to totals due to missing data. Excludes executions. For execution data, see Capital Punishment, 2017: Selected Findings (NCJ 253060, BJS, July 2019). Includes deaths in private state facilities. Mortality rates are based on the annual number of deaths and a 1-day custody population on December 31. Mortality rates are not adjusted for demographic differences among states. See Methodology.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+...Not available.,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"! Interpret with caution. Estimate is based on 10 or fewer cases, or coefficient of variation is greater than 50%. See Methodology – Interpreting rates among small populations, p. 24.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+a/Includes other causes not specified and missing and unknown causes.,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+b/Includes persons who died of illness and were identified as HIV-positive or having AIDS at the time of death.,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"c/Includes other specified illnesses (such as cerebrovascular disease, influenza, and other nonleading natural causes of death) and unspecified illnesses. Includes natural and illness-related deaths of federal prisoners for which the Federal Bureau of Prisons (BOP) could not provide details.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+d/Includes death by intoxication among federal prisoners.,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"e/Includes homicides committed by other prisoners, incidental to the use of force by staff, or resulting from injuries sustained prior to incarceration.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+f/Excludes deaths in private federal facilities.,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"g/Includes deaths in private state facilities. Includes nine prisoner deaths reported by the District of Columbia in 2001. As of December 30, 2001, sentenced felons from the District of Columbia were the responsibility of the BOP.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+h/Prisons and jails form one integrated system. Counts include deaths only in state-operated prisons and jails and exclude deaths in 15 locally operated jails.,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+i/Prisons and jails form one integrated system. Data include the total jail and prison population.,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"j/Annually, Louisiana holds roughly half of its prison population in local jails. Since the calculation of mortality rates is based on the custody populations, which exclude prisoners held in local jails, the mortality rates for Louisiana prisoners will be high because the prisoners held in jails are generally healthier according to the Louisiana Department of Corrections.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Source: Bureau of Justice Statistics, Mortality in Correctional Institutions, 2001–2018, and National Prisoner Statistics, 2001–2018; and Federal Bureau of Prisons, 2001–2018.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,

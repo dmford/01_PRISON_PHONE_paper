@@ -1,0 +1,49 @@
+Bureau of Justice Statistics,,,,,,,,,,,,,
+Filename: mlj0018stt05.csv,,,,,,,,,,,,,
+"Table 5. Number of deaths of local jail inmates, by decedent characteristics, 2000 and 2008–2018",,,,,,,,,,,,,
+"Report title: Mortality in Local Jails, 2000-2018 - Statistical Tables  NCJ 256002",,,,,,,,,,,,,
+"Data source: Bureau of Justice Statistics, Mortality in Correctional Institutions, 2000 and 2008–2018",,,,,,,,,,,,,
+"Author: E. Ann Carson, Ph.D., BJS Statistician",,,,,,,,,,,,,
+Refer questions to: askbjs@usdoj.gov 202-307-0765,,,,,,,,,,,,,
+Date of version: 4/29/2021,,,,,,,,,,,,,
+,,,,,,,,,,,,,
+"Table 5. Number of deaths of local jail inmates, by decedent characteristics, 2000 and 2008–2018",,,,,,,,,,,,,
+Characteristic,,2000,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018
+,Total,903,959,961,918,888,959,985,"1,052","1,093","1,072","1,099","1,120"
+Sex,,,,,,,,,,,,,
+,Male,813,840,852,804,778,837,858,900,939,919,933,940
+,Female,90,119,109,114,110,122,127,152,154,153,165,180
+Race/ethnicity,,,,,,,,,,,,,
+,White/a,452,512,534,516,525,555,523,622,656,624,651,660
+,Black/a,305,310,274,265,234,270,278,273,256,263,271,276
+,Hispanic,118,107,109,90,105,100,145,118,141,137,131,149
+,American Indian/Alaska Native/a,9,11,22,11,6,13,12,13,14,18,15,14
+,Asian/Native Hawaiian/Other Pacific Islander/two or more races/a,8,16,10,12,13,12,10,19,12,17,11,14
+Age,,,,,,,,,,,,,
+,17 or younger,8,3,3,3,2,2,3,2,2,2,3,0
+,18–24,89,86,87,80,81,83,75,87,80,79,82,68
+,25–34,184,167,175,187,206,189,215,229,251,240,258,236
+,35–44,264,246,235,201,198,198,213,231,230,218,235,281
+,45–54,239,275,259,253,227,273,259,263,269,261,243,229
+,55 or older,115,178,193,172,171,209,202,233,247,258,259,301
+Legal status,,,,,,,,,,,,,
+,Convicted/b,258,201,247,232,221,255,229,258,266,256,266,282
+,Unconvicted/c,627,753,694,664,662,698,739,787,814,799,810,829
+Time served,,,,,,,,,,,,,
+,7 days or less,328,349,365,345,346,350,390,425,444,428,441,450
+,8–30,167,164,167,176,172,200,163,218,209,188,209,227
+,31–60,111,106,99,91,97,99,87,106,112,107,101,88
+,61–120,115,122,118,92,90,115,124,96,112,117,113,118
+,121–180,56,68,51,58,55,58,45,51,59,68,67,63
+,181 or more,119,128,145,133,125,132,157,145,143,149,147,169
+Offense,,,,,,,,,,,,,
+,Violent,355,301,348,341,349,350,346,386,376,368,411,404
+,Property,168,185,180,170,152,185,196,202,226,210,215,213
+,Drug,146,165,130,122,113,151,132,161,176,167,146,179
+,Public order/other/d,208,241,243,224,234,235,252,271,265,268,265,289
+Note: Data may have been revised from previously published statistics. Details may not sum to totals due to missing data. See Methodology.,,,,,,,,,,,,,
+"a/Excludes persons of Hispanic origin (e.g., “white” refers to non-Hispanic whites and “black” refers to non-Hispanic blacks).",,,,,,,,,,,,,
+b/Includes inmates who returned on a probation or parole violation.,,,,,,,,,,,,,
+c/Includes inmates whose status was marked as other or was unspecified.,,,,,,,,,,,,,
+"d/Public order offenses include weapons offenses, DUI/DWI, court offenses, commercialized vice, and morals and decency offenses. Other offenses include holds and holds for other jurisdictions and probation and parole violations.",,,,,,,,,,,,,
+"Source: Bureau of Justice Statistics, Mortality in Correctional Institutions, 2000 and 2008–2018.",,,,,,,,,,,,,

@@ -1,0 +1,31 @@
+Bureau of Justice Statistics,,,,
+Filename: msfp0118stt05.csv,,,,
+"Table 5. Crude and adjusted mortality rate per 100,000 U.S. residents, by cause of death, 2018",,,,
+"Report title: Mortality in State and Federal Prisons, 2001-2018 – Statistical Tables  NCJ 255970",,,,
+"Data source: Bureau of Justice Statistics, Mortality in Correctional Institutions, 2018, National Prisoner Statistics, 2018, Survey of Inmates in State Correctional Facilities, 2004, and Survey of Prison Inmates, 2016; and Centers for Disease Control and Prevention, National Center for Health Statistics, CDC WONDER online database, Underlying Cause of Death 2018 (released in 2020)",,,,
+"Author: E. Ann Carson, Ph.D., BJS Statistician",,,,
+Refer questions to: askbjs@usdoj.gov 202-307-0765,,,,
+Date of version: 4/29/2021,,,,
+,,,,
+"Table 5. Crude and adjusted mortality rate per 100,000 U.S. residents, by cause of death, 2018",,,,
+Cause of death,,"Crude rate per 100,000 adult U.S. residents","Adjusted rate per 100,000 adult U.S. residents/a","Prison annual mortality rate per 100,000 state prisoners/b"
+,All causes,"1,110",419,319
+Illness,,"1,040",344,261
+,Heart disease,265,96,84
+,Cancer,242,81,91
+,Liver disease,23,15,17
+,AIDS-related/c,2,5,2
+,Respiratory disease,114,27,23
+,All other illnesses/d,395,121,45
+Suicide,,19,22,25
+Drug/alcohol intoxication,,27,39,20
+Accident/e,,22,11,3
+Homicide/f,,2,4,10
+Note: Includes deaths in private state facilities. Excludes persons younger than age 18 and federal prisoners.,,,,
+"a/Population adjusted to resemble the sex, race or ethnicity, and age distribution of the state prison population.",,,,
+b/Mortality rates may differ from those presented elsewhere in this report due to the removal of state prisoners younger than age 18 from both the numerator (deaths) and denominator (state prison population) and the exclusion of deaths for which cause of death was unknown or missing. These changes were made solely to table 5 to make the mortality rates comparable to those in the U.S. resident population.,,,,
+c/Includes persons who died of illness and were identified as HIV-positive or having AIDS at the time of death.,,,,
+"d/Includes other specified illnesses (such as cerebrovascular disease, influenza, and other nonleading natural causes of death) and unspecified illnesses.",,,,
+"e/Excludes causes of death that are unlikely to occur in prisons, such as motor vehicle accidents, neglect and abandonment, and injury by firearms or explosives unrelated to law enforcement incidents.",,,,
+"f/Includes homicides committed by other prisoners, incidental to the use of force by staff, or resulting from injuries sustained prior to incarceration.",,,,
+"Source: Bureau of Justice Statistics, Mortality in Correctional Institutions, 2018, National Prisoner Statistics, 2018, Survey of Inmates in State Correctional Facilities, 2004, and Survey of Prison Inmates, 2016; and Centers for Disease Control and Prevention, National Center for Health Statistics, CDC WONDER online database, Underlying Cause of Death 2018 (released in 2020).",,,,

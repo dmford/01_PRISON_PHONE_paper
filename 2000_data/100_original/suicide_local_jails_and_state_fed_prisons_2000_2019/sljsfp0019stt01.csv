@@ -1,0 +1,30 @@
+Bureau of Justice Statistics,,,,,,,,,,,,,,,,,,,,,
+Filename: sljsfp0019stt01.csv,,,,,,,,,,,,,,,,,,,,,
+"Table 1. Total deaths and number and rate of suicides in local jails and state and federal prisons, 2000–2019",,,,,,,,,,,,,,,,,,,,,
+"Report title: Suicide in Local Jails and State and Federal Prisons, 2000–2019 – Statistical Tables   NCJ 300731",,,,,,,,,,,,,,,,,,,,,
+"Data source: Bureau of Justice Statistics, Federal Law Enforcement Agency Deaths in Custody Reporting Program, 2015–2019; Mortality in Correctional Institutions, 2000–2019; and National Prisoner Statistics program, 2001–2019",,,,,,,,,,,,,,,,,,,,,
+"Author: E. Ann Carson, Ph.D., BJS Statistician",,,,,,,,,,,,,,,,,,,,,
+Refer questions to: askbjs@usdoj.gov 202-307-0765,,,,,,,,,,,,,,,,,,,,,
+Date of version: 10/7/2021,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+"Table 1. Total deaths and number and rate of suicides in local jails and state and federal prisons, 2000–2019",,,,,,,,,,,,,,,,,,,,,
+,,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019
+Local jails,,,,,,,,,,,,,,,,,,,,,
+,Total deaths,903,942,969,"1,001","1,021","1,045","1,094","1,099",959,961,918,888,960,987,"1,053","1,096","1,076","1,103","1,138","1,200"
+,Suicides,289,313,314,296,299,286,278,283,228,304,305,311,301,328,368,369,334,317,339,355
+,"Suicide rate per 100,000 local jail inmates/a",48,49,47,43,42,39,36,36,29,41,42,43,40,46,50,52,47,43,46,49
+State prisons,,,,,,,,,,,,,,,,,,,,,
+,Total deaths,/,"2,869","2,935","3,152","3,123","3,168","3,233","3,389","3,452","3,417","3,233","3,351","3,357","3,478","3,484","3,708","3,734","3,954","4,137","3,848"
+,Suicides,/,168,168,199,199,213,219,215,197,202,215,185,205,192,249,219,254,261,312,311
+,"Suicide rate per 100,000 state prisoners/b",:,14,14,16,16,17,17,16,15,15,16,14,16,15,20,18,21,22,26,27
+Federal prisons/c,,,,,,,,,,,,,,,,,,,,,
+,Total deaths,/,301,335,346,333,388,328,368,399,376,387,387,350,400,444,455,388,381,378,381
+,Suicides,/,18,17,6,11,13,12,18,21,21,11,17,19,14,24,20,18,24,29,29
+,"Suicide rate per 100,000 federal prisoners/b",:,13,12,4,7,8,7,11,13,12,6,10,11,8,14,12,12,16,19,20
+"Note: Jail counts exclude and state prison counts include deaths in the combined jail and prison systems in Alaska, Connecticut, Delaware, Hawaii, Rhode Island, and Vermont. Data may have been revised from previously published statistics. See Methodology.",,,,,,,,,,,,,,,,,,,,,
+:Not calculated.,,,,,,,,,,,,,,,,,,,,,
+/Not collected.,,,,,,,,,,,,,,,,,,,,,
+"a/Based on the annual number of suicides and the average daily population (ADP) in local jails. In 2000, the ADP was estimated by taking the average of January 1 and December 31 inmate population counts.",,,,,,,,,,,,,,,,,,,,,
+b/Based on the annual number of suicides and the December 31 custody population in state or federal prisons.,,,,,,,,,,,,,,,,,,,,,
+"c/Includes deaths in Federal Bureau of Prisons (BOP) facilities and excludes deaths in privately operated federal facilities. From 2001 to 2014, the BOP provided an aggregate count of deaths in BOP-operated facilities, by cause of death. From 2015 to 2019, the BOP provided individual-level death records from both BOP- and privately operated federal facilities. To allow for comparability over time, nine deaths in private federal prisons in 2015, seven in 2016, seven in 2017, five in 2018, and nine in 2019 were excluded. Among these deaths, one suicide was in 2015, one in 2016, and none in 2017, 2018, and 2019. As of December 30, 2001, sentenced felons from the District of Columbia were the responsibility of the BOP. See Methodology.",,,,,,,,,,,,,,,,,,,,,
+"Source: Bureau of Justice Statistics, Federal Law Enforcement Agency Deaths in Custody Reporting Program, 2015–2019; Mortality in Correctional Institutions, 2000–2019; and National Prisoner Statistics program, 2001–2019.",,,,,,,,,,,,,,,,,,,,,

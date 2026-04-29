@@ -1,0 +1,74 @@
+Bureau of Justice Statistics,,,,,,,,,,
+Filename: ssvacf1218stt10.csv,,,,,,,,,,
+"Table 10. Sexual victimization reported by federal and state prison authorities, by type of victimization, 2012",,,,,,,,,,
+"Report title: Survey of Sexual Victimization in Adult Correctional Facilities, 2012-2018 – Statistical Tables  NCJ 252836",,,,,,,,,,
+"Data source: Bureau of Justice Statistics, Survey of Sexual Victimization, 2012",,,,,,,,,,
+"Authors: Laura M. Maruschak and Emily D. Buehler, Ph.D., BJS Statisticians",,,,,,,,,,
+Refer questions to: askbjs@usdoj.gov 202-307-0765,,,,,,,,,,
+Date of version: 6/2/2021,,,,,,,,,,
+,,,,,,,,,,
+"Table 10. Sexual victimization reported by federal and state prison authorities, by type of victimization, 2012",,,,,,,,,,
+,,,Inmate-on-inmate,,,,Staff-on-inmate,,,
+,,,Nonconsensual sexual acts,,Abusive sexual contact,,Staff sexual misconduct,,Staff sexual harassment,
+Jurisdiction,,Prisoners in custody on 12/31/2012/a,Alleged,Substantiated,Alleged,Substantiated,Alleged,Substantiated,Alleged,Substantiated
+,Total,"1,346,693","2,186",139,"1,295",177,"2,376",234,"1,294",62
+Federal,,"176,469",111,1,63,7,307,6,237,10
+State,,"1,170,224","2,075",138,"1,232",170,"2,069",228,"1,057",52
+,Alabama,"26,230",7,0,6,0,35,4,6,0
+,Alaska,"4,575",3,0,5,1,3,0,0,0
+,Arizona/b,"33,578",54,0,30,0,39,4,/,/
+,Arkansas,"14,043",3,1,4,1,13,6,4,1
+,California,"132,327",113,3,39,2,64,1,17,0
+,Colorado,"16,389",16,0,5,0,45,18,7,1
+,Connecticut,"16,347",19,0,25,2,6,0,3,0
+,Delaware,"6,730",28,1,7,2,11,1,2,0
+,Florida,"88,134",228,6,55,1,191,2,194,3
+,Georgia,"47,278",78,4,0,0,26,4,5,0
+,Hawaii/b,"3,661",5,2,0,0,6,2,/,/
+,Idaho,"4,990",0,0,0,0,0,0,0,0
+,"Illinois/c,d","49,348",67,4,/,/,14,1,/,/
+,Indiana,"23,783",10,1,20,8,24,11,7,1
+,Iowa,"8,735",25,9,93,36,26,8,18,6
+,Kansas,"9,422",76,0,44,4,44,12,31,1
+,Kentucky,"12,186",18,2,9,2,42,9,5,3
+,Louisiana,"15,645",8,6,2,0,18,3,2,0
+,Maine/b,"1,977",37,1,0,0,7,0,/,/
+,"Maryland/b,c","21,783",25,3,/,/,14,1,/,/
+,Massachusetts,"11,127",27,0,21,2,22,2,6,2
+,Michigan/e,"43,594",30,4,15,4,7,1,295,3
+,Minnesota,"9,421",21,1,1,0,13,3,2,1
+,Mississippi,"11,457",20,0,0,0,12,2,0,0
+,Missouri,"31,205",127,26,49,7,240,11,76,2
+,Montana,"1,677",15,0,2,2,6,0,3,0
+,Nebraska,"4,721",18,0,19,4,34,1,26,1
+,Nevada,"12,594",0,0,32,1,57,7,16,1
+,New Hampshire,"2,568",10,1,24,0,9,1,1,0
+,New Jersey,"20,333",10,1,1,0,12,0,3,0
+,New Mexico,"3,641",2,0,3,0,3,0,2,0
+,New York,"54,058",65,2,17,5,213,5,69,3
+,North Carolina,"37,348",37,2,25,3,171,22,110,11
+,North Dakota,"1,413",0,0,1,1,0,0,0,0
+,Ohio,"45,529",51,3,33,9,41,12,1,0
+,Oklahoma,"17,947",29,6,5,3,23,11,3,0
+,Oregon,"14,123",14,0,14,3,30,2,4,1
+,Pennsylvania,"49,009",37,1,11,2,69,5,3,1
+,Rhode Island,"3,042",18,3,2,1,0,0,0,0
+,South Carolina/c,"21,851",27,0,/,/,20,3,1,0
+,South Dakota,"3,581",9,0,7,3,1,0,1,0
+,Tennessee,"14,652",22,0,20,2,23,1,17,3
+,Texas/d,"136,578",350,6,402,11,99,7,/,/
+,Utah,"5,309",5,1,16,5,5,3,3,0
+,Vermont,"1,530",13,1,17,7,16,3,2,1
+,Virginia,"28,149",16,1,11,1,28,12,20,2
+,Washington,"16,919",144,11,77,16,153,15,40,2
+,West Virginia,"5,335",10,1,21,7,38,6,16,2
+,Wisconsin,"22,401",117,18,33,9,90,4,33,0
+,Wyoming,"1,951",11,6,9,3,6,2,3,0
+Note: Excludes the District of Columbia. See Terms and definitions for information on types of victimization.,,,,,,,,,,
+/Not reported.,,,,,,,,,,
+a/Excludes inmates in privately operated facilities and facilities operated and administered by local governments. Counts were based on the 2012 National Prisoner Statistics data collection.,,,,,,,,,,
+b/Allegations of staff sexual harassment could not be counted separately from allegations of staff sexual misconduct.,,,,,,,,,,
+c/Allegations of abusive sexual contact could not be counted separately from allegations of nonconsensual sexual acts.,,,,,,,,,,
+d/Allegations of staff sexual harassment were not recorded.,,,,,,,,,,
+e/Counts of nonconsensual sexual acts were based on completed acts only.,,,,,,,,,,
+"Source: Bureau of Justice Statistics, Survey of Sexual Victimization, 2012.",,,,,,,,,,

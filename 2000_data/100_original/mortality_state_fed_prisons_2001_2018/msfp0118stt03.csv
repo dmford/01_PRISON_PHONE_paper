@@ -1,0 +1,30 @@
+Bureau of Justice Statistics,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Filename: msfp0118stt03.csv,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Table 3. Percent of state prisoner deaths, by cause of death, 2001 and 2008–2018",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Report title: Mortality in State and Federal Prisons, 2001-2018 – Statistical Tables  NCJ 255970",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Data source: Bureau of Justice Statistics, Mortality in Correctional Institutions, 2001 and 2008–2018",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Author: E. Ann Carson, Ph.D., BJS Statistician",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Refer questions to: askbjs@usdoj.gov 202-307-0765,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Date of version: 4/29/2021,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Table 3. Percent of state prisoner deaths, by cause of death, 2001 and 2008–2018",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Cause of death,,2001,,,2008,,,2009,,,2010,,,2011,,,2012,,,2013,,,2014,,,2015,,,2016,,,2017,,,2018,
+,All causes,100,%,,100,%,,100,%,,100,%,,100,%,,100,%,,100,%,,100,%,,100,%,,100,%,,100,%,,100,%
+Illness,,89.5,%,,87.9,%,,88.6,%,,88.6,%,,88.9,%,,88.1,%,,88.6,%,,87,%,,87.6,%,,85.7,%,,82.6,%,,79.1,%
+,Heart disease,25.9,,,24.5,,,24.9,,,25.7,,,25.5,,,23.9,,,25.8,,,25.7,,,26.8,,,27.6,,,27.8,,,25.4,
+,Cancer,24.1,,,26.3,,,28.6,,,28.7,,,30.7,,,30.5,,,30.6,,,30.1,,,30.5,,,30.3,,,28.2,,,27.5,
+,Liver disease,10.8,,,9.2,,,9.9,,,8.9,,,10.1,,,9.1,,,10.3,,,9.1,,,8.2,,,7.1,,,6.2,,,5.2,
+,AIDS-related/a,9.6,,,2.9,,,2.9,,,2.3,,,1.7,,,2.2,,,1.5,,,1.8,,,1.2,,,0.8,,,0.9,,,0.5,
+,Respiratory disease,5,,,7.2,,,5.7,,,6.6,,,6.1,,,6.6,,,5.6,,,6.7,,,6.5,,,5.9,,,6.4,,,6.9,
+,All other illnesses/b,14.1,,,17.8,,,16.7,,,16.5,,,14.8,,,15.8,,,14.8,,,13.5,,,14.4,,,14.1,,,13.1,,,13.5,
+Suicide,,5.9,%,,5.7,%,,5.9,%,,6.7,%,,5.5,%,,6.1,%,,5.5,%,,7.1,%,,5.9,%,,6.8,%,,6.6,%,,7.5,%
+Drug/alcohol intoxication,,1.2,%,,1.7,%,,1.5,%,,1.3,%,,1.7,%,,1,%,,1.6,%,,1.4,%,,2.2,%,,2.8,%,,5.1,%,,6,%
+Accident,,0.8,%,,0.8,%,,0.9,%,,1,%,,1.1,%,,1.5,%,,1,%,,1.1,%,,1.1,%,,1.1,%,,1.1,%,,1,%
+Homicide/c,,1.4,%,,1.2,%,,1.6,%,,2.2,%,,2.1,%,,2.5,%,,2.6,%,,2.4,%,,2.3,%,,2.6,%,,2.9,%,,2.9,%
+Other causes,,0,%,,2.8,%,,0.5,%,,0.2,%,,0.4,%,,0.4,%,,0.5,%,,0.3,%,,0.5,%,,0.6,%,,0.7,%,,0.9,%
+Missing/unknown,,1.3,%,,0,%,,1,%,,0.1,%,,0.3,%,,0.3,%,,0.2,%,,0.6,%,,0.4,%,,0.3,%,,1,%,,2.5,%
+"Note: Data may have been revised from previously published statistics. Details may not sum to totals due to rounding. Excludes executions. For execution data, see Capital Punishment, 2017: Selected Findings (NCJ 253060, BJS, July 2019). See Methodology. Includes deaths in private state facilities.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+a/Includes persons who died of illness and were identified as HIV-positive or having AIDS at the time of death.,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"b/Includes other specified illnesses (such as cerebrovascular disease, influenza, and other nonleading natural causes of death) and unspecified illnesses.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"c/Includes homicides committed by other prisoners, incidental to the use of force by staff, or resulting from injuries sustained prior to incarceration.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Source: Bureau of Justice Statistics, Mortality in Correctional Institutions, 2001 and 2008–2018.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,

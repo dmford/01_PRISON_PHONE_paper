@@ -1,0 +1,67 @@
+Bureau of Justice Statistics,,,,,,,,,,,
+Filename: cj0519stt02.csv,,,,,,,,,,,
+"Table 2. Number of local jail jurisdictions, by size of jurisdiction and state, midyear 2019",,,,,,,,,,,
+"Report title: Census of Jails, 2005–2019 – Statistical Tables  NCJ 255406",,,,,,,,,,,
+"Data source: Bureau of Justice Statistics, Census of Jails, 2019",,,,,,,,,,,
+"Authors: Zhen Zeng, Ph.D., and Todd D. Minton, BJS Statisticians",,,,,,,,,,,
+Refer questions to: askbjs@usdoj.gov 202-307-0765,,,,,,,,,,,
+Date of version: 10/7/2021,,,,,,,,,,,
+,,,,,,,,,,,
+"Table 2. Number of local jail jurisdictions, by size of jurisdiction and state, midyear 2019",,,,,,,,,,,
+,,,Jail jurisdiction size (ADP)/b,,,,,,,,
+State/a,,Total jail jurisdictions,Fewer than 50 inmates,50–99,100–249,250–499,500–999,"1,000–2,499",2500 or more,Mean ADP,Median ADP
+,U.S. total,"2,850",991,504,642,348,215,123,27,261,90
+Northeast,,175,17,32,51,34,23,15,3,439,185
+,Maine,14,4,2,7,1,0,0,0,114,126
+,Massachusetts,13,1,0,3,2,2,5,0,736,833
+,New Hampshire,10,1,4,3,2,0,0,0,150,115
+,New Jersey,19,0,1,4,6,7,1,0,535,415
+,New York,57,7,16,17,8,5,3,1,392,132
+,Pennsylvania,62,4,9,17,15,9,6,2,517,255
+Midwest,,950,453,169,205,73,33,16,1,137,54
+,Illinois,91,43,16,18,7,6,0,1,180,51
+,Indiana,91,8,20,37,18,7,1,0,227,147
+,Iowa,94,74,9,6,4,0,1,0,55,17
+,Kansas,95,63,15,11,2,3,1,0,86,24
+,Michigan,81,23,19,20,12,3,4,0,206,88
+,Minnesota,78,39,20,15,1,2,1,0,90,48
+,Missouri,110,45,25,31,5,2,2,0,117,60
+,Nebraska,63,49,4,7,1,1,1,0,71,12
+,North Dakota,23,14,3,4,2,0,0,0,62,25
+,Ohio,127,58,18,31,13,3,4,0,169,68
+,South Dakota,26,17,4,3,1,1,0,0,81,33
+,Wisconsin,71,20,16,22,7,5,1,0,191,99
+South,,"1,319",355,241,319,196,126,69,13,293,120
+,Alabama,124,68,16,19,12,7,2,0,127,34
+,Arkansas,76,31,22,12,8,2,1,0,117,67
+,District of Columbia,1,0,0,0,0,0,1,0,"1,870","1,870"
+,Florida,67,2,8,15,9,15,11,7,861,496
+,Georgia,150,34,34,38,18,17,8,1,294,111
+,Kentucky,80,1,6,30,29,12,2,0,324,266
+,Louisiana,87,26,10,18,7,15,11,0,356,150
+,Maryland,24,0,5,6,8,3,2,0,370,265
+,Mississippi,81,28,17,14,19,2,1,0,169,84
+,North Carolina,93,10,24,38,12,7,2,0,221,145
+,Oklahoma,95,46,16,25,5,1,2,0,120,52
+,South Carolina,45,8,11,9,10,5,2,0,265,139
+,Tennessee,95,6,16,40,20,8,4,1,325,172
+,Texas,232,92,47,42,19,16,12,4,308,70
+,Virginia,58,2,9,13,15,11,8,0,491,412
+,West Virginia,11,1,0,0,5,5,0,0,471,482
+West,,406,166,62,67,45,33,23,10,363,72
+,Alaska,15,15,0,0,0,0,0,0,4,3
+,Arizona,16,2,0,5,3,4,1,1,822,272
+,California,62,9,6,7,12,11,9,8,"1,205",394
+,Colorado,55,24,14,6,2,4,5,0,239,60
+,Idaho,36,20,4,6,5,0,1,0,116,45
+,Montana,36,26,4,3,2,1,0,0,71,21
+,Nevada,19,8,4,3,1,1,1,1,381,66
+,New Mexico,31,9,8,5,5,3,1,0,179,90
+,Oregon,36,14,4,11,5,1,1,0,167,100
+,Utah,25,4,5,9,3,2,2,0,293,118
+,Washington,52,23,7,9,5,6,2,0,230,58
+,Wyoming,23,12,6,3,2,0,0,0,71,49
+"Note: Includes all locally operated jails in 45 states and the District of Columbia. Includes 15 locally operated jails in Alaska. Excludes the Federal Bureau of Prisons’ detention facilities and the combined jail and prison systems in Alaska, Connecticut, Delaware, Hawaii, Rhode Island, and Vermont. Data were adjusted for survey and item nonresponse and rounded to the nearest 10. See Methodology. ",,,,,,,,,,,
+a/See U.S. Census Bureau. (n.d.). Census regions and divisions of the United States. https://www2.census.gov/geo/pdfs/maps-data/maps/reference/us_regdiv.pdf,,,,,,,,,,,
+"b/Jail jurisdiction size is based on the average daily population (ADP) during the 12-month period ending on June 30, 2019. The ADP is the sum of all inmates in jail each day for the 12-month period, divided by the number of days in the period.",,,,,,,,,,,
+"Source: Bureau of Justice Statistics, Census of Jails, 2019.  ",,,,,,,,,,,

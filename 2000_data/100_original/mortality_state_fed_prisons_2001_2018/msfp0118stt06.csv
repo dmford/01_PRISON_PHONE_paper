@@ -1,0 +1,24 @@
+Bureau of Justice Statistics,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Filename: msfp0118stt06.csv,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Table 6. Mortality rate per 100,000 federal prisoners, by cause of death, 2001 and 2008–2018",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Report title: Mortality in State and Federal Prisons, 2001-2018 – Statistical Tables  NCJ 255970",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Data source: Bureau of Justice Statistics, National Prisoner Statistics, 2001 and 2008–2018; and Federal Bureau of Prisons, 2001 and 2008–2018",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Author: E. Ann Carson, Ph.D., BJS Statistician",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Refer questions to: askbjs@usdoj.gov 202-307-0765,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Date of version: 4/29/2021,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Table 6. Mortality rate per 100,000 federal prisoners, by cause of death, 2001 and 2008–2018",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Cause of death,,2001,,,2008,,,2009,,,2010,,,2011,,,2012,,,2013,,,2014,,,2015,,,2016,,,2017,,,2018
+,All causes,220,,,241,,,220,,,224,,,220,,,198,,,230,,,262,,,283,,,252,,,246,,,250
+Illness,,196,,,217,,,198,,,203,,,204,,,182,,,213,,,238,,,249,,,220,,,208,,,190
+,AIDS-related/a,16,,,8,,,4,!,,4,!,,2,!,,3,!,,2,!,,0,,,1,!,,1,!,,4,!,,0
+Suicide,,13,,,13,,,12,,,6,,,10,,,11,,,8,,,14,,,12,,,12,,,16,,,19
+Accident/b,,4,!,,4,!,,3,!,,1,!,,1,!,,2,!,,2,!,,1,!,,10,,,9,,,5,!,,9
+Homicide/c,,6,!,,8,,,4,!,,10,,,5,!,,3,!,,7,,,8,,,10,,,9,,,6,,,8
+Other/unknown,,0,,,1,!,,4,!,,3,!,,1,!,,1,!,,1,!,,0,,,2,!,,2,!,,11,,,24
+"Note: Excludes deaths in private federal facilities. Until 2015, federal deaths were submitted as an aggregate count by the Federal Bureau of Prisons (BOP), with limited details regarding cause of death, and excluded deaths in private federal facilities. See appendix table 2 for deaths from 2015 to 2018 in federal prison facilities operated by the BOP or operated privately under a BOP contract. Excludes executions. For execution data, see Capital Punishment, 2017: Selected Findings (NCJ 253060, BJS, July 2019). See Methodology. Mortality rates are based on the annual number of deaths and a 1-day custody population on December 31. ",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"! Interpret with caution. Estimate is based on 10 or fewer cases, or coefficient of variation is greater than 50%. See Methodology – Interpreting rates among small populations, p. 24.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+a/Includes persons who died of illness and were identified as HIV-positive or having AIDS at the time of death.,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+b/Includes deaths due to drug or alcohol intoxication.,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"c/Includes homicides committed by other prisoners, incidental to the use of force by staff, or resulting from injuries sustained prior to incarceration.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+"Source: Bureau of Justice Statistics, National Prisoner Statistics, 2001 and 2008–2018; and Federal Bureau of Prisons, 2001 and 2008–2018.",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,

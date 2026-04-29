@@ -1,0 +1,69 @@
+Bureau of Justice Statistics,,,,,,,,,,
+Filename: cj0519stt12.csv,,,,,,,,,,
+"Table 12. Confined inmates held in local jails for federal correctional authorities, state prison authorities, and American Indian and Alaska Native tribal governments, by state, midyear 2019",,,,,,,,,,
+"Report title: Census of Jails, 2005–2019 – Statistical Tables  NCJ 255406",,,,,,,,,,
+"Data source: Bureau of Justice Statistics, Census of Jails, 2019",,,,,,,,,,
+"Authors: Zhen Zeng, Ph.D., and Todd D. Minton, BJS Statisticians",,,,,,,,,,
+Refer questions to: askbjs@usdoj.gov 202-307-0765,,,,,,,,,,
+Date of version: 10/7/2021,,,,,,,,,,
+,,,,,,,,,,
+"Table 12. Confined inmates held in local jails for federal correctional authorities, state prison authorities, and American Indian and Alaska Native tribal governments, by state, midyear 2019",,,,,,,,,,
+,,,Number of inmates held for/c —,,,,,,,
+State/a,,Total inmates in custody/b,All federal/state/tribal authorities,U.S. Marshals Service,Federal Bureau of Prisons,ICE,Bureau of Indian Affairs,Other federal authorities,State prison authorities,AIAN tribal governments
+,U.S. total,"734,470","117,100","32,910","1,810","17,330",230,"1,220","63,330",270
+Northeast,,"73,570","10,130","3,040",90,"3,670",0,40,"3,290",0
+,Maine,"1,620",280,170,10,0,0,0,110,0
+,Massachusetts,"9,260","1,070",160,10,670,0,0,220,0
+,New Hampshire,"1,400",360,280,10,70,0,0,20,0
+,New Jersey,"9,550","2,610",750,0,"1,580",0,20,260,0
+,New York,"20,450","2,570",830,^,220,0,^,"1,520",0
+,Pennsylvania,"31,300","3,240",850,70,"1,130",0,20,"1,170",0
+Midwest ,,"125,330","15,560","7,470",220,"2,940",30,210,"4,620",60
+,Illinois,"16,490","2,410","1,000",60,660,0,^,690,0
+,Indiana,"20,430","1,540",520,10,110,0,0,890,^
+,Iowa,"5,020",970,630,10,120,0,0,200,10
+,Kansas,"8,080","1,490","1,000",30,190,0,10,270,^
+,Michigan,"15,880","1,510",620,10,410,0,^,440,30
+,Minnesota,"6,840","1,160",300,10,490,^,^,360,0
+,Missouri,"11,580","2,190","1,550",50,150,0,^,430,0
+,Nebraska,"4,200",680,380,10,150,10,0,130,0
+,North Dakota,"1,470",250,210,^,10,20,0,10,0
+,Ohio,"20,580","1,580",550,10,270,0,200,550,0
+,South Dakota,"2,010",600,450,^,10,0,0,120,20
+,Wisconsin,"12,750","1,180",260,10,380,0,0,530,^
+South ,,"386,770","76,910","17,580",760,"9,570",70,940,"47,970",30
+,Alabama,"16,450","2,760",870,30,70,0,0,"1,780",0
+,Arkansas,"9,400","2,590",650,^,80,0,0,"1,860",0
+,District of Columbia,"1,820",490,470,20,0,0,0,0,0
+,Florida,"56,660","4,500","1,370",70,"1,470",0,170,"1,430",0
+,Georgia,"44,810","5,600",620,10,"1,610",0,70,"3,280",0
+,Kentucky,"26,190","12,720","1,540",30,180,0,300,"10,670",0
+,Louisiana,"32,560","12,040",620,10,"1,520",^,^,"9,890",^
+,Maryland,"8,590",550,60,10,350,0,0,140,0
+,Mississippi,"14,340","6,800","1,310",20,"1,360",0,0,"4,110",0
+,North Carolina,"20,360","2,590","1,380",20,220,0,^,970,^
+,Oklahoma,"10,630","1,460",400,340,290,60,0,360,20
+,South Carolina,"11,470","1,060",700,^,150,0,^,200,0
+,Tennessee,"31,240","5,460",520,60,170,0,10,"4,710",0
+,Texas,"68,770","11,420","5,480",50,"2,030",0,90,"3,760",10
+,Virginia,"28,380","5,050","1,610",80,80,0,^,"3,270",0
+,West Virginia,"5,110","1,820",0,0,0,0,300,"1,520",0
+West ,,"148,800","14,510","4,820",740,"1,140",140,30,"7,450",190
+,Alaska,50,10,0,0,0,0,0,10,0
+,Arizona,"13,540",580,210,10,20,60,0,260,20
+,California,"75,060","4,240","1,820",610,450,0,^,"1,360",0
+,Colorado,"13,000","1,100",180,10,50,10,10,840,0
+,Idaho,"4,250","1,230",190,70,30,10,^,930,^
+,Montana,"2,510",850,140,^,10,0,0,700,^
+,Nevada,"7,220",510,70,0,380,10,10,30,^
+,New Mexico,"6,550","1,200",980,10,10,40,10,140,20
+,Oregon,"6,040",570,230,20,40,0,0,260,30
+,Utah,"7,300","2,180",560,10,100,^,0,"1,510",0
+,Washington,"11,710","1,860",350,10,50,0,0,"1,340",110
+,Wyoming,"1,570",190,100,^,10,10,0,80,0
+"Note: Includes all locally operated jails in 45 states and the District of Columbia. Includes 15 locally operated jails in Alaska. Excludes the Federal Bureau of Prisons’ detention facilities and the combined jail and prison systems in Alaska, Connecticut, Delaware, Hawaii, Rhode Island, and Vermont. AIAN stands for American Indian and Alaska Native. ICE stands for U.S. Immigration and Customs Enforcement. Details may not sum to totals due to rounding. ",,,,,,,,,,
+^A nonzero value of 5 or less.,,,,,,,,,,
+a/See U.S. Census Bureau. (n.d.). Census regions and divisions of the United States. https://www2.census.gov/geo/pdfs/maps-data/maps/reference/us_regdiv.pdf,,,,,,,,,,
+"b/Includes inmates in custody on June 28, 2019. ",,,,,,,,,,
+c/Data were adjusted for survey and item nonresponse and rounded to the nearest 10. See Methodology. ,,,,,,,,,,
+"Source: Bureau of Justice Statistics, Census of Jails, 2019.  ",,,,,,,,,,

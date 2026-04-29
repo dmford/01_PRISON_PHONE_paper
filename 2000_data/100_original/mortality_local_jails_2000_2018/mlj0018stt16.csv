@@ -1,0 +1,21 @@
+Bureau of Justice Statistics,,,,,,,,,,,,,
+Filename: mlj0018stt16.csv,,,,,,,,,,,,,
+"Table 16. Mortality rate per 100,000 local jail inmates, by size of jurisdiction, 2000 and 2008–2018",,,,,,,,,,,,,
+"Report title: Mortality in Local Jails, 2000-2018 - Statistical Tables  NCJ 256002",,,,,,,,,,,,,
+"Data source: Bureau of Justice Statistics, Mortality in Correctional Institutions, 2000 and 2008–2018",,,,,,,,,,,,,
+"Author: E. Ann Carson, Ph.D., BJS Statistician",,,,,,,,,,,,,
+Refer questions to: askbjs@usdoj.gov 202-307-0765,,,,,,,,,,,,,
+Date of version: 4/29/2021,,,,,,,,,,,,,
+,,,,,,,,,,,,,
+"Table 16. Mortality rate per 100,000 local jail inmates, by size of jurisdiction, 2000 and 2008–2018",,,,,,,,,,,,,
+Jail jurisdiction size (average daily population),,2000,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018
+,Total,151,123,128,125,123,129,138,144,154,149,151,154
+49 or fewer,,229,222,236,285,241,308,289,336,295,294,257,208
+50–99,,170,119,146,125,144,166,172,189,147,164,160,175
+100–249,,105,119,132,129,123,95,149,119,142,143,147,153
+250–499,,115,106,108,96,123,129,126,138,145,136,116,142
+500–999,,142,96,99,94,105,114,118,122,144,132,142,138
+"1,000–2,499",,154,124,132,133,121,129,120,151,156,157,169,171
+"2,500 or more",,175,139,138,135,109,127,148,139,156,148,151,146
+"Note: Data may have been revised from previously published statistics. Mortality rates are per 100,000 inmates held in the custody of local jails. Mortality rates are based on the annual number of deaths and the average daily population (ADP). In 2000, the ADP was estimated by taking the average of January 1 and December 31 one-day inmate population counts. See Methodology.",,,,,,,,,,,,,
+"Source: Bureau of Justice Statistics, Mortality in Correctional Institutions, 2000 and 2008–2018.",,,,,,,,,,,,,

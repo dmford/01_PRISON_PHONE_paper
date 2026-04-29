@@ -1,0 +1,23 @@
+Bureau of Justice Statistics,,,,
+File name: ftelea9716t01.csv,,,,
+"Table 1. Officer-to-resident ratio for general-purpose law enforcement agencies, 1997–2016",,,,
+"Report title: Full-Time Employees in Law Enforcement Agencies, 1997-2016   NCJ 251762",,,,
+"Data source:  Bureau of Justice Statistics, Law Enforcement Management and Administrative Statistics surveys, 1997–2016",,,,
+"Author: Shelley Hyland, Ph.D., BJS Statistician",,,,
+Refer questions to: askbjs@usdoj.gov (202) 307-0765,,,,
+Date of version: 8/28/2018,,,,
+,,,,
+"Table 1. Officer-to-resident ratio for general-purpose law enforcement agencies, 1997–2016",,,,
+Year,U.S. population/a,Total full-time sworn officers/b,"Full-time sworn officers per 1,000 U.S. residents",
+1997,"267,743,595","648,688",2.42, †
+2000,"282,162,411","656,645",2.33, †
+2003,"290,107,933","683,599",2.36, †
+2007,"301,231,207","700,259",2.32, †
+2013,"316,234,505","724,690",2.29,
+2016*,"323,405,935","701,169",2.17,
+Note: See appendix table 1 for standard errors.,,,,
+*Comparison year.,,,,
+†Difference with comparison year is significant at the 95% confidence level.,,,,
+"a/U.S. Census Bureau. National estimates as of July 1. Data for 1997 were retrieved from: www.stats.indiana.edu/web/state/ftp/st_est98.txt. Data for 2000, 2003, and 2007 were retrieved from: https://www2.census.gov/programs-surveys/popest/tables/2000-2010/intercensal/national/us-est00int-01.csv. Data for 2013 and 2016 were retrieved from: https://www2.census.gov/programs-surveys/popest/tables/2010-2017/national/totals/na-est2017-01.xlsx.",,,,
+"b/The reference date for the LEMAS survey in 1997, 2000, 2003 and 2016 was June 30. In 2007, the reference date was September 30. In 2013, the reference date was January 1.",,,,
+"Source: Bureau of Justice Statistics, Law Enforcement Management and Administrative Statistics surveys, 1997–2016.",,,,

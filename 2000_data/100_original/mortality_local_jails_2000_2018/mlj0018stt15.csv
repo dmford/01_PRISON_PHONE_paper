@@ -1,0 +1,21 @@
+Bureau of Justice Statistics,,,,,,,,,,,,,
+Filename: mlj0018stt15.csv,,,,,,,,,,,,,
+"Table 15. Number of deaths of local jail inmates, by size of jurisdiction, 2000 and 2008–2018",,,,,,,,,,,,,
+"Report title: Mortality in Local Jails, 2000-2018 - Statistical Tables  NCJ 256002",,,,,,,,,,,,,
+"Data source: Bureau of Justice Statistics, Mortality in Correctional Institutions, 2000 and 2008–2018",,,,,,,,,,,,,
+"Author: E. Ann Carson, Ph.D., BJS Statistician",,,,,,,,,,,,,
+Refer questions to: askbjs@usdoj.gov 202-307-0765,,,,,,,,,,,,,
+Date of version: 4/29/2021,,,,,,,,,,,,,
+,,,,,,,,,,,,,
+"Table 15. Number of deaths of local jail inmates, by size of jurisdiction, 2000 and 2008–2018",,,,,,,,,,,,,
+Jail jurisdiction size (average daily population),,2000,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018
+,Total,903,959,961,918,888,959,985,"1,052","1,093","1,072","1,099","1,120"
+49 or fewer inmates,,63,47,49,60,51,66,58,68,61,59,51,40
+50–99,,66,46,55,45,51,60,61,70,54,59,58,62
+100–249,,80,108,121,122,116,89,138,115,141,150,151,156
+250–499,,87,111,111,95,125,144,129,153,156,150,135,176
+500–999,,139,121,120,121,133,148,151,158,183,177,193,190
+"1,000–2,499",,186,238,237,237,207,234,205,263,268,264,293,295
+"2,500 or more",,282,286,268,234,186,217,243,225,230,213,218,201
+"Note: Data may have been revised from previously published statistics. Details may not sum to totals due to missing data. In 2000, the average daily population was estimated by taking the average of January 1 and December 31 one-day inmate population counts. See Methodology.",,,,,,,,,,,,,
+"Source: Bureau of Justice Statistics, Mortality in Correctional Institutions, 2000 and 2008–2018.",,,,,,,,,,,,,

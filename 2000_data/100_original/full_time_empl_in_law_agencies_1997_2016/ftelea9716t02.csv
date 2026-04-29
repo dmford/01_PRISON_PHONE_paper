@@ -1,0 +1,27 @@
+Bureau of Justice Statistics,,,,,,,
+File name: ftelea9716t02.csv,,,,,,,
+"Table 2. Full-time employees in general-purpose state and local law enforcement agencies, by agency type, 1997–2016",,,,,,,
+"Report title: Full-Time Employees in Law Enforcement Agencies, 1997-2016   NCJ 251762",,,,,,,
+"Data source:  Bureau of Justice Statistics, Law Enforcement Management and Administrative Statistics surveys, 1997–2016",,,,,,,
+"Author: Shelley Hyland, Ph.D., BJS Statistician",,,,,,,
+Refer questions to: askbjs@usdoj.gov (202) 307-0765,,,,,,,
+Date of version: 8/28/2018,,,,,,,
+,,,,,,,
+"Table 2. Full-time employees in general-purpose state and local law enforcement agencies, by agency type, 1997–2016",,,,,,,
+Agency type,,1997,2000,2003,2007,2013,2016
+Number of agencies,,"16,700","15,798","15,766","15,636","15,388","15,328"
+Total full-time employees,,"876,719","941,807","993,442","1,046,499","1,045,360","1,050,441"
+,Local police,"531,313","565,644","580,749","601,027","604,959","599,501"
+,Sheriff's office*,"263,145","289,135","330,274","346,337","351,904","359,843"
+,Primary state police,"82,261","87,028","82,419","99,135","88,497","91,097"
+Total full-time sworn officers,,"648,688","656,645","683,599","700,259","724,690","701,169"
+,Local police,"419,996","440,770","451,737","463,147","477,317","468,170"
+,Sheriff's office*,"174,486","159,528","174,251","172,241","188,952","173,354"
+,Primary state police,"54,206","56,348","57,611","64,872","58,421","59,645"
+Total full-time civilians,,"228,031","285,162","309,843","346,239","320,670","349,272"
+,Local police,"111,317","124,874","129,013","137,880","127,642","131,332"
+,Sheriff's office*,"88,659","129,608","156,022","174,096","162,952","186,489"
+,Primary state police,"28,055","30,680","24,808","34,263","30,076","31,452"
+"Note: See appendix table 2 for standard errors. In the 1997 and 2013 LEMAS surveys, there were two personnel categories: sworn officers with general arrest powers and non-sworn employees (i.e., civilians). Sheriffs’ offices may employ a third type of full-time personnel: officers with limited or no arrest authority (e.g., jail or court officers). In these years, responding sheriffs’ offices that had officers with limited or no arrest authority had to determine which category best suited those personnel. For the 2000, 2003, 2007, and 2016 LEMAS surveys, agencies were asked to provide counts for all three types of employees. For these years, counts of officers with limited or no arrest powers were added to the civilian counts.",,,,,,,
+*Excludes sheriffs’ offices without primary law enforcement jurisdiction in the counties they serve.,,,,,,,
+"Source: Bureau of Justice Statistics, Law Enforcement Management and Administrative Statistics surveys, 1997–2016.",,,,,,,

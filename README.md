@@ -1,11 +1,20 @@
 # 01_PRISON_PHONE_paper
 
-This repository contains the replication code, LaTeX files, and base data structure for the prison phone rate reform dissertation chapter.
+## Overview
+Replication materials and manuscript files for a dissertation chapter on prison phone rate reform, communication barriers, and inmate safety / mental wellbeing.
 
-## Structure
-- `1000_scripts/` : Stata .do files and analysis scripts
-- `2000_data/` : Original and processed data inputs
-- `6000_LaTeX/` : Dissertation writeup and compiled tables/figures
+## Contents
+- `2000_data/` — original and processed data inputs
+- `3000_code/` — Stata analysis code
+- `6000_LaTeX/` — manuscript files, tables, and figures
+- `Prison Phone Paper.pdf` — compiled paper draft
 
 ## Purpose
-Designed to reproduce the empirical analysis, tables, and figures used in the dissertation chapter.
+Designed to reproduce the empirical analysis, tables, figures, and writeup for the dissertation chapter.
+
+## Tools
+- Stata
+- LaTeX
+
+## Author
+David Ford

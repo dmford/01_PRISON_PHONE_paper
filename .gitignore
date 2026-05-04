@@ -17,3 +17,5 @@ pciv/
 *.dta
 *.zip
 *.tmp
+
+!Prison Phone Paper.pdf
